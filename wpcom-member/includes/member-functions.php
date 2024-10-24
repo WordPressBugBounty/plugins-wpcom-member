@@ -7,19 +7,19 @@ function wpcom_login_form_items( $items = array() ){
     $items += array(
         10 => array(
             'type' => 'text',
-            'label' => _x('Username', 'label', 'wpcom'),
+            'label' => _x('Username', 'label', WPMX_TD),
             'icon' => 'user',
             'name' => 'user_login',
             'require' => true,
-            'placeholder' =>  is_wpcom_enable_phone() ? __('Phone number / E-mail / Username', 'wpcom') : __('Username or email address', 'wpcom')
+            'placeholder' =>  is_wpcom_enable_phone() ? __('Phone number / E-mail / Username', WPMX_TD) : __('Username or email address', WPMX_TD)
         ),
         20 => array(
             'type' => 'password',
-            'label' => _x('Password', 'label', 'wpcom'),
+            'label' => _x('Password', 'label', WPMX_TD),
             'icon' => 'lock',
             'name' => 'user_password',
             'require' => true,
-            'placeholder' => _x('Password', 'placeholder', 'wpcom'),
+            'placeholder' => _x('Password', 'placeholder', WPMX_TD),
         ),
         30 => array(
             'type' => wpcom_member_captcha_type()
@@ -35,42 +35,42 @@ function wpcom_register_form_items( $items = array() ){
         $items += array(
             40 => array(
                 'type' => 'password',
-                'label' => _x('Password', 'label', 'wpcom'),
+                'label' => _x('Password', 'label', WPMX_TD),
                 'icon' => 'lock',
                 'name' => 'user_pass',
                 'require' => true,
                 'validate' => 'password',
-                'placeholder' => _x('Password', 'placeholder', 'wpcom'),
+                'placeholder' => _x('Password', 'placeholder', WPMX_TD),
             )
         );
     }else{
         $items += array(
             10 => array(
                 'type' => 'text',
-                'label' => _x('Email address', 'label', 'wpcom'),
+                'label' => _x('Email address', 'label', WPMX_TD),
                 'icon' => 'mail',
                 'name' => 'user_email',
                 'require' => true,
                 'validate' => 'email',
-                'placeholder' => _x('Email address', 'placeholder', 'wpcom'),
+                'placeholder' => _x('Email address', 'placeholder', WPMX_TD),
             ),
             20 => array(
                 'type' => 'password',
-                'label' => _x('Password', 'label', 'wpcom'),
+                'label' => _x('Password', 'label', WPMX_TD),
                 'icon' => 'lock',
                 'name' => 'user_pass',
                 'require' => true,
                 'validate' => 'password',
-                'placeholder' => _x('Password', 'placeholder', 'wpcom'),
+                'placeholder' => _x('Password', 'placeholder', WPMX_TD),
             ),
             30 => array(
                 'type' => 'password',
-                'label' => _x('Password', 'label', 'wpcom'),
+                'label' => _x('Password', 'label', WPMX_TD),
                 'icon' => 'lock',
                 'name' => 'user_pass2',
                 'require' => true,
                 'validate' => 'password:user_pass',
-                'placeholder' => _x('Confirm password', 'placeholder', 'wpcom'),
+                'placeholder' => _x('Confirm password', 'placeholder', WPMX_TD),
             ),
             40 => array(
                 'type' => wpcom_member_captcha_type()
@@ -85,25 +85,25 @@ function wpcom_email_code_items($items){
     $items += array(
         10 => array(
             'type' => 'text',
-            'label' => _x('Email address', 'label', 'wpcom'),
+            'label' => _x('Email address', 'label', WPMX_TD),
             'icon' => 'envelope',
             'name' => 'user_email',
             'require' => true,
             'validate' => 'email',
-            'placeholder' => _x('Email address', 'placeholder', 'wpcom'),
+            'placeholder' => _x('Email address', 'placeholder', WPMX_TD),
         ),
         20 => array(
             'type' => wpcom_member_captcha_type()
         ),
         30 => array(
             'type' => 'smsCode',
-            'label' => _x('Verification code', 'label', 'wpcom'),
+            'label' => _x('Verification code', 'label', WPMX_TD),
             'name' => 'sms_code',
             'icon' => 'shield-check',
             'validate' => 'sms_code:user_email',
             'target' => 'user_email',
             'require' => true,
-            'placeholder' => _x('Please enter your verification code', 'placeholder', 'wpcom')
+            'placeholder' => _x('Please enter your verification code', 'placeholder', WPMX_TD)
         )
     );
     return $items;
@@ -116,31 +116,31 @@ function wpcom_account_default_tabs( $tabs = array() ){
     $tabs += array(
         10 => array(
             'slug' => 'general',
-            'title' => __('General', 'wpcom'),
+            'title' => __('General', WPMX_TD),
             'icon' => 'personal-circle'
         ),
         50 => array(
             'slug' => 'password',
-            'title' => __('Password', 'wpcom'),
+            'title' => __('Password', WPMX_TD),
             'icon' => 'lock-circle'
         ),
         99 => array(
             'slug' => 'logout',
-            'title' => __('Logout', 'wpcom'),
+            'title' => __('Logout', WPMX_TD),
             'icon' => 'out-circle'
         )
     );
     if(!is_wpcom_enable_phone() && !(isset($options['social_login_on']) && $options['social_login_on']=='1')){
         $tabs[98989] = array(
             'slug' => 'bind',
-            'title' => _x('Connect', 'title', 'wpcom'),
+            'title' => _x('Connect', 'title', WPMX_TD),
             'icon' => 'bind-circle',
             'parent' => 'general'
         );
     }else{
         $tabs[40] = array(
             'slug' => 'bind',
-            'title' => _x('Connect', 'title', 'wpcom'),
+            'title' => _x('Connect', 'title', WPMX_TD),
             'icon' => 'bind-circle'
         );
     }
@@ -156,16 +156,16 @@ function wpcom_account_tabs_general_metas( $metas ){
         $phone = $user->mobile_phone;
         if($phone){
             $url = add_query_arg(array('type' => 'phone', 'action' => 'change'), wpcom_subpage_url('bind'));
-            $phone .= '<a class="member-bind-url" href="'.$url.'">'.__('Edit', 'wpcom').'</a><span class="member-bind-tip">'.__('Private', 'wpcom').'</span>';
+            $phone .= '<a class="member-bind-url" href="'.$url.'">'.__('Edit', WPMX_TD).'</a><span class="member-bind-tip">'.__('Private', WPMX_TD).'</span>';
         }else{
             $url = add_query_arg(array('type' => 'phone', 'action' => 'bind'), wpcom_subpage_url('bind'));
-            $phone = __('Not set', 'wpcom') . '<a class="member-bind-url" href="'.$url.'">'.__('Add phone number', 'wpcom').'</a><span class="member-bind-tip">'.__('Private', 'wpcom').'</span>';
+            $phone = __('Not set', WPMX_TD) . '<a class="member-bind-url" href="'.$url.'">'.__('Add phone number', WPMX_TD).'</a><span class="member-bind-tip">'.__('Private', WPMX_TD).'</span>';
         }
 
         $metas += array(
             10 => array(
                 'type' => 'text',
-                'label' => _x('Phone number', 'label', 'wpcom'),
+                'label' => _x('Phone number', 'label', WPMX_TD),
                 'name' => 'mobile_phone',
                 'value' => $phone,
                 'disabled' => true
@@ -175,16 +175,16 @@ function wpcom_account_tabs_general_metas( $metas ){
     $email = $user->user_email;
     if($email && !wpcom_is_empty_mail($email)){
         $url = add_query_arg(array('type' => 'email', 'action' => 'change'), wpcom_subpage_url('bind'));
-        $email .= '<a class="member-bind-url" href="'.$url.'">'.__('Edit', 'wpcom').'</a><span class="member-bind-tip">'.__('Private', 'wpcom').'</span>';
+        $email .= '<a class="member-bind-url" href="'.$url.'">'.__('Edit', WPMX_TD).'</a><span class="member-bind-tip">'.__('Private', WPMX_TD).'</span>';
     }else{
         $url = add_query_arg(array('type' => 'email', 'action' => 'bind'), wpcom_subpage_url('bind'));
-        $email = __('Not set', 'wpcom') . '<a class="member-bind-url" href="'.$url.'">'.__('Add email address', 'wpcom').'</a><span class="member-bind-tip">'.__('Private', 'wpcom').'</span>';
+        $email = __('Not set', WPMX_TD) . '<a class="member-bind-url" href="'.$url.'">'.__('Add email address', WPMX_TD).'</a><span class="member-bind-tip">'.__('Private', WPMX_TD).'</span>';
     }
 
     $metas += array(
         20 => array(
             'type' => 'text',
-            'label' => _x('Email address', 'label', 'wpcom'),
+            'label' => _x('Email address', 'label', WPMX_TD),
             'name' => 'user_email',
             'maxlength' => 64,
             'require' => true,
@@ -194,7 +194,7 @@ function wpcom_account_tabs_general_metas( $metas ){
         ),
         30 => array(
             'type' => 'text',
-            'label' => __('Nickname', 'wpcom'),
+            'label' => __('Nickname', WPMX_TD),
             'name' => 'display_name',
             'maxlength' => 20,
             'require' => true,
@@ -202,11 +202,11 @@ function wpcom_account_tabs_general_metas( $metas ){
         ),
         40 => array(
             'type' => 'textarea',
-            'label' => __('Description', 'wpcom'),
+            'label' => __('Description', WPMX_TD),
             'maxlength' => 200,
             'rows' => 3,
             'name' => 'description',
-            'desc' => __('Optional, description can not exceed 200 characters', 'wpcom'),
+            'desc' => __('Optional, description can not exceed 200 characters', WPMX_TD),
             'value' => $user->description
         )
     );
@@ -225,15 +225,15 @@ function wpcom_account_tabs_bind_metas( $metas ){
         $phone = $user->mobile_phone;
         if($phone){
             $url = add_query_arg(array('type' => 'phone', 'action' => 'change'), wpcom_subpage_url('bind'));
-            $phone .= '<a class="member-bind-url" href="'.$url.'">'.__('Edit', 'wpcom').'</a><span class="member-bind-tip">'.__('Private', 'wpcom').'</span>';
+            $phone .= '<a class="member-bind-url" href="'.$url.'">'.__('Edit', WPMX_TD).'</a><span class="member-bind-tip">'.__('Private', WPMX_TD).'</span>';
         }else{
             $url = add_query_arg(array('type' => 'phone', 'action' => 'bind'), wpcom_subpage_url('bind'));
-            $phone = __('Not set', 'wpcom') . '<a class="member-bind-url" href="'.$url.'">'.__('Add phone number', 'wpcom').'</a><span class="member-bind-tip">'.__('Private', 'wpcom').'</span>';
+            $phone = __('Not set', WPMX_TD) . '<a class="member-bind-url" href="'.$url.'">'.__('Add phone number', WPMX_TD).'</a><span class="member-bind-tip">'.__('Private', WPMX_TD).'</span>';
         }
         $metas += array(
             10 => array(
                 'type' => 'text',
-                'label' => _x('Phone number', 'label', 'wpcom'),
+                'label' => _x('Phone number', 'label', WPMX_TD),
                 'name' => 'mobile_phone',
                 'value' => $phone,
                 'disabled' => true
@@ -243,15 +243,15 @@ function wpcom_account_tabs_bind_metas( $metas ){
     $email = $user->user_email;
     if($email && !wpcom_is_empty_mail($email)){
         $url = add_query_arg(array('type' => 'email', 'action' => 'change'), wpcom_subpage_url('bind'));
-        $email .= '<a class="member-bind-url" href="'.$url.'">'.__('Edit', 'wpcom').'</a><span class="member-bind-tip">'.__('Private', 'wpcom').'</span>';
+        $email .= '<a class="member-bind-url" href="'.$url.'">'.__('Edit', WPMX_TD).'</a><span class="member-bind-tip">'.__('Private', WPMX_TD).'</span>';
     }else{
         $url = add_query_arg(array('type' => 'email', 'action' => 'bind'), wpcom_subpage_url('bind'));
-        $email = __('Not set', 'wpcom') . '<a class="member-bind-url" href="'.$url.'">'.__('Add email address', 'wpcom').'</a><span class="member-bind-tip">'.__('Private', 'wpcom').'</span>';
+        $email = __('Not set', WPMX_TD) . '<a class="member-bind-url" href="'.$url.'">'.__('Add email address', WPMX_TD).'</a><span class="member-bind-tip">'.__('Private', WPMX_TD).'</span>';
     }
     $metas += array(
         20 => array(
             'type' => 'text',
-            'label' => _x('Email address', 'label', 'wpcom'),
+            'label' => _x('Email address', 'label', WPMX_TD),
             'name' => 'user_email',
             'maxlength' => 64,
             'require' => true,
@@ -269,16 +269,16 @@ function wpcom_account_tabs_bind_metas( $metas ){
                 if( $social['id'] && $social['key'] ) {
                     $key += 10;
                     $url = add_query_arg(array('from' => 'bind'), wpcom_social_login_url($social['name']));
-                    $value = __('Not set', 'wpcom') . '<a class="member-bind-url j-social-bind '.$social['name'].'" href="'.$url.'">'.__('Connect', 'wpcom').'</a>';
+                    $value = __('Not set', WPMX_TD) . '<a class="member-bind-url j-social-bind '.$social['name'].'" href="'.$url.'">'.__('Connect', WPMX_TD).'</a>';
                     $social_name = $social['name'];
                     $social['name'] = $social['name'] === 'wechat2' ? 'wechat' : $social['name'];
                     $type_name = $social['name'] === 'weapp' ? 'wxxcx' : $social['name'];
                     $openid = get_user_meta($user->ID, $wpdb->get_blog_prefix() . 'social_type_'.$type_name, true);
                     if($openid){
-                        $value = __('Connected', 'wpcom');
+                        $value = __('Connected', WPMX_TD);
                         $name = get_user_meta($user->ID, $wpdb->get_blog_prefix() . 'social_type_'.$type_name.'_name', true);
                         $value = $name ?: $value;
-                        $value = $value . '<a class="member-bind-url j-social-unbind" href="#" data-name="'.$social_name.'">'.__('Delete', 'wpcom').'</a>';
+                        $value = $value . '<a class="member-bind-url j-social-unbind" href="#" data-name="'.$social_name.'">'.__('Delete', WPMX_TD).'</a>';
                     }
                     $metas += array(
                         $key => array(
@@ -301,32 +301,32 @@ function wpcom_account_tabs_password_metas( $metas ){
     $metas += array(
         10 => array(
             'type' => 'password',
-            'label' => _x('Old password', 'label', 'wpcom'),
+            'label' => _x('Old password', 'label', WPMX_TD),
             'name' => 'old-password',
             'require' => true,
             'value' => '',
-            'placeholder' => _x('Please enter your old password', 'placeholder', 'wpcom')
+            'placeholder' => _x('Please enter your old password', 'placeholder', WPMX_TD)
         ),
         20 => array(
             'type' => 'password',
-            'label' => _x('New password', 'label', 'wpcom'),
+            'label' => _x('New password', 'label', WPMX_TD),
             'name' => 'password',
             'require' => true,
             'validate' => 'password',
             'maxlength' => 32,
             'minlength' => 6,
-            'desc' => __('Password must be 6-32 characters', 'wpcom'),
+            'desc' => __('Password must be 6-32 characters', WPMX_TD),
             'value' => '',
-            'placeholder' => _x('Please enter your new password', 'placeholder', 'wpcom')
+            'placeholder' => _x('Please enter your new password', 'placeholder', WPMX_TD)
         ),
         30 => array(
             'type' => 'password',
-            'label' => _x('New password', 'label2', 'wpcom'),
+            'label' => _x('New password', 'label2', WPMX_TD),
             'name' => 'password2',
             'require' => true,
             'validate' => 'password:password',
             'value' => '',
-            'placeholder' => _x('Please confirm your new password', 'placeholder', 'wpcom')
+            'placeholder' => _x('Please confirm your new password', 'placeholder', WPMX_TD)
         )
     );
 
@@ -338,11 +338,11 @@ function wpcom_lostpassword_form_items( $items = array() ){
     $items += array(
         10 => array(
             'type' => 'text',
-            'label' => _x('Username', 'label', 'wpcom'),
+            'label' => _x('Username', 'label', WPMX_TD),
             'icon' => 'user',
             'name' => 'user_login',
             'require' => true,
-            'placeholder' =>  is_wpcom_enable_phone() ? __('Phone number / E-mail / Username', 'wpcom') : __('Username or email address', 'wpcom')
+            'placeholder' =>  is_wpcom_enable_phone() ? __('Phone number / E-mail / Username', WPMX_TD) : __('Username or email address', WPMX_TD)
         ),
         30 => array(
             'type' => wpcom_member_captcha_type()
@@ -356,26 +356,26 @@ function wpcom_resetpassword_form_items( $items = array() ){
     $items += array(
         10 => array(
             'type' => 'password',
-            'label' => _x('New password', 'label', 'wpcom'),
+            'label' => _x('New password', 'label', WPMX_TD),
             'name' => 'password',
             'icon' => 'lock',
             'require' => true,
             'validate' => 'password',
             'maxlength' => 32,
             'minlength' => 6,
-            'desc' => __('Password must be 6-32 characters', 'wpcom'),
+            'desc' => __('Password must be 6-32 characters', WPMX_TD),
             'value' => '',
-            'placeholder' => _x('Please enter your new password', 'placeholder', 'wpcom')
+            'placeholder' => _x('Please enter your new password', 'placeholder', WPMX_TD)
         ),
         20 => array(
             'type' => 'password',
-            'label' => _x('New password', 'label2', 'wpcom'),
+            'label' => _x('New password', 'label2', WPMX_TD),
             'name' => 'password2',
             'icon' => 'lock',
             'require' => true,
             'validate' => 'password:password',
             'value' => '',
-            'placeholder' => _x('Please confirm your new password', 'placeholder', 'wpcom')
+            'placeholder' => _x('Please confirm your new password', 'placeholder', WPMX_TD)
         ),
         30 => array(
             'type' => wpcom_member_captcha_type()
@@ -388,18 +388,18 @@ add_filter( 'wpcom_member_errors', 'wpcom_member_errors' );
 function wpcom_member_errors( $errors ){
     $captcha = wpcom_member_captcha_type();
     $errors += array(
-        'require' => __( ' is required', 'wpcom' ),
-        'email' => __( 'This is not a valid email', 'wpcom' ),
-        'pls_enter' => __( 'Please enter your ', 'wpcom' ),
-        'password' => __( 'Your password must be 6-32 characters', 'wpcom' ),
-        'passcheck' => __( 'Your passwords do not match', 'wpcom' ),
-        'phone' => __( 'Please enter a valid phone number', 'wpcom' ),
-        'terms' => __( 'Please read and agree with the terms', 'wpcom' ),
-        'sms_code' => __( 'Your verification code error', 'wpcom' ),
-        'captcha_verify' => $captcha == 'noCaptcha' ? __( 'Please slide to verify', 'wpcom' ) : __( 'Please click to verify', 'wpcom' ),
-        'captcha_fail' => __( 'Security verification failed, please try again', 'wpcom' ),
-        'nonce' => __( 'The nonce check failed', 'wpcom' ),
-        'req_error' => __( 'Request Error!', 'wpcom' )
+        'require' => __( ' is required', WPMX_TD ),
+        'email' => __( 'This is not a valid email', WPMX_TD ),
+        'pls_enter' => __( 'Please enter your ', WPMX_TD ),
+        'password' => __( 'Your password must be 6-32 characters', WPMX_TD ),
+        'passcheck' => __( 'Your passwords do not match', WPMX_TD ),
+        'phone' => __( 'Please enter a valid phone number', WPMX_TD ),
+        'terms' => __( 'Please read and agree with the terms', WPMX_TD ),
+        'sms_code' => __( 'Your verification code error', WPMX_TD ),
+        'captcha_verify' => $captcha == 'noCaptcha' ? __( 'Please slide to verify', WPMX_TD ) : __( 'Please click to verify', WPMX_TD ),
+        'captcha_fail' => __( 'Security verification failed, please try again', WPMX_TD ),
+        'nonce' => __( 'The nonce check failed', WPMX_TD ),
+        'req_error' => __( 'Request Error!', WPMX_TD )
     );
     return $errors;
 }
@@ -409,12 +409,12 @@ add_filter( 'wpcom_profile_tabs', 'wpcom_profile_default_tabs' );
 function wpcom_profile_default_tabs( $tabs = array() ){
     $tabs[10] = array(
         'slug' => 'posts',
-        'title' => __( 'Posts', 'wpcom' )
+        'title' => __( 'Posts', WPMX_TD )
     );
     if ( wpmx_comment_status() ) {
         $tabs[20] = array(
             'slug' => 'comments',
-            'title' => __( 'Comments', 'wpcom' )
+            'title' => __( 'Comments', WPMX_TD )
         );
     }
     return $tabs;
@@ -425,39 +425,39 @@ function wpcom_socials( $social ){
     $options = $GLOBALS['wpmx_options'];
     $types = array(
         'qq' => array(
-            'title' => _x('QQ', 'social login', 'wpcom'),
+            'title' => _x('QQ', 'social login', WPMX_TD),
             'icon' => defined('FRAMEWORK_VERSION') && version_compare(FRAMEWORK_VERSION, '2.7.17', '<=') ? 'qq' : 'qq-logo'
         ),
         'weibo' => array(
-            'title' => _x('Weibo', 'social login', 'wpcom'),
+            'title' => _x('Weibo', 'social login', WPMX_TD),
             'icon' => 'weibo'
         ),
         'wechat' => array(
-            'title' => _x('WeChat', 'social login', 'wpcom'),
+            'title' => _x('WeChat', 'social login', WPMX_TD),
             'icon' => 'wechat'
         ),
         'wechat2' => array(
-            'title' => _x('WeChat', 'social login', 'wpcom'),
+            'title' => _x('WeChat', 'social login', WPMX_TD),
             'icon' => 'wechat'
         ),
         'weapp' => array(
-            'title' => _x('WeChat', 'social login', 'wpcom'),
+            'title' => _x('WeChat', 'social login', WPMX_TD),
             'icon' => 'wechat'
         ),
         'google' => array(
-            'title' => _x('Google', 'social login', 'wpcom'),
+            'title' => _x('Google', 'social login', WPMX_TD),
             'icon' => 'google-logo'
         ),
         'facebook' => array(
-            'title' => _x('Facebook', 'social login', 'wpcom'),
+            'title' => _x('Facebook', 'social login', WPMX_TD),
             'icon' => 'facebook-circle'
         ),
         'twitter' => array(
-            'title' => _x('Twitter', 'social login', 'wpcom'),
+            'title' => _x('Twitter', 'social login', WPMX_TD),
             'icon' => 'twitter'
         ),
         'github' => array(
-            'title' => _x('Github', 'social login', 'wpcom'),
+            'title' => _x('Github', 'social login', WPMX_TD),
             'icon' => 'github-circle'
         )
     );
@@ -528,11 +528,11 @@ function wpcom_approve_resend_form_items( $items = array() ){
     $items += array(
         10 => array(
             'type' => 'text',
-            'label' => _x('Username', 'label', 'wpcom'),
+            'label' => _x('Username', 'label', WPMX_TD),
             'icon' => 'user',
             'name' => 'user_login',
             'require' => true,
-            'placeholder' => __('Username or email address', 'wpcom'),
+            'placeholder' => __('Username or email address', WPMX_TD),
             'disabled' => true,
             'value' => $value
         ),
@@ -608,26 +608,26 @@ function wpcom_send_active_email( $user_id ){
     }
 
     /* translators: %s: display_name */
-    $message = '<p>' . sprintf( __( 'Hi, %s!', 'wpcom' ), $user->display_name ) . '</p>';
+    $message = '<p>' . sprintf( __( 'Hi, %s!', WPMX_TD ), $user->display_name ) . '</p>';
     /* translators: %s: site_name */
-    $message .= '<p>' . sprintf( __( 'Welcome to %s. To activate your account and verify your email address, please click the following link:', 'wpcom' ), $site_name ) . '</p>';
+    $message .= '<p>' . sprintf( __( 'Welcome to %s. To activate your account and verify your email address, please click the following link:', WPMX_TD ), $site_name ) . '</p>';
     $message .= '<p><a href="'.$url.'">'.$url.'</a></p><p></p>';
-    $message .= '<p>' . __( 'If this was a mistake, ignore this email and nothing will happen.', 'wpcom' ) . "</p>";
+    $message .= '<p>' . __( 'If this was a mistake, ignore this email and nothing will happen.', WPMX_TD ) . "</p>";
 
     /* translators: %s: site_name */
-    $title = sprintf( __( '[%s] Please verify your email address', 'wpcom' ), $site_name );
+    $title = sprintf( __( '[%s] Please verify your email address', WPMX_TD ), $site_name );
 
     $headers = array('Content-Type: text/html; charset=UTF-8');
 
     if ( $message && !wp_mail( $user->user_email, wp_specialchars_decode( $title ), $message, $headers ) )
-        return __('The email could not be sent.', 'wpcom');
+        return __('The email could not be sent.', WPMX_TD);
 
     return true;
 }
 
 function wpcom_send_active_to_admin( $user_id ){
     $user = get_user_by( 'ID', $user_id );
-    if(!$user->ID) return __( 'The user does not exist', 'wpcom' );
+    if(!$user->ID) return __( 'The user does not exist', WPMX_TD );
 
     $admin_email = get_option('admin_email');
 
@@ -638,21 +638,21 @@ function wpcom_send_active_to_admin( $user_id ){
     }
 
     /* translators: %1$s: display_name, %2$s: site_name */
-    $message = '<p>' . sprintf( __( '%1$s has just created an account on %2$s!', 'wpcom' ), $user->display_name, $site_name ) . '</p>';
+    $message = '<p>' . sprintf( __( '%1$s has just created an account on %2$s!', WPMX_TD ), $user->display_name, $site_name ) . '</p>';
     /* translators: %s: user_login */
-    $message .= '<p>' .sprintf( __( 'Username: %s', 'wpcom' ), $user->user_login ) . '</p>';
+    $message .= '<p>' .sprintf( __( 'Username: %s', WPMX_TD ), $user->user_login ) . '</p>';
     /* translators: %s: user_email */
-    $message .= '<p>' .sprintf( __( 'E-Mail: %s', 'wpcom' ), $user->user_email ) . '</p><p></p>';
+    $message .= '<p>' .sprintf( __( 'E-Mail: %s', WPMX_TD ), $user->user_email ) . '</p><p></p>';
 
-    $message .= '<p>' . __( 'If you want to approve the new user, please go to wp-admin page.', 'wpcom' ) . '</p>';
+    $message .= '<p>' . __( 'If you want to approve the new user, please go to wp-admin page.', WPMX_TD ) . '</p>';
 
     /* translators: %s: site_name */
-    $title = sprintf( __( '[%s] New user account', 'wpcom' ), $site_name );
+    $title = sprintf( __( '[%s] New user account', WPMX_TD ), $site_name );
 
     $headers = array('Content-Type: text/html; charset=UTF-8');
 
     if ( $message && !wp_mail( $admin_email, wp_specialchars_decode( $title ), $message, $headers ) )
-        return __('The email could not be sent.', 'wpcom');
+        return __('The email could not be sent.', WPMX_TD);
 
     return true;
 }
@@ -670,17 +670,17 @@ function wpcom_send_actived_email( $user_id ){
     $login_url = wpcom_login_url();
 
     /* translators: %s: display_name */
-    $message = '<p>' . sprintf( __( 'Hi, %s!', 'wpcom' ), $user->display_name ) . '</p>';
+    $message = '<p>' . sprintf( __( 'Hi, %s!', WPMX_TD ), $user->display_name ) . '</p>';
     /* translators: %s: login url */
-    $message .= '<p>' . sprintf( __( 'Congratulations, your account has been activated successfully, you can now login: <a href="%1$s">%2$s</a>', 'wpcom' ), $login_url, $login_url ) . '</p>';
+    $message .= '<p>' . sprintf( __( 'Congratulations, your account has been activated successfully, you can now login: <a href="%1$s">%2$s</a>', WPMX_TD ), $login_url, $login_url ) . '</p>';
 
     /* translators: %s: site_name */
-    $title = sprintf( __( '[%s] Welcome to join us', 'wpcom' ), $site_name );
+    $title = sprintf( __( '[%s] Welcome to join us', WPMX_TD ), $site_name );
 
     $headers = array('Content-Type: text/html; charset=UTF-8');
 
     if ( $message && !wp_mail( $user->user_email, wp_specialchars_decode( $title ), $message, $headers ) )
-        return __('The email could not be sent.', 'wpcom');
+        return __('The email could not be sent.', WPMX_TD);
 
     return true;
 }
@@ -697,19 +697,19 @@ function wpcom_send_email_code( $email ){
 
     $code = wpcom_generate_sms_code(sanitize_user($email, true));
     /* translators: %s: display_name */
-    $message = '<p>' . sprintf( __( 'Hi, %s!', 'wpcom' ), $user->display_name ) . '</p>';
+    $message = '<p>' . sprintf( __( 'Hi, %s!', WPMX_TD ), $user->display_name ) . '</p>';
     /* translators: %s: verification code */
-    $message .= '<p>' . sprintf( __( 'Your verification code is <b style="color:red;">%s</b>, please enter in 10 minutes.', 'wpcom' ), $code ) . '</p>';
+    $message .= '<p>' . sprintf( __( 'Your verification code is <b style="color:red;">%s</b>, please enter in 10 minutes.', WPMX_TD ), $code ) . '</p>';
     $message .= '<p></p>';
-    $message .= '<p>' . __( 'If this was a mistake, ignore this email and nothing will happen.', 'wpcom' ) . "</p>";
+    $message .= '<p>' . __( 'If this was a mistake, ignore this email and nothing will happen.', WPMX_TD ) . "</p>";
 
     /* translators: %s: site_name */
-    $title = sprintf( __( '[%s] Your verification code', 'wpcom' ), $site_name );
+    $title = sprintf( __( '[%s] Your verification code', WPMX_TD ), $site_name );
 
     $headers = array('Content-Type: text/html; charset=UTF-8');
 
     if ( $message && !wp_mail( $email, wp_specialchars_decode( $title ), $message, $headers ) )
-        return __('The email could not be sent.', 'wpcom');
+        return __('The email could not be sent.', WPMX_TD);
 
     return true;
 }
@@ -734,7 +734,7 @@ function wpcom_is_login(){
         if($show_profile) {
             $menus[] = array(
                 'url' => $res['url'],
-                'title' => __('Profile', 'wpcom')
+                'title' => __('Profile', WPMX_TD)
             );
         }
 
@@ -753,11 +753,11 @@ function wpcom_is_login(){
 
         $menus[] = array(
             'url' => isset( $res['account'] ) ? $res['account'] : $res['url'],
-            'title' => __('Account', 'wpcom')
+            'title' => __('Account', WPMX_TD)
         );
         $menus[] = array(
             'url' => wp_logout_url(),
-            'title' => __( 'Logout', 'wpcom' )
+            'title' => __( 'Logout', WPMX_TD )
         );
         $res['menus'] = apply_filters('wpcom_profile_menus', $menus);
     }else{
@@ -1047,10 +1047,10 @@ add_filter( 'wpmx_localize_script', 'wpcom_login_js_lang' );
 function wpcom_login_js_lang($scripts){
     $scripts['js_lang'] = isset($scripts['js_lang']) ? $scripts['js_lang'] : array();
     $scripts['js_lang'] += array(
-        'login_desc' => __('You are not signed in, please sign in before proceeding with related operations!', 'wpcom'),
-        'login_title' => __('Please sign in', 'wpcom'),
-        'login_btn' => __('Sign in', 'wpcom'),
-        'reg_btn' => __('Sign up', 'wpcom')
+        'login_desc' => __('You are not signed in, please sign in before proceeding with related operations!', WPMX_TD),
+        'login_title' => __('Please sign in', WPMX_TD),
+        'login_btn' => __('Sign in', WPMX_TD),
+        'reg_btn' => __('Sign up', WPMX_TD)
     );
     if(!is_user_logged_in()){
         $scripts['login_url'] = wp_login_url();
@@ -1076,7 +1076,7 @@ function wpcom_captcha(){
                     // 近10分钟调用次数超过20次
                     if($count['total'] > 20) {
                         $res['result'] = -2;
-                        $res['msg'] = __('You have sent too many requests', 'wpcom');
+                        $res['msg'] = __('You have sent too many requests', WPMX_TD);
                         wp_send_json($res);
                     }
                 }else{
@@ -1108,7 +1108,7 @@ function wpcom_captcha(){
 
     if(!isset($res['nonce'])){
         $res['result'] = -1;
-        $res['msg'] = __('No captcha was found', 'wpcom');
+        $res['msg'] = __('No captcha was found', WPMX_TD);
     }
     wp_send_json($res);
 }
@@ -1212,8 +1212,8 @@ function wpmx_send_sms_code(){
     $errors = apply_filters( 'wpcom_member_errors', array() );
 
     $msg = array(
-        '0' => __( 'Failed to send', 'wpcom' ),
-        '1' => __('Send success', 'wpcom'),
+        '0' => __( 'Failed to send', WPMX_TD ),
+        '1' => __('Send success', WPMX_TD),
         '-1' => $errors['nonce'],
         '-2' => $errors['captcha_fail'],
         '-3' => $errors['captcha_verify']
@@ -1251,7 +1251,7 @@ function wpmx_send_sms_code(){
         if(is_email($_POST[$target])){
             if(!wpcom_send_email_code(sanitize_text_field($_POST[$target]))){
                 $res['result'] = 0;
-                $res['error'] = __('Failed to send email', 'wpcom');
+                $res['error'] = __('Failed to send email', WPMX_TD);
             }
         }else{
             $send = wpcom_sms_code_sender($_POST[$target], isset($_POST['user_phone_country']) ? sanitize_text_field($_POST['user_phone_country']) : '');

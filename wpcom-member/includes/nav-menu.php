@@ -78,7 +78,7 @@ namespace WPCOM\Member {
 							if($show_profile) {
 								$user_menus[] = array(
 									'url' => get_author_posts_url( $current_user->ID ),
-									'title' => __('Profile', 'wpcom')
+									'title' => __('Profile', WPMX_TD)
 								);
 							}
 
@@ -97,11 +97,11 @@ namespace WPCOM\Member {
 
 							$user_menus[] = array(
 								'url' => $item->url,
-								'title' => __('Account', 'wpcom')
+								'title' => __('Account', WPMX_TD)
 							);
 							$user_menus[] = array(
 								'url' => wp_logout_url(),
-								'title' => __( 'Logout', 'wpcom' )
+								'title' => __( 'Logout', WPMX_TD )
 							);
 							$user_menus = apply_filters('wpcom_profile_menus', $user_menus);
 							foreach($user_menus as $x => $uitem){
@@ -135,13 +135,13 @@ namespace WPCOM\Member {
 						if(!$user_id){
 							if($checked){
 								$item->url = wp_registration_url();
-								$item->title = __('Sign up', 'wpcom');
+								$item->title = __('Sign up', WPMX_TD);
 								$item->ID = $item->ID . '-register';
 								$item->menu_order += 1;
 								$items[$i] = $item;
 							}else{
 								$item->url = wp_login_url();
-								$item->title = __('Sign in', 'wpcom');
+								$item->title = __('Sign in', WPMX_TD);
 								$item->ID = $item->ID . '-login';
 								$items[$i] = $item;
 							}
@@ -168,7 +168,7 @@ namespace WPCOM\Member {
 					$unread_messages = apply_filters('wpcom_unread_messages_count', 0, $current_user->ID);
 					$menu = array(
 						'url' => wpcom_subpage_url('messages'),
-						'title' => __('Messages', 'wpcom') . ($unread_messages ? '<span class="num-count">'.$unread_messages.'</span>' : '')
+						'title' => __('Messages', WPMX_TD) . ($unread_messages ? '<span class="num-count">'.$unread_messages.'</span>' : '')
 					);
 					array_splice($menus, -2, 0, array($menu));
 				}
@@ -182,7 +182,7 @@ namespace WPCOM\Member {
 					$unread_messages = apply_filters('wpcom_unread_notifications_count', 0, $current_user->ID);
 					$menu = array(
 						'url' => wpcom_subpage_url('notifications'),
-						'title' => __('Notifications', 'wpcom') . ($unread_messages ? '<span class="num-count">'.$unread_messages.'</span>' : '')
+						'title' => __('Notifications', WPMX_TD) . ($unread_messages ? '<span class="num-count">'.$unread_messages.'</span>' : '')
 					);
 					array_splice($menus, -2, 0, array($menu));
 				}
@@ -262,7 +262,7 @@ namespace {
 					if ($show_profile) {
 						$user_menus[] = array(
 							'url' => get_author_posts_url($current_user->ID),
-							'title' => __('Profile', 'wpcom')
+							'title' => __('Profile', WPMX_TD)
 						);
 					}
 
@@ -281,11 +281,11 @@ namespace {
 
 					$user_menus[] = array(
 						'url' => $menu_block['attrs']['url'],
-						'title' => __('Account', 'wpcom')
+						'title' => __('Account', WPMX_TD)
 					);
 					$user_menus[] = array(
 						'url' => wp_logout_url(),
-						'title' => __('Logout', 'wpcom')
+						'title' => __('Logout', WPMX_TD)
 					);
 					$user_menus = apply_filters('wpcom_profile_menus', $user_menus);
 					foreach ($user_menus as $uitem) {
@@ -307,7 +307,7 @@ namespace {
 					$menu .= render_block(array(
 						'blockName' => 'core/navigation-link',
 						'attrs' => [
-							'label' => __('Sign in', 'wpcom'),
+							'label' => __('Sign in', WPMX_TD),
 							'url' => wp_login_url(),
 							'kind' => 'custom'
 						],
@@ -315,7 +315,7 @@ namespace {
 					$menu .= render_block(array(
 						'blockName' => 'core/navigation-link',
 						'attrs' => [
-							'label' => __('Sign up', 'wpcom'),
+							'label' => __('Sign up', WPMX_TD),
 							'url' => wp_registration_url(),
 							'kind' => 'custom'
 						],

@@ -9,7 +9,7 @@ $logo = isset($options['login_logo']) && $options['login_logo'] ? wp_get_attachm
 <div class="<?php echo esc_attr($classes);?>">
     <div class="member-form-inner">
         <?php if ( !get_option('users_can_register') ) { ?>
-        <div class="wpcom-alert alert-warning text-center"><?php esc_html_e('User registration is currently not allowed.', 'wpcom');?></div>
+        <div class="wpcom-alert alert-warning text-center"><?php esc_html_e('User registration is currently not allowed.', WPMX_TD);?></div>
         <?php } ?>
         <?php if($logo){ ?>
         <div class="member-form-head">
@@ -17,14 +17,14 @@ $logo = isset($options['login_logo']) && $options['login_logo'] ? wp_get_attachm
         </div>
         <?php } ?>
         <div class="member-form-title">
-            <h3><?php esc_html_e('Sign Up', 'wpcom');?></h3>
-            <span class="member-switch pull-right"><?php esc_html_e('Already have an account?', 'wpcom');?> <a href="<?php echo esc_url(wp_login_url());?>"><?php echo esc_html_x('Sign in', 'sign', 'wpcom');?></a></span>
+            <h3><?php esc_html_e('Sign Up', WPMX_TD);?></h3>
+            <span class="member-switch pull-right"><?php esc_html_e('Already have an account?', WPMX_TD);?> <a href="<?php echo esc_url(wp_login_url());?>"><?php echo esc_html_x('Sign in', 'sign', WPMX_TD);?></a></span>
         </div>
         <?php do_action( 'wpcom_register_form' ); ?>
         <?php if( $social_login_on ){ ?>
         <div class="member-form-footer">
             <div class="member-form-social">
-                <span><?php esc_html_e('Sign up with', 'wpcom');?></span>
+                <span><?php esc_html_e('Sign up with', WPMX_TD);?></span>
                 <?php do_action( 'wpcom_social_login' );?>
             </div>
         </div>

@@ -763,9 +763,9 @@ class Social_Login {
         if( !$access_token ){
             return '<p style="text-align: center;text-indent: 0;margin: 0;">社交绑定页面仅用于第三方账号登录后账号的绑定，如果直接访问则显示此提醒，请忽略。</p>';
         }else if( !$newuser && $access_token ){
-            return '<p style="text-align: center;text-indent: 0;margin: 0;">'.__('Parameter error', 'wpcom').'</p>';
+            return '<p style="text-align: center;text-indent: 0;margin: 0;">'.__('Parameter error', WPMX_TD).'</p>';
         }else if( !get_option('users_can_register') ){ // 未开启注册功能
-            return '<p style="text-align: center;text-indent: 0;margin: 0;">' . __('User registration is currently not allowed.', 'wpcom') . '</p>';
+            return '<p style="text-align: center;text-indent: 0;margin: 0;">' . __('User registration is currently not allowed.', WPMX_TD) . '</p>';
         }else if($newuser && !is_array($newuser)){
             $newuser = json_decode($newuser, true);
         }

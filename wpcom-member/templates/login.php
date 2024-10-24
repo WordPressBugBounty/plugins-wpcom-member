@@ -16,8 +16,8 @@ $logo = isset($options['login_logo']) && $options['login_logo'] ? wp_get_attachm
         </div>
         <?php } ?>
         <div class="member-form-title">
-            <h3><?php esc_html_e('Sign In', 'wpcom');?></h3>
-            <span class="member-switch pull-right"><?php esc_html_e('No account?', 'wpcom');?> <a href="<?php echo esc_url(wp_registration_url());?>"><?php esc_html_e('Create one!', 'wpcom');?></a></span>
+            <h3><?php esc_html_e('Sign In', WPMX_TD);?></h3>
+            <span class="member-switch pull-right"><?php esc_html_e('No account?', WPMX_TD);?> <a href="<?php echo esc_url(wp_registration_url());?>"><?php esc_html_e('Create one!', WPMX_TD);?></a></span>
         </div>
         <?php
         // 默认登录表单
@@ -26,7 +26,7 @@ $logo = isset($options['login_logo']) && $options['login_logo'] ? wp_get_attachm
         <?php if( $social_login_on ){ ?>
             <div class="member-form-footer">
                 <div class="member-form-social">
-                    <span><?php esc_html_e('Sign in with', 'wpcom');?></span>
+                    <span><?php esc_html_e('Sign in with', WPMX_TD);?></span>
                     <?php do_action( 'wpcom_social_login' );?>
                 </div>
             </div>

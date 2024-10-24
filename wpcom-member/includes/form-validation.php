@@ -43,9 +43,9 @@ if (!function_exists('wpcom_account_form_bind')) {
         if (isset($_POST['by']) && $by = sanitize_text_field(wp_unslash($_POST['by']))) {
             $user = wp_get_current_user();
             if ($by == 'phone' && !$user->mobile_phone) {
-                $res['error'] = __('No phone number added, phone number verification cannot be used', 'wpcom');
+                $res['error'] = __('No phone number added, phone number verification cannot be used', WPMX_TD);
             } else if ($by == 'email' && (!$user->user_email || wpcom_is_empty_mail($user->user_email))) {
-                $res['error'] = __('No email address added, email verification cannot be used', 'wpcom');
+                $res['error'] = __('No email address added, email verification cannot be used', WPMX_TD);
             }
 
             // 全部验证通过
@@ -92,7 +92,7 @@ if (!function_exists('wpcom_account_form_password')) {
                 wp_set_auth_cookie($user->ID);
                 wp_set_current_user($user->ID);
             } else {
-                $res['error']['old-password'] = __('The password is incorrect', 'wpcom');
+                $res['error']['old-password'] = __('The password is incorrect', WPMX_TD);
             }
         } else {
             $res['result'] = 0;
@@ -113,8 +113,8 @@ if (!function_exists('wpcom_ajax_login')) {
         $errors = apply_filters('wpcom_member_errors', array());
 
         $msg = array(
-            '0' => __('The username or password is incorrect', 'wpcom'),
-            '1' => __('Login successfully', 'wpcom'),
+            '0' => __('The username or password is incorrect', WPMX_TD),
+            '1' => __('Login successfully', WPMX_TD),
             '-1' => $errors['nonce'],
             '-2' => $errors['captcha_fail'],
             '-3' => $errors['captcha_verify']
@@ -145,9 +145,9 @@ if (!function_exists('wpcom_ajax_login')) {
                         if ($member_reg_active == '1') {
                             $resend_url = add_query_arg('approve', 'resend', wp_registration_url());
                             /* translators: %s: Resend activation email url */
-                            $err = sprintf(__('Please activate your account. <a href="%s" target="_blank">Resend activation email</a>', 'wpcom'), $resend_url);
+                            $err = sprintf(__('Please activate your account. <a href="%s" target="_blank">Resend activation email</a>', WPMX_TD), $resend_url);
                         } else if ($member_reg_active == '2') {
-                            $err = __('Account awaiting approval.', 'wpcom');
+                            $err = __('Account awaiting approval.', WPMX_TD);
                         }
                         if ($err) $login = new WP_Error('not_approve', $err);
                     } else {
@@ -159,7 +159,7 @@ if (!function_exists('wpcom_ajax_login')) {
                 } else { // 用户不存在
                     if (defined('WPCOM_MP_VERSION') && isset($options['invitation_code']) && $options['invitation_code'] == '1') { // 需要邀请码则提示请注册
                         $res['result'] = 0;
-                        $res['error'] = __('You need to register before you can login', 'wpcom');
+                        $res['error'] = __('You need to register before you can login', WPMX_TD);
                         $login = new WP_Error('user_not_exist', $res['error']);
                     } else { // 直接注册并登录
                         $username = wpcom_generate_unique_username(substr($user_phone, -4));
@@ -218,7 +218,7 @@ if (!function_exists('wpcom_ajax_register')) {
 
         $msg = array(
             //'0' => '',
-            '1' => __('Registered successfully', 'wpcom'),
+            '1' => __('Registered successfully', WPMX_TD),
             '-1' => $errors['nonce'],
             '-2' => $errors['captcha_fail'],
             '-3' => $errors['captcha_verify'],
@@ -229,7 +229,7 @@ if (!function_exists('wpcom_ajax_register')) {
 
         if (!get_option('users_can_register')) { // 未开启注册
             $res['result'] = 0;
-            $res['error'] = __('User registration is currently not allowed.', 'wpcom');
+            $res['error'] = __('User registration is currently not allowed.', WPMX_TD);
         } else {
             $res = wpcom_form_validate($res, 'member_form_register', 'wpcom_register_form_items');
             $res = apply_filters('wpcom_register_form_validate', $res);
@@ -253,7 +253,7 @@ if (!function_exists('wpcom_ajax_register')) {
             }
 
             if (is_wpcom_enable_phone() && wpcom_mobile_phone_exists($login)) { // 手机号是否注册
-                $user_id = new WP_Error('existing_user_login', __('Sorry, that mobile phone number already exists!', 'wpcom'));
+                $user_id = new WP_Error('existing_user_login', __('Sorry, that mobile phone number already exists!', WPMX_TD));
             } else {
                 $registration_errors = false;
                 // 邮箱注册通过 registration_errors hook 检查系统错误
@@ -317,8 +317,8 @@ function wpcom_ajax_approve_resend() {
     $errors = apply_filters('wpcom_member_errors', array());
 
     $msg = array(
-        '0' => __('The username does not exist', 'wpcom'),
-        '1' => __('Resend successfully', 'wpcom'),
+        '0' => __('The username does not exist', WPMX_TD),
+        '1' => __('Resend successfully', WPMX_TD),
         '-1' => $errors['nonce'],
         '-2' => $errors['captcha_fail'],
         '-3' => $errors['captcha_verify']
@@ -342,7 +342,7 @@ function wpcom_ajax_approve_resend() {
                     $resend = wpcom_send_active_email($user->ID);
                     if ($resend !== true) {
                         $res['result'] = 0;
-                        $res['error'] = $resend ? $resend : __('Error occurs when resend email.', 'wpcom');
+                        $res['error'] = $resend ? $resend : __('Error occurs when resend email.', WPMX_TD);
                     } else {
                         $url = wpcom_register_url();
                         $url = add_query_arg('approve', 'false', $url);
@@ -350,7 +350,7 @@ function wpcom_ajax_approve_resend() {
                     }
                 } else {
                     $res['result'] = 0;
-                    $res['error'] = __('You have already activated your account.', 'wpcom');
+                    $res['error'] = __('You have already activated your account.', WPMX_TD);
                 }
             } else {
                 $res['result'] = 0;
@@ -375,8 +375,8 @@ function wpcom_ajax_lostpassword() {
     $errors = apply_filters('wpcom_member_errors', array());
 
     $msg = array(
-        '0' => __('The username does not exist', 'wpcom'),
-        '1' => __('Submitted successfully', 'wpcom'),
+        '0' => __('The username does not exist', WPMX_TD),
+        '1' => __('Submitted successfully', WPMX_TD),
         '-1' => $errors['nonce'],
         '-2' => $errors['captcha_fail'],
         '-3' => $errors['captcha_verify']
@@ -415,7 +415,7 @@ function wpcom_ajax_lostpassword() {
                             Session::set('lost_password_phone', $phone);
                         } else {
                             $res['result'] = 0;
-                            $res['error'] = __('No email address or phone number added, you should add first', 'wpcom'); //'未绑定邮箱或者手机，社交登录用户请绑定后再使用找回密码功能';
+                            $res['error'] = __('No email address or phone number added, you should add first', WPMX_TD); //'未绑定邮箱或者手机，社交登录用户请绑定后再使用找回密码功能';
                         }
                     } else {
                         $reset = retrieve_password($user->user_login);
@@ -452,8 +452,8 @@ function wpcom_ajax_resetpassword() {
     $errors = apply_filters('wpcom_member_errors', array());
 
     $msg = array(
-        '0' => __('Reset failed, please retry!', 'wpcom'),
-        '1' => __('Reset successfully', 'wpcom'),
+        '0' => __('Reset failed, please retry!', WPMX_TD),
+        '1' => __('Reset successfully', WPMX_TD),
         '-1' => $errors['nonce'],
         '-2' => $errors['captcha_fail'],
         '-3' => $errors['captcha_verify']
@@ -530,8 +530,8 @@ function wpcom_accountbind() {
     $errors = apply_filters('wpcom_member_errors', array());
 
     $msg = array(
-        '0' => isset($_POST['member_form_accountbind_nonce']) ? __('Add failed', 'wpcom') : __('verification failed', 'wpcom'),
-        '1' => isset($_POST['member_form_accountbind_nonce']) ? __('Added successfully', 'wpcom') : __('Verified successfully', 'wpcom'),
+        '0' => isset($_POST['member_form_accountbind_nonce']) ? __('Add failed', WPMX_TD) : __('verification failed', WPMX_TD),
+        '1' => isset($_POST['member_form_accountbind_nonce']) ? __('Added successfully', WPMX_TD) : __('Verified successfully', WPMX_TD),
         '-1' => $errors['nonce'],
         '-2' => $errors['captcha_fail'],
         '-3' => $errors['captcha_verify']
@@ -567,7 +567,7 @@ function wpcom_accountbind() {
                 $user_id = wpcom_mobile_phone_exists(sanitize_text_field(wp_unslash($_POST[$target])));
                 if ($user_id && $user_id != $user->ID) { // 已注册，并且注册用户非当前用户
                     $res['result'] = 0;
-                    $res['error'] = __('The phone number has been registered', 'wpcom');
+                    $res['error'] = __('The phone number has been registered', WPMX_TD);
                 } else {
                     Session::delete('', 'code_' . sanitize_text_field(wp_unslash($_POST[$target])));
                     update_user_meta($user->ID, 'mobile_phone', sanitize_text_field(wp_unslash($_POST[$target])));
@@ -857,7 +857,7 @@ function wpcom_social_unbind() {
     $can_unbind = false;
     $res = array(
         'result' => 1,
-        'error' => __('Successfully deleted!', 'wpcom')
+        'error' => __('Successfully deleted!', WPMX_TD)
     );
     $name = isset($_POST['name']) && $_POST['name'] ? sanitize_text_field($_POST['name']) : '';
     if (!empty($name)) {
@@ -880,20 +880,20 @@ function wpcom_social_unbind() {
                 }
             } else {
                 $res['result'] = 0;
-                $res['error'] = __('Social login is not turned on', 'wpcom');
+                $res['error'] = __('Social login is not turned on', WPMX_TD);
             }
         }
         if ($can_unbind) {
             update_user_option($user->ID, 'social_type_' . ($name === 'wechat2' ? 'wechat' : $name), '');
             $url = add_query_arg(array('from' => 'bind'), wpcom_social_login_url($name));
-            $res['error'] = __('Not set', 'wpcom') . '<a class="member-bind-url j-social-bind ' . $name . '" href="' . $url . '">' . __('Connect', 'wpcom') . '</a>';
+            $res['error'] = __('Not set', WPMX_TD) . '<a class="member-bind-url j-social-bind ' . $name . '" href="' . $url . '">' . __('Connect', WPMX_TD) . '</a>';
         } else {
             $res['result'] = 0;
-            $res['error'] = __('The current account only has this login method, please bind other login methods before unbinding!', 'wpcom');
+            $res['error'] = __('The current account only has this login method, please bind other login methods before unbinding!', WPMX_TD);
         }
     } else {
         $res['result'] = 0;
-        $res['error'] = __('Parameter error', 'wpcom');
+        $res['error'] = __('Parameter error', WPMX_TD);
     }
     wp_send_json($res);
 }

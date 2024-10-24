@@ -2,10 +2,10 @@
 defined( 'ABSPATH' ) || exit;
 
 $steps = array(
-    'default' => __('STEP 1', 'wpcom'),
-    'send_success' => __('STEP 2', 'wpcom'),
-    'reset' => __('STEP 3', 'wpcom'),
-    'finished' => __('STEP 4', 'wpcom')
+    'default' => __('STEP 1', WPMX_TD),
+    'send_success' => __('STEP 2', WPMX_TD),
+    'reset' => __('STEP 3', WPMX_TD),
+    'finished' => __('STEP 4', WPMX_TD)
 );
 ?>
 

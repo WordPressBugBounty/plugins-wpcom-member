@@ -5,7 +5,7 @@ use WPCOM\Themer\Session;
 use WPCOM\Themer\Plugin;
 
 add_action('plugins_loaded', function(){
-    load_plugin_textdomain( 'wpcom', false, basename( WPMX_DIR ) . '/lang' );
+    load_plugin_textdomain( WPMX_TD, false, basename( WPMX_DIR ) . '/lang' );
 });
 
 add_action('after_setup_theme', 'wpmx_init', 9);
@@ -185,9 +185,9 @@ function wpmx_comment_status(){
 add_action( 'woocommerce_before_edit_account_address_form', 'wc_print_notices', 10 );
 add_filter( 'woocommerce_account_menu_items', 'wpcom_woo_account_menu_items' );
 function wpcom_woo_account_menu_items( $items ){
-    $items['orders'] = __('Orders', 'wpcom');
-    $items['downloads'] = __('Downloads', 'wpcom');
-    $items['edit-address'] = __('Addresses', 'wpcom');
+    $items['orders'] = __('Orders', WPMX_TD);
+    $items['downloads'] = __('Downloads', WPMX_TD);
+    $items['edit-address'] = __('Addresses', WPMX_TD);
     unset($items['dashboard']);
     unset($items['edit-account']);
     unset($items['customer-logout']);
@@ -230,7 +230,7 @@ function wpcom_woo_add_tabs( $tabs ){
     if($orders) {
         $tabs[25] = array(
             'slug' => $orders,
-            'title' => defined('WPCOM_MP_VERSION') ? _x('Orders', 'shop', 'wpcom') : __('Orders', 'wpcom'),
+            'title' => defined('WPCOM_MP_VERSION') ? _x('Orders', 'shop', WPMX_TD) : __('Orders', WPMX_TD),
             'icon' => defined('WPCOM_MP_VERSION') ? 'shop-orders' : 'order-circle',
             'shadow' => defined('WPCOM_MP_VERSION')
         );
@@ -240,7 +240,7 @@ function wpcom_woo_add_tabs( $tabs ){
     if($downloads) {
         $tabs[26] = array(
             'slug' => $downloads,
-            'title' => __('Downloads', 'wpcom'),
+            'title' => __('Downloads', WPMX_TD),
             'icon' => 'download-circle'
         );
         add_action( 'wpcom_account_tabs_'.$downloads, 'wpcom_account_tabs_downloads' );
@@ -248,7 +248,7 @@ function wpcom_woo_add_tabs( $tabs ){
     if($edit_address) {
         $tabs[27] = array(
             'slug' => $edit_address,
-            'title' => __('Addresses', 'wpcom'),
+            'title' => __('Addresses', WPMX_TD),
             'icon' => 'address-circle'
         );
         add_action( 'wpcom_account_tabs_'.$edit_address, 'wpcom_account_tabs_address' );
@@ -257,7 +257,7 @@ function wpcom_woo_add_tabs( $tabs ){
     if($view_order) {
         $tabs[9999] = array(
             'slug' => $view_order,
-            'title' => __('Orders', 'wpcom'),
+            'title' => __('Orders', WPMX_TD),
             'icon' => 'order-circle',
             'parent' => 'orders'
         );

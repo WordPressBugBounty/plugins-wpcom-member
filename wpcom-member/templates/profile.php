@@ -22,7 +22,7 @@ $classes = apply_filters('wpcom_profile_head_classes', 'wpcom-profile-head');
             <?php if( $can_edit ){ ?>
                 <div class="wpcom-profile-action">
                     <span class="wpcom-profile-setcover edit-cover" data-user="<?php echo esc_attr($profile->ID);?>">
-                        <?php wpmx_icon('camera');?> <?php esc_html_e('Change cover', 'wpcom');?>
+                        <?php wpmx_icon('camera');?> <?php esc_html_e('Change cover', WPMX_TD);?>
                     </span>
                     <?php if($can_edit) wp_nonce_field( 'wpcom_cropper', 'wpcom_cropper_nonce', 0 );?>
                 </div>

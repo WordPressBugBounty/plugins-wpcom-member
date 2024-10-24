@@ -12,7 +12,7 @@ if(!function_exists('wpcom_pagination')){
             echo ' <ul class="pagination">';
             $prev = $page - 1;
             if ( $prev > 0 ) {
-                echo '<li class="prev">'. wpcom_link_page( $prev, $args ) . '<span>'.esc_html_x('Previous', 'pagination', 'wpcom').'</span>' . '</a></li>';
+                echo '<li class="prev">'. wpcom_link_page( $prev, $args ) . '<span>'.esc_html_x('Previous', 'pagination', WPMX_TD).'</span>' . '</a></li>';
             }
 
             if($numpages > $range){
@@ -41,16 +41,16 @@ if(!function_exists('wpcom_pagination')){
 
             $next = $page + 1;
             if ( $next <= $numpages ) {
-                echo '<li class="next">'. wpcom_link_page($next, $args) . '<span>'.esc_html_x('Next', 'pagination', 'wpcom').'</span></a></li>';
+                echo '<li class="next">'. wpcom_link_page($next, $args) . '<span>'.esc_html_x('Next', 'pagination', WPMX_TD).'</span></a></li>';
             }
             $paged_arg = isset($args['paged_arg']) && $args['paged_arg'] ? $args['paged_arg'] : 'page';
-            echo '<li class="pagination-go"><form method="get"><input class="pgo-input" type="text" name="'.esc_attr($paged_arg).'" placeholder="'.esc_attr(_x('GO', '页码', 'wpcom')).'" /><button class="pgo-btn" type="submit" aria-label="'.esc_html_x('GO', '页码', 'wpcom').'"></button></form></li>';
+            echo '<li class="pagination-go"><form method="get"><input class="pgo-input" type="text" name="'.esc_attr($paged_arg).'" placeholder="'.esc_attr(_x('GO', '页码', WPMX_TD)).'" /><button class="pgo-btn" type="submit" aria-label="'.esc_html_x('GO', '页码', WPMX_TD).'"></button></form></li>';
             echo '</ul>';
         }else if( ($max_page = $wp_query->max_num_pages) > 1 ){
             echo ' <ul class="pagination">';
             if(!$paged) $paged = 1;
             echo '<li class="disabled"><span>'.esc_html($paged).' / '.esc_html($max_page).'</span></li>';
-            $prev = get_previous_posts_link('<span>'._x('Previous', 'pagination', 'wpcom').'</span>');
+            $prev = get_previous_posts_link('<span>'._x('Previous', 'pagination', WPMX_TD).'</span>');
             if($prev) echo '<li class="prev">'.wp_kses($prev, wpmx_allowed_html()).'</li>';
             if($max_page > $range){
                 if($paged < $range){
@@ -75,11 +75,11 @@ if(!function_exists('wpcom_pagination')){
                     echo '<a href="' . get_pagenum_link($i) .'">'.esc_html($i).'</a></li>';
                 }
             }
-            $next = get_next_posts_link('<span>'._x('Next', 'pagination', 'wpcom').'</span>');
+            $next = get_next_posts_link('<span>'._x('Next', 'pagination', WPMX_TD).'</span>');
             if($next) echo '<li class="next">'.wp_kses($next, wpmx_allowed_html()).'</li>';
             echo '<li class="pagination-go"><form method="get">';
             if(is_search()) echo '<input type="hidden" name="s" value="' . esc_attr(get_search_query()) . '">';
-            echo '<input class="pgo-input" type="text" name="paged" placeholder="'.esc_attr_x('GO', '页码', 'wpcom').'" /><button class="pgo-btn" type="submit" aria-label="'.esc_html_x('GO', '页码', 'wpcom').'"></button></form></li>';
+            echo '<input class="pgo-input" type="text" name="paged" placeholder="'.esc_attr_x('GO', '页码', WPMX_TD).'" /><button class="pgo-btn" type="submit" aria-label="'.esc_html_x('GO', '页码', WPMX_TD).'"></button></form></li>';
             echo '</ul>';
         }
     }

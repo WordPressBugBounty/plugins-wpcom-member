@@ -40,7 +40,7 @@
         <?php if( isset($GLOBALS['validation']) && empty( $GLOBALS['validation']['error'] ) ) { ?>
         <div class="wpcom-alert alert-success fade in" role="alert">
             <div class="wpcom-close" data-wpcom-dismiss="alert"><?php wpmx_icon('close');?></div>
-            <?php esc_html_e( 'Updated successfully.', 'wpcom' ); ?>
+            <?php esc_html_e( 'Updated successfully.', WPMX_TD ); ?>
         </div>
         <?php } ?>
         <?php do_action( 'wpcom_account_tabs_' . $subpage ); ?>

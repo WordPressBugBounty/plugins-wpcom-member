@@ -284,8 +284,8 @@ class Member {
         }
 
         if($captcha && $captcha !== 'noCaptcha'){
-            $scripts['captcha_label'] = __("I'm not a robot", "wpcom");
-            $scripts['captcha_verified'] = __("You are verified", "wpcom");
+            $scripts['captcha_label'] = __("I'm not a robot", WPMX_TD);
+            $scripts['captcha_verified'] = __("You are verified", WPMX_TD);
         }
 
         $scripts['errors'] = apply_filters( 'wpcom_member_errors', array() );
@@ -653,7 +653,7 @@ class Member {
             switch ($args['type']) {
                 case 'TCaptcha':
                     if( isset($options['tc_appid']) && $options['tc_appid']!='' && $options['tc_appkey']!='' ) {
-                        $html = '<div class="member-account-item TCaptcha"><label class="member-account-label"></label><div class="member-account-input captcha-button j-TCaptcha"><div class="captcha-icon"><i></i></div><span>'.__("I'm not a robot", "wpcom").'</span><input type="hidden" class="j-Tticket" name="ticket"><input type="hidden" class="j-Trandstr" name="randstr"></div></div>';
+                        $html = '<div class="member-account-item TCaptcha"><label class="member-account-label"></label><div class="member-account-input captcha-button j-TCaptcha"><div class="captcha-icon"><i></i></div><span>'.__("I'm not a robot", WPMX_TD).'</span><input type="hidden" class="j-Tticket" name="ticket"><input type="hidden" class="j-Trandstr" name="randstr"></div></div>';
                     }
                     break;
                 case 'noCaptcha':
@@ -664,21 +664,21 @@ class Member {
                 case 'aliCaptcha':
                     if(isset($options['alic_sceneId']) && $options['alic_sceneId'] !='' && $options['alic_prefix'] !='' && $options['alic_access_id'] !='' && $options['alic_access_secret'] != ''){
                         $rand_id = rand(1000, 9999);
-                        $html = '<div class="member-account-item aliCaptcha"><label class="member-account-label"></label><div class="member-account-input captcha-button" id="ali-captcha-btn-' . $rand_id . '"><div class="captcha-icon"><i></i></div><span>' . __("I'm not a robot", "wpcom") . '</span></div><div id="ali-captcha-' . $rand_id . '">'. wp_nonce_field('aliyun_captcha_verify', 'captcha_verify', true, false) . '</div><input type="hidden" name="verify-key"></div>';
+                        $html = '<div class="member-account-item aliCaptcha"><label class="member-account-label"></label><div class="member-account-input captcha-button" id="ali-captcha-btn-' . $rand_id . '"><div class="captcha-icon"><i></i></div><span>' . __("I'm not a robot", WPMX_TD) . '</span></div><div id="ali-captcha-' . $rand_id . '">'. wp_nonce_field('aliyun_captcha_verify', 'captcha_verify', true, false) . '</div><input type="hidden" name="verify-key"></div>';
                     }
                     break;
                 case 'hCaptcha':
                     if( isset($options['hc_sitekey']) && $options['hc_sitekey']!='' && $options['hc_secret']!='' ) {
-                        $html = '<div class="member-account-item hCaptcha"><label class="member-account-label"></label><div class="member-account-input captcha-button"><div class="h-captcha"></div><div class="captcha-icon"><i></i></div><span>'.__("I'm not a robot", "wpcom").'</span></div></div>';
+                        $html = '<div class="member-account-item hCaptcha"><label class="member-account-label"></label><div class="member-account-input captcha-button"><div class="h-captcha"></div><div class="captcha-icon"><i></i></div><span>'.__("I'm not a robot", WPMX_TD).'</span></div></div>';
                     }
                     break;
                 case 'reCAPTCHA':
                     if( isset($options['gc_sitekey']) && $options['gc_sitekey']!='' && $options['gc_secret']!='' ) {
-                        $html = '<div class="member-account-item reCAPTCHA"><label class="member-account-label"></label><div class="member-account-input captcha-button"><div class="g-recaptcha"></div><div class="captcha-icon"><i></i></div><span>'.__("I'm not a robot", "wpcom").'</span></div></div>';
+                        $html = '<div class="member-account-item reCAPTCHA"><label class="member-account-label"></label><div class="member-account-input captcha-button"><div class="g-recaptcha"></div><div class="captcha-icon"><i></i></div><span>'.__("I'm not a robot", WPMX_TD).'</span></div></div>';
                     }
                     break;
                 case '_Captcha':
-                    $html = '<div class="member-account-item _Captcha"><label class="member-account-label"></label><div class="member-account-input captcha-button"><div class="w-captcha"></div><div class="captcha-icon"><i></i></div><span>'.__("I'm not a robot", "wpcom").'</span><input type="hidden" class="j-ticket" name="ticket"><input type="hidden" class="j-randstr" name="randstr"></div></div>';
+                    $html = '<div class="member-account-item _Captcha"><label class="member-account-label"></label><div class="member-account-input captcha-button"><div class="w-captcha"></div><div class="captcha-icon"><i></i></div><span>'.__("I'm not a robot", WPMX_TD).'</span><input type="hidden" class="j-ticket" name="ticket"><input type="hidden" class="j-randstr" name="randstr"></div></div>';
                     break;
                 case 'smsCode':
                     $html = '<div class="member-account-item'.($error?' error':'').' sms-code"><label class="member-account-label"></label><div class="member-account-input"><input type="text" class="is-input sms-code-input require" id="'.$name.'" name="'.$name.'" placeholder="'.$placeholder.'"'.($validate?' data-rule="'.$validate.'"':'').' data-label="'.$label.'" autocomplete="off"><div class="wpcom-btn btn-lg send-sms-code j-send-sms-code" data-target="'.(isset($args['target']) ? $args['target'] : '').'">'.__('Get Code', WPMX_TD).'</div>'.wp_nonce_field( 'send_sms_code', 'send_sms_code_nonce', true, false ).'</div></div>';
@@ -1013,7 +1013,7 @@ class Member {
             switch ($args['type']) {
                 case 'TCaptcha':
                     if( isset($options['tc_appid']) && $options['tc_appid']!='' && $options['tc_appkey']!='' ) {
-                        $html = '<div class="form-group TCaptcha"><div class="captcha-button j-TCaptcha"><div class="captcha-icon"><i></i></div><span>'.__("I'm not a robot", "wpcom").'</span></div><input type="hidden" class="j-Tticket" name="ticket"><input type="hidden" class="j-Trandstr" name="randstr"></div>';
+                        $html = '<div class="form-group TCaptcha"><div class="captcha-button j-TCaptcha"><div class="captcha-icon"><i></i></div><span>'.__("I'm not a robot", WPMX_TD).'</span></div><input type="hidden" class="j-Tticket" name="ticket"><input type="hidden" class="j-Trandstr" name="randstr"></div>';
                     }
                     break;
                 case 'noCaptcha':
@@ -1024,21 +1024,21 @@ class Member {
                 case 'aliCaptcha':
                     if (isset($options['alic_sceneId']) && $options['alic_sceneId'] != '' && $options['alic_prefix'] != '' && $options['alic_access_id'] != '' && $options['alic_access_secret'] != '') {
                         $rand_id = rand(1000, 9999);
-                        $html = '<div class="form-group aliCaptcha"><div class="captcha-button" id="ali-captcha-btn-' . $rand_id . '"><div class="ali-captcha"></div><div class="captcha-icon"><i></i></div><span>' . __("I'm not a robot", "wpcom") . '</span></div><div id="ali-captcha-' . $rand_id . '">' . wp_nonce_field('aliyun_captcha_verify', 'captcha_verify', true, false) . '</div><input type="hidden" name="verify-key"></div>';
+                        $html = '<div class="form-group aliCaptcha"><div class="captcha-button" id="ali-captcha-btn-' . $rand_id . '"><div class="ali-captcha"></div><div class="captcha-icon"><i></i></div><span>' . __("I'm not a robot", WPMX_TD) . '</span></div><div id="ali-captcha-' . $rand_id . '">' . wp_nonce_field('aliyun_captcha_verify', 'captcha_verify', true, false) . '</div><input type="hidden" name="verify-key"></div>';
                     }
                     break;
                 case 'hCaptcha':
                     if( isset($options['hc_sitekey']) && $options['hc_sitekey']!='' && $options['hc_secret']!='' ) {
-                        $html = '<div class="form-group hCaptcha"><div class="captcha-button"><div class="h-captcha"></div><div class="captcha-icon"><i></i></div><span>'.__("I'm not a robot", "wpcom").'</span></div></div>';
+                        $html = '<div class="form-group hCaptcha"><div class="captcha-button"><div class="h-captcha"></div><div class="captcha-icon"><i></i></div><span>'.__("I'm not a robot", WPMX_TD).'</span></div></div>';
                     }
                     break;
                 case 'reCAPTCHA':
                     if( isset($options['gc_sitekey']) && $options['gc_sitekey']!='' && $options['gc_secret']!='' ) {
-                        $html = '<div class="form-group reCAPTCHA"><div class="captcha-button"><div class="g-recaptcha"></div><div class="captcha-icon"><i></i></div><span>'.__("I'm not a robot", "wpcom").'</span></div></div>';
+                        $html = '<div class="form-group reCAPTCHA"><div class="captcha-button"><div class="g-recaptcha"></div><div class="captcha-icon"><i></i></div><span>'.__("I'm not a robot", WPMX_TD).'</span></div></div>';
                     }
                     break;
                 case '_Captcha':
-                    $html = '<div class="form-group _Captcha"><div class="captcha-button"><div class="w-captcha"></div><div class="captcha-icon"><i></i></div><span>'.__("I'm not a robot", "wpcom").'</span><input type="hidden" class="j-ticket" name="ticket"><input type="hidden" class="j-randstr" name="randstr"></div></div>';
+                    $html = '<div class="form-group _Captcha"><div class="captcha-button"><div class="w-captcha"></div><div class="captcha-icon"><i></i></div><span>'.__("I'm not a robot", WPMX_TD).'</span><input type="hidden" class="j-ticket" name="ticket"><input type="hidden" class="j-randstr" name="randstr"></div></div>';
                     break;
                 case 'smsCode':
                     $html = '<div class="form-group sms-code">'.wp_nonce_field( 'send_sms_code', 'send_sms_code_nonce', true, false ).'<label>'.$icon.' <input type="text" class="form-input is-input require" id="'.$name.'" name="'.$name.'" placeholder="'.$placeholder.'"'.($validate?' data-rule="'.$validate.'"':'').' data-label="'.$label.'" autocomplete="off"></label><div class="wpcom-btn btn-lg send-sms-code j-send-sms-code" data-target="'.(isset($args['target']) ? $args['target'] : '').'">'.__('Get Code', WPMX_TD).'</div></div>';

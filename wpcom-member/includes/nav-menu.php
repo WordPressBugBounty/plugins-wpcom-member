@@ -128,9 +128,11 @@ namespace WPCOM\Member {
 						$menus[] = $item;
 					}
 				}
-				$items = json_decode(json_encode($menus));
+
+				$items = [];
 				$checked = 0;
-				foreach($items as $i => $item){
+				foreach($menus as $i => $item){
+					$item = (object)(array)$item;
 					if($item && isset($item->url) && $item->url === '#wpcom_user_info'){
 						if(!$user_id){
 							if($checked){

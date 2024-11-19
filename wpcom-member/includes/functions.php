@@ -4,10 +4,6 @@ use WPCOM\Member;
 use WPCOM\Themer\Session;
 use WPCOM\Themer\Plugin;
 
-add_action('plugins_loaded', function(){
-    load_plugin_textdomain( WPMX_TD, false, basename( WPMX_DIR ) . '/lang' );
-});
-
 add_action('after_setup_theme', 'wpmx_init', 9);
 function wpmx_init() {
     $wpmx_info = array(
@@ -27,6 +23,8 @@ function wpmx_init() {
     $GLOBALS['wpmx'] = new $panel_class($wpmx_info);
     $wpmx_options = get_option($wpmx_info['key']);
     $GLOBALS[$wpmx_info['key']] = $wpmx_options;
+
+    load_plugin_textdomain( WPMX_TD, false, basename( WPMX_DIR ) . '/lang' );
 
     require_once WPMX_DIR . 'includes/member-functions.php';
     require_once WPMX_DIR . 'includes/form-validation.php';

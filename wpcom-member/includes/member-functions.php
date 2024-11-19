@@ -453,8 +453,8 @@ function wpcom_socials( $social ){
             'icon' => 'facebook-circle'
         ),
         'twitter' => array(
-            'title' => _x('Twitter', 'social login', WPMX_TD),
-            'icon' => 'twitter'
+            'title' => _x(' X ', 'social login', WPMX_TD),
+            'icon' => 'twitter-x'
         ),
         'github' => array(
             'title' => _x('Github', 'social login', WPMX_TD),

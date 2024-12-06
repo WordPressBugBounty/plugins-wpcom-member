@@ -70,6 +70,7 @@ class Member {
         add_filter( 'wp_send_new_user_notification_to_user', '__return_false' );
         // 小黑屋功能需要 WP 5.8.0+
         add_filter( 'wp_pre_insert_user_data', array( $this, 'pre_insert_user_data'), 10, version_compare($wp_version,'5.8','>=') ? 4 : 3);
+        add_filter( 'send_email_change_email', '__return_false' );
 
         $account_tabs = wpcom_account_default_tabs();
         foreach ($account_tabs as $tab){

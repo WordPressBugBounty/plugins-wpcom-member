@@ -419,7 +419,9 @@ function wpcom_ajax_lostpassword() {
                         }
                     } else {
                         $reset = retrieve_password($user->user_login);
-                        if ($reset !== true) {
+                        if(is_wp_error($reset)){
+                            $res['error'] = $reset->get_error_code() === 'retrieve_password_email_failure' ? '操作失败，请联系网站管理员检查是否支持邮件发送功能' : $reset->get_error_message();
+                        }else if ($reset !== true) {
                             $res['result'] = 0;
                             $res['error'] = $reset;
                         }

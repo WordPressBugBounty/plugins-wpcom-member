@@ -19,6 +19,9 @@ if (!function_exists('wpcom_account_form_general')) {
             $user = wp_get_current_user();
             if ($user->ID) {
                 $res['value']['ID'] = $user->ID;
+                if(isset($res['value']['user_url']) && trim($res['value']['user_url']) !== ''){
+                    $res['value']['user_url'] = sanitize_url($res['value']['user_url']);
+                }
                 $user_id = wp_update_user($res['value']);
                 if (is_wp_error($user_id)) {
                     $res['error'][$user_id->get_error_code()] = $user_id->get_error_message();
@@ -156,8 +159,11 @@ if (!function_exists('wpcom_ajax_login')) {
                         wp_set_current_user($user->ID);
                         $login = $user;
                     }
-                } else { // 用户不存在
-                    if (defined('WPCOM_MP_VERSION') && isset($options['invitation_code']) && $options['invitation_code'] == '1') { // 需要邀请码则提示请注册
+                } else { // 用户不存在，新注册
+                    if (!get_option('users_can_register')) { // 未开启注册
+                        $res['result'] = 0;
+                        $res['error'] = __('User registration is currently not allowed.', WPMX_TD);
+                    }else if (defined('WPCOM_MP_VERSION') && isset($options['invitation_code']) && $options['invitation_code'] == '1') { // 需要邀请码则提示请注册
                         $res['result'] = 0;
                         $res['error'] = __('You need to register before you can login', WPMX_TD);
                         $login = new WP_Error('user_not_exist', $res['error']);

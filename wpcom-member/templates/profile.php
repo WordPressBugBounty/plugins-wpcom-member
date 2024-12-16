@@ -16,7 +16,7 @@ $classes = apply_filters('wpcom_profile_head_classes', 'wpcom-profile-head');
                 <h2 class="wpcom-ph-name"><?php
                     $name = apply_filters('wpcom_user_display_name', $profile->display_name, $profile->ID, 'full');
                     echo wp_kses($name, wpmx_allowed_html());?></h2>
-                <?php if($profile->description){ ?><div class="wpcom-ph-desc"><?php echo wp_kses($profile->description, 'user_description');?></div><?php } ?>
+                <?php if(wpmx_description_length() > 0 && $profile->description){ ?><div class="wpcom-ph-desc"><?php echo wp_kses($profile->description, 'user_description');?></div><?php } ?>
                 <?php do_action('wpcom_profile_after_description', $profile->ID);?>
             </div>
             <?php if( $can_edit ){ ?>

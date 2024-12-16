@@ -1498,7 +1498,7 @@ class Member {
             $this->set_default_role($user_id);
         }
         $member_reg_active = isset($options['member_reg_active']) && $options['member_reg_active'] ? $options['member_reg_active']: '0';
-        if( !is_wpcom_enable_phone() && $member_reg_active!='0' ){
+        if( !is_wpcom_enable_phone() && $member_reg_active != '0' ){
             // 注册用户需要验证
             wp_update_user( array( 'ID' => $user_id, 'user_status' => -1 ) );
             if( !Session::get('user') ) { // 非社交登录渠道

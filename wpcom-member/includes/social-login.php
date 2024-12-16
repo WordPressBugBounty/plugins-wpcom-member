@@ -894,7 +894,10 @@ class Social_Login {
 
         if($email=='') $res['result'] = 1;
 
-        if(is_email($email)){
+        if (!get_option('users_can_register')) { // 未开启注册
+            $res['result'] = 7;
+            $res['msg'] = __('User registration is currently not allowed.', WPMX_TD);
+        }else if(is_email($email)){
             $bind_user = $this->is_bind($newuser['type'], $newuser['openid'], isset($newuser['unionid'])?$newuser['unionid']:'');
             if(isset($bind_user->ID) && $bind_user->ID){ // 已绑定用户
                 do_action('wpcom_sl_unionid_login', $bind_user->ID, $newuser['type'], $newuser['openid'], isset($newuser['unionid'])?$newuser['unionid']:'');

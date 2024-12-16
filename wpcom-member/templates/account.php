@@ -14,7 +14,7 @@
                 </a>
                 <?php }else { echo esc_html($user->display_name); } ?>
             </h3>
-            <?php if($user->description){ ?><div class="member-account-dio"><?php echo wp_kses($user->description, 'user_description');?></div><?php } ?>
+            <?php if(wpmx_description_length() > 0 && $user->description){ ?><div class="member-account-dio"><?php echo wp_kses($user->description, 'user_description');?></div><?php } ?>
             <?php do_action('wpcom_member_account_after_dio');?>
         </div>
         <ul class="member-account-menu">

@@ -4,7 +4,7 @@ Donate link: https://www.wpcom.cn/plugins/wpcom-member-pro.html
 Tags: 用户中心, membership
 Requires at least: 6.1.1
 Tested up to: 6.7.1
-Stable tag: 1.5.7
+Stable tag: 1.6.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -43,6 +43,7 @@ WordPress用户中心插件 / User profile & membership plugin for WordPress
 - 内置订单支付系统，可支持微信支付、支付宝以及虎皮椒支付接口；
 - 会员订阅功能；
 - 我的钱包功能，可实现余额支付；
+- 积分功能；
 - 代金券充值功能；
 - 付费查看内容、付费阅读全文；
 - 付费下载内容；
@@ -59,6 +60,12 @@ WordPress用户中心插件 / User profile & membership plugin for WordPress
 == Changelog ==
 
 ### 更新记录
+
+**1.6.0** - 2024-12-16
+
+- 新增账号设置`昵称`和`个人说明`选项字数限制：用户中心-常规设置-选项设置；
+- 新增账号设置`网址选项标题`选项：用户中心-常规设置-选项设置，设置标题后可填写网站地址，会在评论列表用户昵称带上链接地址，适合博客网站使用；
+- 优化注册功能，关闭注册后将不可通过社交登录和手机快捷登录进行注册；
 
 **1.5.7** - 2024-12-06
 

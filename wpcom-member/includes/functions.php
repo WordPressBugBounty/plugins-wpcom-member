@@ -434,11 +434,6 @@ function wpmx_admin_options(){
                 'type' => 'u'
             ),
             array(
-                'name' => 'member_desc',
-                'title' => '默认简介',
-                'std' => '这个人很懒，什么都没有留下～'
-            ),
-            array(
                 'name' => 'member_user_slug',
                 'title' => '用户链接',
                 'desc' => '个人中心页面链接地址格式',
@@ -749,8 +744,37 @@ function wpmx_admin_options(){
                     'type' => 't'
                 )
             )
-        )
+        ),
+        array(
+            'title' => '选项设置',
+            'desc' => '部分字段选项的自定义设置',
+            'type' => 'tt'
+        ),
+        array(
+            'name' => 'display_name_length',
+            'title' => '昵称长度',
+            'desc' => '可选，针对昵称设置选项，可以限制昵称长度，默认20个字符，同时为确保昵称的合理性如果昵称长度设置低于4会无效',
+        ),
+        array(
+            'name' => 'description_length',
+            'title' => '个人说明长度',
+            'desc' => '可选，针对个人说明选项，可以限制昵称长度，默认200个字符，如果设置为0可关闭个人说明选项',
+        ),
+        array(
+            'name' => 'member_desc',
+            'title' => '默认个人说明',
+            'std' => '这个人很懒，什么都没有留下～'
+        ),
     ));
+    if($type){
+        $options = array_merge($options, array(
+            array(
+                'name' => 'url_label',
+                'title' => '网址选项标题',
+                'desc' => '可选，留空则不开启选项，填写后会在<b>账号设置-基本资料</b>里面增加此选项，可用于文章评论用户昵称链接展示，适用于博客类网站使用',
+            )
+        ));
+    }
     return apply_filters('wpmx_admin_options', $options);
 }
 
@@ -791,6 +815,12 @@ function wpcom_wxmp_token($appid, $appsecret) {
     }
 }
 
+function wpcom_back_home(){
+    if( function_exists('wpcom_setup') ){ ?>
+        <a href="<?php bloginfo('url'); ?>" class="wpcom-btn btn-primary btn-home"><?php wpmx_icon('home-fill'); _e('Go back to home', 'wpcom');?></a>
+    <?php }
+}
+
 add_filter('eztoc_do_shortcode', function($isEligible){
     if(wp_doing_ajax()) $isEligible = false;
     return $isEligible;
@@ -817,3 +847,17 @@ add_action('wpcom_delete_post_cache', function($post_id){
         if($author_url) wpcom_delete_cache_by_url($author_url);
     }
 });
+
+add_filter('get_comment_author_url', function($comment_author_url, $comment_id, $comment){
+    if( $comment->user_id && $userdata = get_userdata( $comment->user_id )){
+        $options = $GLOBALS['wpmx_options'];
+        $url_label = isset($options['url_label']) && trim($options['url_label']) !== '' ? sanitize_text_field(trim($options['url_label'])) : '';
+
+        $comment_author_url = $url_label !== '' ? sanitize_url($userdata->user_url) : '';
+
+        if($comment_author_url === ''){
+            $comment_author_url = get_author_posts_url( $comment->user_id );
+        }
+    }
+    return $comment_author_url;
+}, 20, 3);

@@ -1,5 +1,4 @@
-<?php
-defined( 'ABSPATH' ) || exit;
+<?php defined( 'ABSPATH' ) || exit;
 
 $options = $GLOBALS['wpmx_options'];
 $social_login_on = isset($options['social_login_on']) && $options['social_login_on']=='1' ? 1 : 0;
@@ -31,3 +30,4 @@ $logo = isset($options['login_logo']) && $options['login_logo'] ? wp_get_attachm
         <?php } ?>
     </div>
 </div>
+<?php wpcom_back_home();?>

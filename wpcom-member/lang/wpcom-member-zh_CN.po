@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: WPCOM Member\n"
-"POT-Creation-Date: 2024-09-06 13:16+0800\n"
-"PO-Revision-Date: 2024-09-06 13:21+0800\n"
+"POT-Creation-Date: 2024-12-16 14:05+0800\n"
+"PO-Revision-Date: 2024-12-16 14:06+0800\n"
 "Last-Translator: \n"
 "Language-Team: WPCOM <service@izt.me>\n"
 "Language: zh_CN\n"
@@ -19,212 +19,212 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: js\n"
 
-#: admin/includes/class-plugin-panel.php:105 includes/class-member.php:485
-#: includes/class-member.php:511 includes/class-member.php:586
-#: includes/class-member.php:626
+#: admin/includes/class-plugin-panel.php:105 includes/class-member.php:486
+#: includes/class-member.php:512 includes/class-member.php:587
+#: includes/class-member.php:627
 msgid "Save Changes"
 msgstr "保存设置"
 
-#: includes/class-member.php:211
+#: includes/class-member.php:212
 #, php-format
 msgid "%s's avatar"
 msgstr "%s的头像"
 
-#: includes/class-member.php:270
+#: includes/class-member.php:271
 msgid "Security Verification"
 msgstr "安全验证"
 
-#: includes/class-member.php:271
+#: includes/class-member.php:272
 msgid "Drag to complete the jigsaw"
 msgstr "拖动滑块完成拼图"
 
-#: includes/class-member.php:272
+#: includes/class-member.php:273
 msgid "Jigsaw is loading"
 msgstr "拼图加载中..."
 
-#: includes/class-member.php:273
+#: includes/class-member.php:274
 msgid "Please try again"
 msgstr "请再试一次"
 
-#: includes/class-member.php:287 includes/class-member.php:656
-#: includes/class-member.php:667 includes/class-member.php:672
-#: includes/class-member.php:677 includes/class-member.php:681
-#: includes/class-member.php:1016 includes/class-member.php:1027
-#: includes/class-member.php:1032 includes/class-member.php:1037
-#: includes/class-member.php:1041
+#: includes/class-member.php:288 includes/class-member.php:657
+#: includes/class-member.php:668 includes/class-member.php:673
+#: includes/class-member.php:678 includes/class-member.php:682
+#: includes/class-member.php:1017 includes/class-member.php:1028
+#: includes/class-member.php:1033 includes/class-member.php:1038
+#: includes/class-member.php:1042
 msgid "I'm not a robot"
 msgstr "点击进行人机验证"
 
-#: includes/class-member.php:288
+#: includes/class-member.php:289
 msgid "You are verified"
 msgstr "验证成功"
 
-#: includes/class-member.php:295 includes/class-member.php:298
+#: includes/class-member.php:296 includes/class-member.php:299
 msgid "Select photo"
 msgstr "选择图片"
 
-#: includes/class-member.php:296
+#: includes/class-member.php:297
 msgid "Select your profile photo"
 msgstr "请选择头像图片"
 
-#: includes/class-member.php:297
+#: includes/class-member.php:298
 msgid "Select your cover photo"
 msgstr "请选择封面图片"
 
-#: includes/class-member.php:299
+#: includes/class-member.php:300
 msgid "Apply"
 msgstr "应用"
 
-#: includes/class-member.php:300
+#: includes/class-member.php:301
 msgid "Cancel"
 msgstr "取消"
 
-#: includes/class-member.php:301
+#: includes/class-member.php:302
 msgid "This image is too large!"
 msgstr "图片尺寸太大！"
 
-#: includes/class-member.php:302
+#: includes/class-member.php:303
 msgid "Sorry this is not a valid image."
 msgstr "请选择有效的图片文件"
 
-#: includes/class-member.php:303
+#: includes/class-member.php:304
 msgid "Nonce check failed!"
 msgstr "随机数校验失败"
 
-#: includes/class-member.php:304
+#: includes/class-member.php:305
 msgid "Image upload failed!"
 msgstr "图片上传失败"
 
-#: includes/class-member.php:305
+#: includes/class-member.php:306
 msgid "You must login first!"
 msgstr "请登录后操作"
 
-#: includes/class-member.php:306
+#: includes/class-member.php:307
 msgid "Please select a photo!"
 msgstr "请选择图片"
 
-#: includes/class-member.php:307
+#: includes/class-member.php:308
 msgid "Request failed!"
 msgstr "请求失败"
 
-#: includes/class-member.php:335
+#: includes/class-member.php:336
 #, php-format
 msgid "%1$s’s %2$s"
 msgstr "%1$s的%2$s"
 
-#: includes/class-member.php:460
+#: includes/class-member.php:461
 msgid "No user found."
 msgstr "没有找到用户"
 
-#: includes/class-member.php:519
+#: includes/class-member.php:520
 msgctxt "验证方式"
 msgid "STEP 1"
 msgstr "验证方式"
 
-#: includes/class-member.php:520
+#: includes/class-member.php:521
 msgctxt "安全验证"
 msgid "STEP 2"
 msgstr "安全验证"
 
-#: includes/class-member.php:521
+#: includes/class-member.php:522
 msgctxt "绑定账号"
 msgid "STEP 3"
 msgstr "绑定账号"
 
-#: includes/class-member.php:566 includes/class-member.php:609
+#: includes/class-member.php:567 includes/class-member.php:610
 msgid "Next"
 msgstr "下一步"
 
-#: includes/class-member.php:573
+#: includes/class-member.php:574
 msgid "Verification failed"
 msgstr "验证失败"
 
-#: includes/class-member.php:599
+#: includes/class-member.php:600
 msgid "Verify by"
 msgstr "选择验证方式"
 
-#: includes/class-member.php:602
+#: includes/class-member.php:603
 msgctxt "Verify"
 msgid "Phone number"
 msgstr "手机号码"
 
-#: includes/class-member.php:603
+#: includes/class-member.php:604
 msgctxt "Verify"
 msgid "Email address"
 msgstr "电子邮箱"
 
-#: includes/class-member.php:684 includes/class-member.php:1044
+#: includes/class-member.php:685 includes/class-member.php:1045
 msgid "Get Code"
 msgstr "发送验证码"
 
-#: includes/class-member.php:746
+#: includes/class-member.php:747
 msgid "Load more posts"
 msgstr "点击查看更多"
 
-#: includes/class-member.php:749
+#: includes/class-member.php:750
 msgid "You have not created any posts."
 msgstr "你还没有发布任何文章。"
 
-#: includes/class-member.php:749
+#: includes/class-member.php:750
 msgid "This user has not created any posts."
 msgstr "该用户还没有发布任何文章。"
 
-#: includes/class-member.php:809
+#: includes/class-member.php:810
 msgid "Load more comments"
 msgstr "点击查看更多"
 
-#: includes/class-member.php:812
+#: includes/class-member.php:813
 msgid "You have not made any comments."
 msgstr "你还没有发布任何评论。"
 
-#: includes/class-member.php:812
+#: includes/class-member.php:813
 msgid "This user has not made any comments."
 msgstr "该用户还没有发布任何评论。"
 
-#: includes/class-member.php:879
+#: includes/class-member.php:880
 #, php-format
 msgid "I have read and agree to the %1$s and %2$s"
 msgstr "我已阅读并同意%1$s和%2$s"
 
-#: includes/class-member.php:882
+#: includes/class-member.php:883
 #, php-format
 msgid "I have read and agree to the %s"
 msgstr "我已阅读并同意%s"
 
-#: includes/class-member.php:887
+#: includes/class-member.php:888
 msgid "Create an account"
 msgstr "提交注册"
 
-#: includes/class-member.php:910
+#: includes/class-member.php:911
 msgid "Remember me"
 msgstr "记住我的登录状态"
 
-#: includes/class-member.php:911
+#: includes/class-member.php:912
 msgid "Forgot password?"
 msgstr "忘记密码？"
 
-#: includes/class-member.php:913 templates/login.php:19
+#: includes/class-member.php:914 templates/login.php:18
 msgid "Sign In"
 msgstr "登录"
 
-#: includes/class-member.php:935 includes/class-member.php:951
-#: includes/class-member.php:984
+#: includes/class-member.php:936 includes/class-member.php:952
+#: includes/class-member.php:985
 msgid "Submit"
 msgstr "提交"
 
-#: includes/class-member.php:956
+#: includes/class-member.php:957
 msgid "Your phone number error!"
 msgstr "手机号码错误"
 
-#: includes/class-member.php:957
+#: includes/class-member.php:958
 msgid "Unable to get the phone number, please return to the previous step."
 msgstr "无法获取手机号码，请返回上一步继续操作。"
 
-#: includes/class-member.php:963
+#: includes/class-member.php:964
 msgid "Password reset email send successfully!"
 msgstr "密码重置邮件发送成功！"
 
-#: includes/class-member.php:964
+#: includes/class-member.php:965
 msgid ""
 "Check your email for a link to reset your password. If it doesn’t appear "
 "within a few minutes, check your spam folder."
@@ -232,357 +232,362 @@ msgstr ""
 "密码重置信息已发送至您账号绑定的电子邮箱，请登录您的邮箱点击验证地址进行密码"
 "重置。如果一直没有收到邮件，可以检查下邮件的垃圾箱。"
 
-#: includes/class-member.php:973
+#: includes/class-member.php:974
 msgid "Password reset link invalid"
 msgstr "重置链接无效"
 
-#: includes/class-member.php:975
+#: includes/class-member.php:976
 msgid "Click here to resend password reset email"
 msgstr "点击重新请求新链接"
 
-#: includes/class-member.php:992
+#: includes/class-member.php:993
 msgid "Password reset successfully"
 msgstr "密码重置成功！"
 
-#: includes/class-member.php:993
+#: includes/class-member.php:994
 msgid "Your password has been reset successfully! "
 msgstr "你的密码重置成功，请使用新密码进行登录。"
 
-#: includes/class-member.php:994
+#: includes/class-member.php:995
 msgid " Click here to return to the login page"
 msgstr "点击进入登录页面"
 
-#: includes/class-member.php:1081
+#: includes/class-member.php:1082
 msgid "Your activation link has expired."
 msgstr "激活链接已经过期"
 
-#: includes/class-member.php:1083
+#: includes/class-member.php:1084
 msgid "Your activation link is invalid."
 msgstr "激活链接无效"
 
-#: includes/class-member.php:1086 includes/class-member.php:1132
+#: includes/class-member.php:1087 includes/class-member.php:1133
 msgid "Resend activation email"
 msgstr "重发激活邮件"
 
-#: includes/class-member.php:1091
+#: includes/class-member.php:1092
 msgid "Your account has been activated successfully."
 msgstr "你的账号已经激活成功。"
 
-#: includes/class-member.php:1092
+#: includes/class-member.php:1093
 msgid "Click here to login"
 msgstr "点击前往登录"
 
-#: includes/class-member.php:1116
+#: includes/class-member.php:1117
 #, php-format
 msgid "Log in with %s"
 msgstr "%s登录"
 
-#: includes/class-member.php:1341
+#: includes/class-member.php:1342
 msgid "Your password reset link has expired"
 msgstr "密码重置链接已过期，请重新请求新链接。"
 
-#: includes/class-member.php:1343
+#: includes/class-member.php:1344
 msgid "Your password reset link appears to be invalid"
 msgstr "密码重置链接无效，请重新请求新链接。"
 
-#: includes/class-member.php:1568
+#: includes/class-member.php:1569
 #, php-format
 msgid "Please activate your account. %1$s Resend activation email %2$s"
 msgstr "账号未激活 %1$s重发激活邮件%2$s"
 
-#: includes/class-member.php:1570 includes/form-validation.php:151
+#: includes/class-member.php:1571 includes/form-validation.php:150
 msgid "Account awaiting approval."
 msgstr "当前账号还未通过审核"
 
-#: includes/class-member.php:1574
+#: includes/class-member.php:1575
 msgid "Blacklist user."
 msgstr "小黑屋用户"
 
-#: includes/class-member.php:1620 includes/class-member.php:1827
+#: includes/class-member.php:1621 includes/class-member.php:1828
 msgid "Unapproved"
 msgstr "待审核"
 
-#: includes/class-member.php:1627 includes/class-member.php:1829
+#: includes/class-member.php:1628 includes/class-member.php:1830
 msgid "Blacklist"
 msgstr "小黑屋"
 
-#: includes/class-member.php:1726
+#: includes/class-member.php:1727
 msgid "Approve"
 msgstr "设置为已审核"
 
-#: includes/class-member.php:1727
+#: includes/class-member.php:1728
 msgid "Disapprove"
 msgstr "设置为待审核"
 
-#: includes/class-member.php:1728
+#: includes/class-member.php:1729
 msgid "Add to blacklist"
 msgstr "加入小黑屋"
 
-#: includes/class-member.php:1729
+#: includes/class-member.php:1730
 msgid "Remove from blacklist"
 msgstr "移出小黑屋"
 
-#: includes/class-member.php:1774
+#: includes/class-member.php:1775
 msgid "Registered"
 msgstr "注册"
 
-#: includes/class-member.php:1779
+#: includes/class-member.php:1780
 msgid "User"
 msgstr ""
 
-#: includes/class-member.php:1783 includes/member-functions.php:168
-#: includes/member-functions.php:236
+#: includes/class-member.php:1784 includes/member-functions.php:169
+#: includes/member-functions.php:247
 msgctxt "label"
 msgid "Phone number"
 msgstr "手机号码"
 
-#: includes/class-member.php:1787
+#: includes/class-member.php:1788
 msgid "Email"
 msgstr ""
 
-#: includes/class-member.php:1820
+#: includes/class-member.php:1821
 msgid "Super Admin"
 msgstr ""
 
-#: includes/class-member.php:1836 includes/member-functions.php:159
-#: includes/member-functions.php:178 includes/member-functions.php:228
-#: includes/member-functions.php:246
+#: includes/class-member.php:1837 includes/member-functions.php:160
+#: includes/member-functions.php:179 includes/member-functions.php:239
+#: includes/member-functions.php:257
 msgid "Edit"
 msgstr "编辑"
 
-#: includes/class-member.php:1843 includes/member-functions.php:281
+#: includes/class-member.php:1844 includes/member-functions.php:292
 msgid "Delete"
 msgstr "解除绑定"
 
-#: includes/class-member.php:1846
+#: includes/class-member.php:1847
 msgid "Remove"
 msgstr ""
 
-#: includes/class-member.php:1856
+#: includes/class-member.php:1857
 #, php-format
 msgid "View posts by %s"
 msgstr ""
 
-#: includes/class-member.php:1857
+#: includes/class-member.php:1858
 msgid "View"
 msgstr ""
 
-#: includes/class-member.php:1882
+#: includes/class-member.php:1883
 msgid "Show more details"
 msgstr ""
 
-#: includes/class-member.php:1899
+#: includes/class-member.php:1900
 msgid "Mobile Phone"
 msgstr "手机号码"
 
-#: includes/class-member.php:2014
+#: includes/class-member.php:2015
 msgctxt "stats"
 msgid "posts"
 msgstr "文章"
 
-#: includes/class-member.php:2015
+#: includes/class-member.php:2016
 msgctxt "stats"
 msgid "comments"
 msgstr "评论"
 
-#: includes/class-member.php:2023
+#: includes/class-member.php:2024
 msgctxt "stats"
 msgid "questions"
 msgstr "问题"
 
-#: includes/class-member.php:2024
+#: includes/class-member.php:2025
 msgctxt "stats"
 msgid "answers"
 msgstr "回答"
 
-#: includes/class-member.php:2031
+#: includes/class-member.php:2032
 msgctxt "stats"
 msgid "followers"
 msgstr "粉丝"
 
-#: includes/form-validation.php:47
+#: includes/form-validation.php:46
 msgid "No phone number added, phone number verification cannot be used"
 msgstr "未绑定手机，无法使用手机验证"
 
-#: includes/form-validation.php:49
+#: includes/form-validation.php:48
 msgid "No email address added, email verification cannot be used"
 msgstr "未绑定邮箱，无法使用邮箱验证"
 
-#: includes/form-validation.php:96
+#: includes/form-validation.php:95
 msgid "The password is incorrect"
 msgstr "密码错误"
 
-#: includes/form-validation.php:117
+#: includes/form-validation.php:116
 msgid "The username or password is incorrect"
 msgstr "用户名或密码错误"
 
-#: includes/form-validation.php:118
+#: includes/form-validation.php:117
 msgid "Login successfully"
 msgstr "登录成功"
 
-#: includes/form-validation.php:149
+#: includes/form-validation.php:148
 #, php-format
 msgid ""
 "Please activate your account. <a href=\"%s\" target=\"_blank\">Resend "
 "activation email</a>"
 msgstr "账号未激活 <a href=\"%s\" target=\"_blank\">重发激活邮件</a>"
 
-#: includes/form-validation.php:162
-msgid "You need to register before you can login"
-msgstr "请注册后再登录"
-
-#: includes/form-validation.php:222
-msgid "Registered successfully"
-msgstr "注册成功"
-
-#: includes/form-validation.php:233 includes/social-login.php:770
-#: templates/register.php:12
+#: includes/form-validation.php:162 includes/form-validation.php:235
+#: includes/social-login.php:768 includes/social-login.php:899
+#: templates/register.php:11
 msgid "User registration is currently not allowed."
 msgstr "目前暂未开放用户注册"
 
-#: includes/form-validation.php:257
+#: includes/form-validation.php:165
+msgid "You need to register before you can login"
+msgstr "请注册后再登录"
+
+#: includes/form-validation.php:224
+msgid "Registered successfully"
+msgstr "注册成功"
+
+#: includes/form-validation.php:259
 msgid "Sorry, that mobile phone number already exists!"
 msgstr "当前手机号码已经注册"
 
-#: includes/form-validation.php:321 includes/form-validation.php:379
+#: includes/form-validation.php:323 includes/form-validation.php:381
 msgid "The username does not exist"
 msgstr "用户名不存在"
 
-#: includes/form-validation.php:322
+#: includes/form-validation.php:324
 msgid "Resend successfully"
 msgstr "重发成功"
 
-#: includes/form-validation.php:346
+#: includes/form-validation.php:348
 msgid "Error occurs when resend email."
 msgstr "重新发送电子邮件时发生错误"
 
-#: includes/form-validation.php:354
+#: includes/form-validation.php:356
 msgid "You have already activated your account."
 msgstr "请勿重复激活"
 
-#: includes/form-validation.php:380
+#: includes/form-validation.php:382
 msgid "Submitted successfully"
 msgstr "提交成功"
 
-#: includes/form-validation.php:419
+#: includes/form-validation.php:421
 msgid "No email address or phone number added, you should add first"
 msgstr "未绑定邮箱或者手机，社交登录用户请绑定后再使用找回密码功能"
 
-#: includes/form-validation.php:456
+#: includes/form-validation.php:460
 msgid "Reset failed, please retry!"
 msgstr "密码重置失败，请重试"
 
-#: includes/form-validation.php:457
+#: includes/form-validation.php:461
 msgid "Reset successfully"
 msgstr "重置成功"
 
-#: includes/form-validation.php:497
+#: includes/form-validation.php:501
 msgid "Someone has requested a password reset for the following account:"
 msgstr "有人为以下账户请求了密码重置："
 
-#: includes/form-validation.php:499
+#: includes/form-validation.php:503
 #, php-format
 msgid "Site Name: %s"
 msgstr ""
 
-#: includes/form-validation.php:501 includes/member-functions.php:643
+#: includes/form-validation.php:505 includes/member-functions.php:654
 #, php-format
 msgid "Username: %s"
 msgstr ""
 
-#: includes/form-validation.php:502 includes/member-functions.php:615
-#: includes/member-functions.php:704
+#: includes/form-validation.php:506 includes/member-functions.php:626
+#: includes/member-functions.php:715
 msgid "If this was a mistake, ignore this email and nothing will happen."
 msgstr "如果这是一个错误，请忽略此电子邮件，不会发生任何事情。"
 
-#: includes/form-validation.php:503
+#: includes/form-validation.php:507
 msgid "To reset your password, visit the following address:"
 msgstr "要重置您的密码，请打开下面的链接："
 
-#: includes/form-validation.php:511
+#: includes/form-validation.php:515
 #, php-format
 msgid "This password reset request originated from the IP address %s."
 msgstr ""
 
-#: includes/form-validation.php:534
+#: includes/form-validation.php:538
 msgid "Add failed"
 msgstr "绑定失败"
 
-#: includes/form-validation.php:534
+#: includes/form-validation.php:538
 msgid "verification failed"
 msgstr "验证失败"
 
-#: includes/form-validation.php:535
+#: includes/form-validation.php:539
 msgid "Added successfully"
 msgstr "绑定成功"
 
-#: includes/form-validation.php:535
+#: includes/form-validation.php:539
 msgid "Verified successfully"
 msgstr "验证成功"
 
-#: includes/form-validation.php:571
+#: includes/form-validation.php:575
 msgid "The phone number has been registered"
 msgstr "该手机号已被注册"
 
-#: includes/form-validation.php:861
+#: includes/form-validation.php:865
 msgid "Successfully deleted!"
 msgstr "解绑成功！"
 
-#: includes/form-validation.php:884
+#: includes/form-validation.php:888
 msgid "Social login is not turned on"
 msgstr "暂未开启社交登录功能"
 
-#: includes/form-validation.php:890 includes/member-functions.php:162
-#: includes/member-functions.php:181 includes/member-functions.php:231
-#: includes/member-functions.php:249 includes/member-functions.php:272
+#: includes/form-validation.php:894 includes/member-functions.php:163
+#: includes/member-functions.php:182 includes/member-functions.php:242
+#: includes/member-functions.php:260 includes/member-functions.php:283
 msgid "Not set"
 msgstr "未绑定"
 
-#: includes/form-validation.php:890 includes/member-functions.php:272
+#: includes/form-validation.php:894 includes/member-functions.php:283
 msgid "Connect"
 msgstr "立即绑定"
 
-#: includes/form-validation.php:893
+#: includes/form-validation.php:897
 msgid ""
 "The current account only has this login method, please bind other login "
 "methods before unbinding!"
 msgstr "当前账号仅有此登录方式，请绑定其他登录方式后再进行解绑操作！"
 
-#: includes/form-validation.php:897 includes/social-login.php:768
+#: includes/form-validation.php:901 includes/social-login.php:766
 msgid "Parameter error"
 msgstr "参数错误"
 
-#: includes/functions.php:188 includes/functions.php:233
-#: includes/functions.php:260
+#: includes/functions.php:186 includes/functions.php:231
+#: includes/functions.php:258
 msgid "Orders"
 msgstr "我的订单"
 
-#: includes/functions.php:189 includes/functions.php:243
+#: includes/functions.php:187 includes/functions.php:241
 msgid "Downloads"
 msgstr "我的下载"
 
-#: includes/functions.php:190 includes/functions.php:251
+#: includes/functions.php:188 includes/functions.php:249
 msgid "Addresses"
 msgstr "配送地址"
 
-#: includes/functions.php:233
+#: includes/functions.php:231
 msgctxt "shop"
 msgid "Orders"
 msgstr "商城订单"
 
-#: includes/member-functions.php:10 includes/member-functions.php:341
-#: includes/member-functions.php:531 templates/social-login-connect.php:33
+#: includes/functions.php:820
+msgid "Go back to home"
+msgstr "返回首页"
+
+#: includes/member-functions.php:10 includes/member-functions.php:352
+#: includes/member-functions.php:542 templates/social-login-connect.php:33
 msgctxt "label"
 msgid "Username"
 msgstr "用户名"
 
-#: includes/member-functions.php:14 includes/member-functions.php:345
+#: includes/member-functions.php:14 includes/member-functions.php:356
 #: templates/social-login-connect.php:35
 msgid "Phone number / E-mail / Username"
 msgstr "请输入手机号码/电子邮箱/用户名"
 
-#: includes/member-functions.php:14 includes/member-functions.php:345
-#: includes/member-functions.php:535 templates/social-login-connect.php:35
+#: includes/member-functions.php:14 includes/member-functions.php:356
+#: includes/member-functions.php:546 templates/social-login-connect.php:35
 msgid "Username or email address"
 msgstr "请输入用户名/电子邮箱"
 
@@ -600,7 +605,7 @@ msgid "Password"
 msgstr "请输入登录密码"
 
 #: includes/member-functions.php:50 includes/member-functions.php:88
-#: includes/member-functions.php:187 includes/member-functions.php:254
+#: includes/member-functions.php:193 includes/member-functions.php:265
 msgctxt "label"
 msgid "Email address"
 msgstr "电子邮箱"
@@ -633,8 +638,8 @@ msgstr "基本资料"
 msgid "Password"
 msgstr "修改密码"
 
-#: includes/member-functions.php:129 includes/member-functions.php:760
-#: includes/nav-menu.php:104 includes/nav-menu.php:288
+#: includes/member-functions.php:129 includes/member-functions.php:771
+#: includes/nav-menu.php:104 includes/nav-menu.php:290
 msgid "Logout"
 msgstr "退出登录"
 
@@ -643,292 +648,293 @@ msgctxt "title"
 msgid "Connect"
 msgstr "账号绑定"
 
-#: includes/member-functions.php:159 includes/member-functions.php:162
-#: includes/member-functions.php:178 includes/member-functions.php:181
-#: includes/member-functions.php:228 includes/member-functions.php:231
-#: includes/member-functions.php:246 includes/member-functions.php:249
+#: includes/member-functions.php:160 includes/member-functions.php:163
+#: includes/member-functions.php:179 includes/member-functions.php:182
+#: includes/member-functions.php:239 includes/member-functions.php:242
+#: includes/member-functions.php:257 includes/member-functions.php:260
 msgid "Private"
 msgstr "仅自己可见"
 
-#: includes/member-functions.php:162 includes/member-functions.php:231
+#: includes/member-functions.php:163 includes/member-functions.php:242
 msgid "Add phone number"
 msgstr "立即绑定"
 
-#: includes/member-functions.php:181 includes/member-functions.php:249
+#: includes/member-functions.php:182 includes/member-functions.php:260
 msgid "Add email address"
 msgstr "立即绑定"
 
-#: includes/member-functions.php:197
+#: includes/member-functions.php:203
 msgid "Nickname"
 msgstr "昵称"
 
-#: includes/member-functions.php:205
+#: includes/member-functions.php:215
 msgid "Description"
 msgstr "个人说明"
 
-#: includes/member-functions.php:209
-msgid "Optional, description can not exceed 200 characters"
-msgstr "可选，个人说明不超过200个字符"
+#: includes/member-functions.php:219
+#, php-format
+msgid "Optional, description can not exceed %s characters"
+msgstr "可选，个人说明不超过%s个字符"
 
-#: includes/member-functions.php:278
+#: includes/member-functions.php:289
 msgid "Connected"
 msgstr "已绑定"
 
-#: includes/member-functions.php:304
+#: includes/member-functions.php:315
 msgctxt "label"
 msgid "Old password"
 msgstr "原密码"
 
-#: includes/member-functions.php:308
+#: includes/member-functions.php:319
 msgctxt "placeholder"
 msgid "Please enter your old password"
 msgstr "请输入原密码"
 
-#: includes/member-functions.php:312 includes/member-functions.php:359
+#: includes/member-functions.php:323 includes/member-functions.php:370
 msgctxt "label"
 msgid "New password"
 msgstr "确认新密码"
 
-#: includes/member-functions.php:318 includes/member-functions.php:366
+#: includes/member-functions.php:329 includes/member-functions.php:377
 msgid "Password must be 6-32 characters"
 msgstr "密码长度为6～32位"
 
-#: includes/member-functions.php:320 includes/member-functions.php:368
+#: includes/member-functions.php:331 includes/member-functions.php:379
 msgctxt "placeholder"
 msgid "Please enter your new password"
 msgstr "请输入新密码"
 
-#: includes/member-functions.php:324 includes/member-functions.php:372
+#: includes/member-functions.php:335 includes/member-functions.php:383
 msgctxt "label2"
 msgid "New password"
 msgstr "确认新密码"
 
-#: includes/member-functions.php:329 includes/member-functions.php:378
+#: includes/member-functions.php:340 includes/member-functions.php:389
 msgctxt "placeholder"
 msgid "Please confirm your new password"
 msgstr "请再次输入新密码"
 
-#: includes/member-functions.php:391
+#: includes/member-functions.php:402
 msgid " is required"
 msgstr "不能为空"
 
-#: includes/member-functions.php:392
+#: includes/member-functions.php:403
 msgid "This is not a valid email"
 msgstr "请输入正确的电子邮箱"
 
-#: includes/member-functions.php:393
+#: includes/member-functions.php:404
 msgid "Please enter your "
 msgstr "请输入"
 
-#: includes/member-functions.php:394
+#: includes/member-functions.php:405
 msgid "Your password must be 6-32 characters"
 msgstr "密码必须为6~32个字符"
 
-#: includes/member-functions.php:395
+#: includes/member-functions.php:406
 msgid "Your passwords do not match"
 msgstr "两次密码输入不一致"
 
-#: includes/member-functions.php:396
+#: includes/member-functions.php:407
 msgid "Please enter a valid phone number"
 msgstr "请输入正确的手机号码"
 
-#: includes/member-functions.php:397
+#: includes/member-functions.php:408
 msgid "Please read and agree with the terms"
 msgstr "请阅读并同意条款"
 
-#: includes/member-functions.php:398
+#: includes/member-functions.php:409
 msgid "Your verification code error"
 msgstr "验证码错误"
 
-#: includes/member-functions.php:399
+#: includes/member-functions.php:410
 msgid "Please slide to verify"
 msgstr "请按住滑块，拖动到最右边"
 
-#: includes/member-functions.php:399
+#: includes/member-functions.php:410
 msgid "Please click to verify"
 msgstr "请点击按钮进行验证"
 
-#: includes/member-functions.php:400
+#: includes/member-functions.php:411
 msgid "Security verification failed, please try again"
 msgstr "人机验证失败，请重试"
 
-#: includes/member-functions.php:401
+#: includes/member-functions.php:412
 msgid "The nonce check failed"
 msgstr "随机数校验失败"
 
-#: includes/member-functions.php:402
+#: includes/member-functions.php:413
 msgid "Request Error!"
 msgstr "请求失败"
 
-#: includes/member-functions.php:412
+#: includes/member-functions.php:423
 msgid "Posts"
 msgstr "文章"
 
-#: includes/member-functions.php:417
+#: includes/member-functions.php:428
 msgid "Comments"
 msgstr "评论"
 
-#: includes/member-functions.php:428
+#: includes/member-functions.php:439
 msgctxt "social login"
 msgid "QQ"
 msgstr "QQ"
 
-#: includes/member-functions.php:432
+#: includes/member-functions.php:443
 msgctxt "social login"
 msgid "Weibo"
 msgstr "微博"
 
-#: includes/member-functions.php:436 includes/member-functions.php:440
-#: includes/member-functions.php:444
+#: includes/member-functions.php:447 includes/member-functions.php:451
+#: includes/member-functions.php:455
 msgctxt "social login"
 msgid "WeChat"
 msgstr "微信"
 
-#: includes/member-functions.php:448
+#: includes/member-functions.php:459
 msgctxt "social login"
 msgid "Google"
 msgstr "Google"
 
-#: includes/member-functions.php:452
+#: includes/member-functions.php:463
 msgctxt "social login"
 msgid "Facebook"
 msgstr "Facebook"
 
-#: includes/member-functions.php:456
+#: includes/member-functions.php:467
 msgctxt "social login"
-msgid "Twitter"
-msgstr "Twitter"
+msgid " X "
+msgstr ""
 
-#: includes/member-functions.php:460
+#: includes/member-functions.php:471
 msgctxt "social login"
 msgid "Github"
 msgstr "Github"
 
-#: includes/member-functions.php:611 includes/member-functions.php:673
-#: includes/member-functions.php:700
+#: includes/member-functions.php:622 includes/member-functions.php:684
+#: includes/member-functions.php:711
 #, php-format
 msgid "Hi, %s!"
 msgstr "你好，%s！"
 
-#: includes/member-functions.php:613
+#: includes/member-functions.php:624
 #, php-format
 msgid ""
 "Welcome to %s. To activate your account and verify your email address, "
 "please click the following link:"
 msgstr "欢迎加入%s！请点击以下链接验证电子邮箱来激活您的账号："
 
-#: includes/member-functions.php:618
+#: includes/member-functions.php:629
 #, php-format
 msgid "[%s] Please verify your email address"
 msgstr "【%s】邮箱验证激活"
 
-#: includes/member-functions.php:623 includes/member-functions.php:655
-#: includes/member-functions.php:683 includes/member-functions.php:712
+#: includes/member-functions.php:634 includes/member-functions.php:666
+#: includes/member-functions.php:694 includes/member-functions.php:723
 msgid "The email could not be sent."
 msgstr "邮件无法发送，如有疑问请联系网站管理员"
 
-#: includes/member-functions.php:630
+#: includes/member-functions.php:641
 msgid "The user does not exist"
 msgstr "用户不存在"
 
-#: includes/member-functions.php:641
+#: includes/member-functions.php:652
 #, php-format
 msgid "%1$s has just created an account on %2$s!"
 msgstr "用户【%1$s】已在您的网站【%2$s】成功注册！"
 
-#: includes/member-functions.php:645
+#: includes/member-functions.php:656
 #, php-format
 msgid "E-Mail: %s"
 msgstr "电子邮箱：%s"
 
-#: includes/member-functions.php:647
+#: includes/member-functions.php:658
 msgid "If you want to approve the new user, please go to wp-admin page."
 msgstr "如需通过用户的注册申请，可在网站后台【用户】页面进行操作。"
 
-#: includes/member-functions.php:650
+#: includes/member-functions.php:661
 #, php-format
 msgid "[%s] New user account"
 msgstr "【%s】新用户注册"
 
-#: includes/member-functions.php:675
+#: includes/member-functions.php:686
 #, php-format
 msgid ""
 "Congratulations, your account has been activated successfully, you can now "
 "login: <a href=\"%1$s\">%2$s</a>"
 msgstr "你的账号已经通过审核，马上点击链接登录：<a href=“%1$s”>%2$s</a>"
 
-#: includes/member-functions.php:678
+#: includes/member-functions.php:689
 #, php-format
 msgid "[%s] Welcome to join us"
 msgstr "【%s】账号审核通过"
 
-#: includes/member-functions.php:702
+#: includes/member-functions.php:713
 #, php-format
 msgid ""
 "Your verification code is <b style=\"color:red;\">%s</b>, please enter in 10 "
 "minutes."
 msgstr "您的验证码为：<b style=\"color:red;\">%s</b>，请在10分钟内输入。"
 
-#: includes/member-functions.php:707
+#: includes/member-functions.php:718
 #, php-format
 msgid "[%s] Your verification code"
 msgstr "【%s】电子邮件验证码"
 
-#: includes/member-functions.php:737 includes/nav-menu.php:81
-#: includes/nav-menu.php:265
+#: includes/member-functions.php:748 includes/nav-menu.php:81
+#: includes/nav-menu.php:267
 msgid "Profile"
 msgstr "个人中心"
 
-#: includes/member-functions.php:756 includes/nav-menu.php:100
-#: includes/nav-menu.php:284
+#: includes/member-functions.php:767 includes/nav-menu.php:100
+#: includes/nav-menu.php:286
 msgid "Account"
 msgstr "账号设置"
 
-#: includes/member-functions.php:1051
+#: includes/member-functions.php:1061
 msgid ""
 "You are not signed in, please sign in before proceeding with related "
 "operations!"
 msgstr "您还未登录，请登录后再进行相关操作！"
 
-#: includes/member-functions.php:1052
+#: includes/member-functions.php:1062
 msgid "Please sign in"
 msgstr "请登录"
 
-#: includes/member-functions.php:1053 includes/nav-menu.php:144
-#: includes/nav-menu.php:310
+#: includes/member-functions.php:1063 includes/nav-menu.php:146
+#: includes/nav-menu.php:312
 msgid "Sign in"
 msgstr "登录"
 
-#: includes/member-functions.php:1054 includes/nav-menu.php:138
-#: includes/nav-menu.php:318
+#: includes/member-functions.php:1064 includes/nav-menu.php:140
+#: includes/nav-menu.php:320
 msgid "Sign up"
 msgstr "注册"
 
-#: includes/member-functions.php:1080
+#: includes/member-functions.php:1090
 msgid "You have sent too many requests"
 msgstr "您发送的请求过多，请稍后再试！"
 
-#: includes/member-functions.php:1112
+#: includes/member-functions.php:1122
 msgid "No captcha was found"
 msgstr "安全验证初始化失败，请稍后再试！"
 
-#: includes/member-functions.php:1216
+#: includes/member-functions.php:1226
 msgid "Failed to send"
 msgstr "发送失败"
 
-#: includes/member-functions.php:1217
+#: includes/member-functions.php:1227
 msgid "Send success"
 msgstr "发送成功"
 
-#: includes/member-functions.php:1255
+#: includes/member-functions.php:1265
 msgid "Failed to send email"
 msgstr "邮件发送失败"
 
-#: includes/nav-menu.php:171
+#: includes/nav-menu.php:173
 msgid "Messages"
 msgstr "我的私信"
 
-#: includes/nav-menu.php:185
+#: includes/nav-menu.php:187
 msgid "Notifications"
 msgstr "系统通知"
 
@@ -988,15 +994,15 @@ msgstr[1] "%s秒前"
 msgid "On %1$s %2$s %3$s"
 msgstr "评论于 %1$s %2$s %3$s"
 
-#: templates/login.php:20
+#: templates/login.php:19
 msgid "No account?"
 msgstr "还没有账号？"
 
-#: templates/login.php:20
+#: templates/login.php:19
 msgid "Create one!"
 msgstr "立即注册"
 
-#: templates/login.php:29
+#: templates/login.php:28
 msgid "Sign in with"
 msgstr "第三方账号登录"
 
@@ -1020,20 +1026,20 @@ msgstr "完成"
 msgid "Change cover"
 msgstr "修改封面"
 
-#: templates/register.php:20
+#: templates/register.php:19
 msgid "Sign Up"
 msgstr "注册"
 
-#: templates/register.php:21
+#: templates/register.php:20
 msgid "Already have an account?"
 msgstr "已经有账号？"
 
-#: templates/register.php:21
+#: templates/register.php:20
 msgctxt "sign"
 msgid "Sign in"
 msgstr "马上登录"
 
-#: templates/register.php:27
+#: templates/register.php:26
 msgid "Sign up with"
 msgstr "简单注册快人一步"
 
@@ -1072,6 +1078,10 @@ msgstr "没有账户，我是新用户"
 #: templates/social-login-connect.php:59
 msgid "Register"
 msgstr "点击立即登录"
+
+#~ msgctxt "social login"
+#~ msgid "Twitter"
+#~ msgstr "Twitter"
 
 #, php-format
 #~ msgid "On <a target=\"_blank\" href=\"%1$s\">%2$s</a>"
@@ -1177,9 +1187,6 @@ msgstr "点击立即登录"
 
 #~ msgid "Log in with username"
 #~ msgstr "账号密码登录"
-
-#~ msgid "Go back to home"
-#~ msgstr "返回首页"
 
 #~ msgid "Image"
 #~ msgstr "图片"

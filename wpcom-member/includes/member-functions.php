@@ -151,6 +151,7 @@ add_filter( 'wpcom_account_tabs_general_metas', 'wpcom_account_tabs_general_meta
 function wpcom_account_tabs_general_metas( $metas ){
     $user = wp_get_current_user();
     if( !$user->ID ) return $metas;
+    $options = $GLOBALS['wpmx_options'];
 
     if(is_wpcom_enable_phone()) {
         $phone = $user->mobile_phone;
@@ -181,6 +182,12 @@ function wpcom_account_tabs_general_metas( $metas ){
         $email = __('Not set', WPMX_TD) . '<a class="member-bind-url" href="'.$url.'">'.__('Add email address', WPMX_TD).'</a><span class="member-bind-tip">'.__('Private', WPMX_TD).'</span>';
     }
 
+    $display_name_length = isset($options['display_name_length']) ? trim($options['display_name_length']) : 20;
+    $display_name_length = is_numeric($display_name_length) && $display_name_length >= 4 ? intval($display_name_length) : 20;
+
+    $description_length = wpmx_description_length();
+    $url_label = isset($options['url_label']) && trim($options['url_label']) !== '' ? sanitize_text_field(trim($options['url_label'])) : '';
+
     $metas += array(
         20 => array(
             'type' => 'text',
@@ -196,20 +203,37 @@ function wpcom_account_tabs_general_metas( $metas ){
             'type' => 'text',
             'label' => __('Nickname', WPMX_TD),
             'name' => 'display_name',
-            'maxlength' => 20,
+            'maxlength' => $display_name_length,
             'require' => true,
             'value' => $user->display_name
-        ),
-        40 => array(
-            'type' => 'textarea',
-            'label' => __('Description', WPMX_TD),
-            'maxlength' => 200,
-            'rows' => 3,
-            'name' => 'description',
-            'desc' => __('Optional, description can not exceed 200 characters', WPMX_TD),
-            'value' => $user->description
         )
     );
+
+    if($description_length > 0){
+        $metas += array(
+            40 => array(
+                'type' => 'textarea',
+                'label' => __('Description', WPMX_TD),
+                'maxlength' => $description_length,
+                'rows' => 3,
+                'name' => 'description',
+                'desc' => sprintf(__('Optional, description can not exceed %s characters', WPMX_TD), $description_length),
+                'value' => $user->description
+            )
+        );
+    }
+
+    if($url_label !== ''){
+        $metas += array(
+            50 => array(
+                'type' => 'text',
+                'label' => $url_label,
+                'maxlength' => 120,
+                'name' => 'user_url',
+                'value' => $user->user_url
+            )
+        );
+    }
 
     return $metas;
 }
@@ -1285,4 +1309,11 @@ function wpmx_send_sms_code(){
     if ( $res['error'] == '' && isset($msg[$res['result']]) ) $res['error'] = $msg[$res['result']];
 
     wp_send_json($res);
+}
+
+function wpmx_description_length(){
+    $options = $GLOBALS['wpmx_options'];
+    $description_length = isset($options['description_length']) && is_numeric(trim($options['description_length'])) ? trim($options['description_length']) : 200;
+    $description_length = $description_length > 0 ? intval($description_length) : 0;
+    return $description_length;
 }

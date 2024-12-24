@@ -1,5 +1,7 @@
 <?php
 namespace WPCOM\Member;
+
+use WP_Error;
 use WPCOM\Themer\Session;
 
 defined( 'ABSPATH' ) || exit;
@@ -38,6 +40,7 @@ class Member {
         add_action( 'wpcom_social_new_user', array( $this, 'social_new_user' ) );
         add_action( 'login_form_register', array( $this, 'disable_default_register'), 10 );
         add_action( 'login_head', array( $this, 'login_head' ) );
+        add_action( 'wpmx_before_member_account', [ $this, 'add_fill_login_notice']);
 
         add_filter( 'wpmx_localize_script', array($this, 'localize_script') );
         add_filter( 'upload_dir', array($this, 'upload_dir') );
@@ -71,6 +74,14 @@ class Member {
         // 小黑屋功能需要 WP 5.8.0+
         add_filter( 'wp_pre_insert_user_data', array( $this, 'pre_insert_user_data'), 10, version_compare($wp_version,'5.8','>=') ? 4 : 3);
         add_filter( 'send_email_change_email', '__return_false' );
+
+        add_filter( 'pre_comment_approved', [$this, 'comment_fill_login_check'], 20, 2 );
+        add_filter( 'qapress_pre_insert_comment', [$this, 'qa_comment_fill_login_check'], 20 );
+        add_filter( 'wp_insert_post_data', array( $this, 'pre_insert_post'), 10 ,2 );
+        add_filter( 'rest_pre_insert_post', array( $this, 'rest_pre_insert_post') );
+        add_filter( 'wpcom_tougao_notice', array( $this, 'tougao_notice'), 10, 2 );
+        add_action( 'admin_notices', array($this, 'post_fill_login_error') );
+        add_filter( 'qapress_pre_insert_question', [$this, 'qa_post_fill_login_check'], 20 );
 
         $account_tabs = wpcom_account_default_tabs();
         foreach ($account_tabs as $tab){
@@ -429,7 +440,6 @@ class Member {
     }
 
     function shortcode_userlist( $atts ) {
-        $options = $GLOBALS['wpmx_options'];
         $paged = get_query_var('paged') ? get_query_var('paged') : (get_query_var('page') ? get_query_var('page') : 1);
         $users = null; $user_ids = array();
         $number = isset($atts['per_page']) && $atts['per_page'] ? $atts['per_page'] : 10;
@@ -1570,10 +1580,10 @@ class Member {
                     }else if($member_reg_active=='2'){
                         $err = __( 'Account awaiting approval.', WPMX_TD );
                     }
-                    if($err) $user = new \WP_Error( 'not_approve', $err );
+                    if($err) $user = new WP_Error( 'not_approve', $err );
                 }else if($get_user->user_status=='1'){ // 黑名单用户
                     $err = __( 'Blacklist user.', WPMX_TD );
-                    if($err) $user = new \WP_Error( 'not_approve', $err );
+                    if($err) $user = new WP_Error( 'not_approve', $err );
                 }
             }
         }else if( is_wpcom_enable_phone() && preg_match("/^1[3-9]{1}\d{9}$/", $username) ){ // 手机登录
@@ -2054,6 +2064,98 @@ class Member {
             </div>
         </div>
     <?php }
+
+    function comment_fill_login_check($approved, $comment){
+        if(!is_wp_error($approved) && isset($comment['user_id']) && $comment['user_id'] && wpcom_need_fill_login($comment['user_id'])){
+            return new WP_Error('need_fill_login', $this->fill_login_check_msg(), 400);
+        }
+        return $approved;
+    }
+
+    function qa_comment_fill_login_check($comment){
+        if(!is_wp_error($comment) && isset($comment['user_id']) && $comment['user_id'] && wpcom_need_fill_login($comment['user_id'])){
+            $comment = new WP_Error('need_fill_login', $this->fill_login_check_msg(), 400);
+        }
+        return $comment;
+    }
+
+    function pre_insert_post($data, $attr, $rest = 0){
+        $user_id = isset($data['post_author']) && $data['post_author'] ? $data['post_author'] : get_current_user_id();
+        if($user_id && wpcom_need_fill_login($user_id)){
+            $data['post_status'] = 'inherit';
+            if($rest){
+                $err = new WP_Error( 'need_fill_login', $this->fill_login_check_msg(false), 400);
+                return $err;
+            }else{
+                add_filter('redirect_post_location', array( $this, 'redirect_post_location_filter'), 88);
+            }
+        }
+        return $data;
+    }
+
+    function rest_pre_insert_post($post){
+        $_post = json_decode(json_encode($post), true);
+        $res = $this->pre_insert_post($_post, $_post, 1);
+        if(is_wp_error($res)){
+            return $res;
+        }else{
+            return $post;
+        }
+    }
+
+    function redirect_post_location_filter($location){
+        remove_filter('redirect_post_location', __FUNCTION__, 88);
+        $location = add_query_arg('message', 7799, $location);
+        return $location;
+    }
+
+    function post_fill_login_error(){
+        if(isset( $_GET['message'] ) && isset( $_GET['post'] ) && $_GET['message'] == '7799'){
+            $post_notice = $this->fill_login_check_msg(); ?>
+            <div class="notice error is-dismissible" >
+                <?php echo wp_kses_post(wpautop($post_notice));?>
+            </div>
+        <?php }
+    }
+
+    function tougao_notice($notice, $post){
+        global $post_notice;
+        if(!isset($post_notice) && $post->post_status === 'inherit'){
+            $post_notice = $this->fill_login_check_msg();
+        }
+        if($post_notice && $post && isset($post->post_status) && ($post->post_status === 'draft' || $post->post_status === 'inherit')){
+            $notice = '<div class="wpcom-alert alert-warning alert-dismissible fade in" role="alert">';
+            $notice .= '<div class="wpcom-close" data-wpcom-dismiss="alert" aria-label="Close">' . wpmx_icon('close', 0) . '</div>';
+            $notice .= $post_notice;
+            $notice .= '</div>';
+        }
+        return $notice;
+    }
+
+    function qa_post_fill_login_check($post){
+        if(!is_wp_error($post) && isset($post['post_author']) && $post['post_author'] && wpcom_need_fill_login($post['post_author'])){
+            $post = new WP_Error('need_fill_login', $this->fill_login_check_msg(), 400);
+        }
+        return $post;
+    }
+
+    function add_fill_login_notice(){
+        $user_id = get_current_user_id();
+        if($user_id && wpcom_need_fill_login($user_id)){
+            $bind_link = '<a href="' . wpcom_subpage_url('bind') . '">' . __('click here to complete your profile', WPMX_TD) . '</a>';
+            $msg = sprintf(__('Your %1$s is missing. Please %2$s.', WPMX_TD), is_wpcom_enable_phone() ? _x('Phone number', 'label', WPCMP_TD) : _x('Email address', 'label', WPMX_TD), $bind_link);
+            echo '<div class="wpcom-alert alert-warning text-center" role="alert">' . $msg . '</div>';
+        }
+    }
+
+    private function fill_login_check_msg($has_url = true){
+        $bind_link = sprintf($has_url ? __('click here to update your %s', WPMX_TD) : __('update your %s', WPMX_TD), is_wpcom_enable_phone() ? _x('Phone number', 'label', WPCMP_TD) : _x('Email address', 'label', WPMX_TD));
+        if($has_url){
+            $bind_link = '<a href="' . wpcom_subpage_url('bind') . '" target="_blank">' . $bind_link . '</a>';
+        }
+        $msg = sprintf( __('Action failed. Please %s before proceeding with this action.', WPMX_TD), $bind_link);
+        return apply_filters('wpmx_fill_login_check_msg', $msg);
+    }
 }
 
 class_alias(Member::class, 'WPCOM_Member');

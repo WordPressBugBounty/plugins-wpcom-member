@@ -4,7 +4,7 @@ Donate link: https://www.wpcom.cn/plugins/wpcom-member-pro.html
 Tags: 用户中心, membership
 Requires at least: 6.1.1
 Tested up to: 6.7.1
-Stable tag: 1.6.0
+Stable tag: 1.7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -60,6 +60,11 @@ WordPress用户中心插件 / User profile & membership plugin for WordPress
 == Changelog ==
 
 ### 更新记录
+
+**1.7.0** - 2024-12-24
+
+新增`补充电子邮箱`/`补充手机号码`选项：用户中心-常规设置-注册登录选项（温馨提示：补充手机号码需要使用WPCOM主题或者高级版用户中心插件并且开启手机号码登录功能）：
+如果开启了选项则在发布文章、评论、QAPress问答和回答的时候会自动检测是否完善电子邮箱或者手机号，如果没有的话则会拦截无法提交发布。
 
 **1.6.0** - 2024-12-16
 

@@ -535,6 +535,12 @@ function wpmx_admin_options(){
             'r' => 5
         ),
         array(
+            'name' => 'member_fill_login',
+            'title' => is_wpcom_enable_phone() ? '补充手机号码' : '补充电子邮箱',
+            'desc' => '针对社交登录注册及历史用户缺少手机号或者邮箱信息时限制内容发布，例如评论、投稿',
+            'type' => 't'
+        ),
+        array(
             'name' => 'member_captcha',
             'title' => '人机验证方式',
             'desc' => '注册登录等表单人机验证方式',
@@ -819,6 +825,22 @@ function wpcom_back_home(){
     if( function_exists('wpcom_setup') ){ ?>
         <a href="<?php bloginfo('url'); ?>" class="wpcom-btn btn-primary btn-home"><?php wpmx_icon('home-fill'); _e('Go back to home', 'wpcom');?></a>
     <?php }
+}
+
+function wpcom_need_fill_login($user_id){
+    $options = $GLOBALS['wpmx_options'];
+    if($user_id && isset($options['member_fill_login']) && $options['member_fill_login'] == 1){
+        $user = get_user_by('id', $user_id);
+        if($user && isset($user->ID) && $user->ID){
+            if(is_wpcom_enable_phone()){
+                $login = $user->mobile_phone;
+            }else{
+                $login = $user->user_email && !wpcom_is_empty_mail($user->user_email) ? $user->user_email : '';
+            }
+            if(!$login || trim($login) === '') return true;
+        }
+    }
+    return false;
 }
 
 add_filter('eztoc_do_shortcode', function($isEligible){

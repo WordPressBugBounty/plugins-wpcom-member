@@ -524,7 +524,7 @@ function wpcom_socials( $social ){
         }
     }
 
-    $is_wechat = strpos($_SERVER['HTTP_USER_AGENT'], 'MicroMessenger') !== false;
+    $is_wechat = isset($_SERVER['HTTP_USER_AGENT']) && strpos($_SERVER['HTTP_USER_AGENT'], 'MicroMessenger') !== false;
     if($is_wechat && $has_wechat2 > -1){ // 微信内置浏览器，并且配置了公众号登录，则以公众号登录为准
         if ($has_wechat > -1) unset($social[$has_wechat]);
         if ($has_weapp > -1) unset($social[$has_weapp]);
@@ -1014,11 +1014,11 @@ function wpmx_aliyun_toString($bytes) {
 }
 
 function wpmx_get_ip(){
-    if(!empty($_SERVER['HTTP_CLIENT_IP'])){
+    if(isset($_SERVER['HTTP_CLIENT_IP']) && !empty($_SERVER['HTTP_CLIENT_IP'])){
         $cip = $_SERVER['HTTP_CLIENT_IP'];
-    } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])){
+    } else if (isset($_SERVER['HTTP_X_FORWARDED_FOR']) && !empty($_SERVER['HTTP_X_FORWARDED_FOR'])){
         $cip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-    } elseif (!empty($_SERVER['REMOTE_ADDR'])){
+    } else if (isset($_SERVER['REMOTE_ADDR']) && !empty($_SERVER['REMOTE_ADDR'])){
         $cip = $_SERVER['REMOTE_ADDR'];
     }
     $cip = isset($cip) ? filter_var($cip, FILTER_VALIDATE_IP) : '';

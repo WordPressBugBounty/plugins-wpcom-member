@@ -1,4 +1,5 @@
-<?php defined( 'ABSPATH' ) || exit;?>
+<?php defined( 'ABSPATH' ) || exit;
+do_action('wpmx_before_member_account');?>
 <div class="member-account-wrap">
     <div class="member-account-nav">
         <div class="member-account-user">

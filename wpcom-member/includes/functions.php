@@ -829,7 +829,7 @@ function wpcom_back_home(){
 
 function wpcom_need_fill_login($user_id){
     $options = $GLOBALS['wpmx_options'];
-    if($user_id && isset($options['member_fill_login']) && $options['member_fill_login'] == 1){
+    if($user_id && isset($options['member_fill_login']) && $options['member_fill_login'] == 1 && !user_can($user_id, 'edit_post')){
         $user = get_user_by('id', $user_id);
         if($user && isset($user->ID) && $user->ID){
             if(is_wpcom_enable_phone()){

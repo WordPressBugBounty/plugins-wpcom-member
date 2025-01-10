@@ -92,7 +92,20 @@ function wpmx_scripts(){
         global $wpmx_options;
         wp_enqueue_script('wpcom-member', WPMX_URI . 'js/index.js', array('jquery'), WPMX_VERSION, true);
         wp_enqueue_style('wpcom-member', WPMX_URI . 'css/style.css', array(), WPMX_VERSION);
-        if(!wp_script_is('wpcom-icons')) wp_register_script('wpcom-icons', WPMX_URI . 'js/icons-2.8.8.js', array(), WPMX_VERSION, true);
+
+        // 图标库版本处理，兼容主题和其他插件
+        $load_icon = true;
+        $ver = '2.8.9';
+        if(wp_script_is('wpcom-icons')){
+            $cur_version = isset(wp_scripts()->registered['wpcom-icons']) ? wp_scripts()->registered['wpcom-icons']->ver : '';
+            if(!$cur_version || version_compare($cur_version, $ver, '<')){ // 当前版本低，需要替换
+                wp_deregister_script('wpcom-icons');
+            }else{ // 不替换不注册
+                $load_icon = false;
+            }
+        }
+        if($load_icon) wp_register_script('wpcom-icons', WPMX_URI . 'js/icons-' . $ver . '.js', array(), $ver, true);
+
         wp_enqueue_script('wpcom-icons');
 
         if(!function_exists('wpcom_setup')){
@@ -830,6 +843,11 @@ function wpcom_back_home(){
 function wpcom_need_fill_login($user_id){
     $options = $GLOBALS['wpmx_options'];
     if($user_id && isset($options['member_fill_login']) && $options['member_fill_login'] == 1 && !user_can($user_id, 'edit_post')){
+        // 当前登录用户不是被判断的用户，比如管理员、编辑后台选择作者
+        if((int)get_current_user_id() !== (int)$user_id && current_user_can('edit_others_posts')){
+            return false;
+        }
+
         $user = get_user_by('id', $user_id);
         if($user && isset($user->ID) && $user->ID){
             if(is_wpcom_enable_phone()){

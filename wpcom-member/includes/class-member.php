@@ -58,7 +58,8 @@ class Member {
         add_filter( 'user_has_cap', array( $this, 'user_has_cap' ), 10, 4 );
         add_filter( 'authenticate', array( $this, 'authenticate' ), 50, 3 );
         add_filter( 'views_users', array( $this, 'views_users' ) );
-        add_filter( 'pre_get_users', array( $this, 'filter_users' ) );
+        add_action( 'pre_get_users', array( $this, 'filter_users' ) );
+        add_action( 'pre_user_query', array( $this, 'search_by_phone' ) );
         add_filter( 'bulk_actions-users', array( $this, 'bulk_actions_users' ) );
         add_filter( 'handle_bulk_actions-users', array( $this, 'handle_bulk_actions_users' ), 10, 3 );
         add_filter( 'body_class', array( $this, 'body_class' ), 10);
@@ -1560,7 +1561,7 @@ class Member {
             }
             if( $get_user->ID ){
                 $options = $GLOBALS['wpmx_options'];
-                // 查查旧数据，向下兼容
+                // 查查旧数据，向下兼容，6.8.0+
                 if($get_user->user_status == '0'){
                     $_approve = get_user_meta( $get_user->ID, 'wpcom_approve', true );
                     if($_approve == '0'){ // 未激活用户
@@ -1642,7 +1643,7 @@ class Member {
 
     function filter_users( $query ){
         global $pagenow;
-        if (is_admin() && 'users.php' == $pagenow ) {
+        if ( is_admin() && 'users.php' == $pagenow ) {
             if(!isset($_GET['orderby'])){
                 $query->set('orderby', 'registered');
                 $query->set('order', 'desc');
@@ -1655,7 +1656,26 @@ class Member {
                 }
             }
         }
-        return $query;
+    }
+
+    function search_by_phone($query){
+        global $wpdb, $pagenow;
+        $search_term = trim($query->query_vars['search'], '*');
+        if( is_admin() && 'users.php' == $pagenow && $search_term && preg_match("/^\d{4,11}$/", $search_term) ) {
+            $query->query_from = 'FROM wp_users INNER JOIN wp_usermeta ON ( wp_users.ID = wp_usermeta.user_id )  INNER JOIN wp_usermeta AS mt1 ON ( wp_users.ID = mt1.user_id )';
+
+            // 正则替换
+            $pattern = "/wp_usermeta(\.meta_key\s+=\s+['\"]{$wpdb->prefix}capabilities['\"])/";
+            $replacement = "mt1$1";
+
+            // 正则替换
+            $pattern2 = "/display_name\s+LIKE\s+('{[^\'\"]+}')/";
+            $replacement2 = "display_name LIKE $1 OR ( wp_usermeta.meta_key = 'mobile_phone' AND wp_usermeta.meta_value LIKE $1 )";
+
+            // 执行替换
+            $query->query_where = preg_replace($pattern, $replacement, $query->query_where);
+            $query->query_where = preg_replace($pattern2, $replacement2, $query->query_where);
+        }
     }
 
     function display_page_type($post_states, $post){

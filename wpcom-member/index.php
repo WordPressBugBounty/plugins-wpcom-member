@@ -2,14 +2,14 @@
 /**
  * Plugin Name: WPCOM Member 用户中心
  * Description: WordPress用户中心插件 / User profile & membership plugin for WordPress
- * Version: 1.7.2
+ * Version: 1.7.3
  * Author: WPCOM
  * Author URI: https://www.wpcom.cn
  * Requires PHP: 7.0
  * Requires at least: 6.2
  */
 
-define( 'WPMX_VERSION', '1.7.2' );
+define( 'WPMX_VERSION', '1.7.3' );
 define( 'WPMX_DIR', plugin_dir_path( __FILE__ ) );
 define( 'WPMX_URI', plugins_url( '/', __FILE__ ) );
 define( 'WPMX_TD', 'wpcom-member');

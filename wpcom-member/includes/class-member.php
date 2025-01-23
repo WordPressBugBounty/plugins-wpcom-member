@@ -2163,13 +2163,13 @@ class Member {
         $user_id = get_current_user_id();
         if($user_id && wpcom_need_fill_login($user_id)){
             $bind_link = '<a href="' . wpcom_subpage_url('bind') . '">' . __('click here to complete your profile', WPMX_TD) . '</a>';
-            $msg = sprintf(__('Your %1$s is missing. Please %2$s.', WPMX_TD), is_wpcom_enable_phone() ? _x('Phone number', 'label', WPCMP_TD) : _x('Email address', 'label', WPMX_TD), $bind_link);
+            $msg = sprintf(__('Your %1$s is missing. Please %2$s.', WPMX_TD), is_wpcom_enable_phone() ? _x('Phone number', 'label', defined('WPCMP_TD') ? WPCMP_TD : 'wpcom') : _x('Email address', 'label', WPMX_TD), $bind_link);
             echo '<div class="wpcom-alert alert-warning text-center" role="alert">' . $msg . '</div>';
         }
     }
 
     private function fill_login_check_msg($has_url = true){
-        $bind_link = sprintf($has_url ? __('click here to update your %s', WPMX_TD) : __('update your %s', WPMX_TD), is_wpcom_enable_phone() ? _x('Phone number', 'label', WPCMP_TD) : _x('Email address', 'label', WPMX_TD));
+        $bind_link = sprintf($has_url ? __('click here to update your %s', WPMX_TD) : __('update your %s', WPMX_TD), is_wpcom_enable_phone() ? _x('Phone number', 'label', defined('WPCMP_TD') ? WPCMP_TD : 'wpcom') : _x('Email address', 'label', WPMX_TD));
         if($has_url){
             $bind_link = '<a href="' . wpcom_subpage_url('bind') . '" target="_blank">' . $bind_link . '</a>';
         }

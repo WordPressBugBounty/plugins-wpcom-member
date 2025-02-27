@@ -2100,8 +2100,9 @@ class Member {
     }
 
     function pre_insert_post($data, $attr, $rest = 0){
-        $user_id = isset($data['post_author']) && $data['post_author'] ? $data['post_author'] : get_current_user_id();
-        if($user_id && wpcom_need_fill_login($user_id)){
+        $user_id = isset($data['post_author']) && $data['post_author'] ? (int)$data['post_author'] : get_current_user_id();
+        $needed_types = apply_filters('wpmx_need_fill_login_post_types', ['post', 'page', 'kuaixun', 'qa_post']);
+        if($user_id && $data['post_type'] && in_array($data['post_status'], $needed_types) && wpcom_need_fill_login($user_id)){
             $data['post_status'] = 'inherit';
             if($rest){
                 $err = new WP_Error( 'need_fill_login', $this->fill_login_check_msg(false), 400);

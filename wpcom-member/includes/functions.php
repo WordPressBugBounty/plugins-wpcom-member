@@ -842,7 +842,7 @@ function wpcom_back_home(){
 
 function wpcom_need_fill_login($user_id){
     $options = $GLOBALS['wpmx_options'];
-    if($user_id && isset($options['member_fill_login']) && $options['member_fill_login'] == 1 && !user_can($user_id, 'edit_post')){
+    if($user_id && isset($options['member_fill_login']) && $options['member_fill_login'] == 1 && !user_can($user_id, 'edit_posts')){
         // 当前登录用户不是被判断的用户，比如管理员、编辑后台选择作者
         if((int)get_current_user_id() !== (int)$user_id && current_user_can('edit_others_posts')){
             return false;

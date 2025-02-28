@@ -134,7 +134,7 @@ if (!function_exists('wpcom_ajax_login')) {
         $res = apply_filters('wpcom_login_form_validate', $res);
 
         if ($res['result'] == 1) {
-            if ($sms_login) { // 手机快捷登录
+            if ($sms_login && $user_phone !== '' && isset($_POST['sms_code']) && wpcom_check_sms_code($user_phone, sanitize_text_field($_POST['sms_code']))) { // 手机快捷登录
                 $args = array(
                     'meta_key'     => 'mobile_phone',
                     'meta_value'   => $user_phone,

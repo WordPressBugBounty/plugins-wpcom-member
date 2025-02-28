@@ -818,7 +818,7 @@ function wpcom_check_sms_code($phone, $val){
     // 检查session、验证码值
     $key = 'code_'.$phone;
     $code = Session::get($key);
-    if($code && $code == $val ){
+    if($phone && $val && $code && $code == $val ){
         return true;
     }
     return false;

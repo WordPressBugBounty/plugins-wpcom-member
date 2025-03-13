@@ -10,16 +10,17 @@ if( !class_exists( Session::class ) ) {
             global $wpcom_wpdb, $wpdb;
             self::init_database();
             $table = $wpdb->prefix . self::$table;
-            $session = array();
+            $session = [];
             if(!preg_match('/^_/i', $name)) $name = self::session_prefix() . '_' . $name;
             $session['name'] = $name;
             $session['value'] = $value;
             $session['expired'] = $expired && is_numeric($expired) ? $expired : 900;
             $session['time'] = current_time( 'mysql', 1 );
-            $option = @$wpcom_wpdb->get_row( "SELECT * FROM `$table` WHERE name = '$name'" );
+            $query = $wpdb->prepare("SELECT * FROM `$table` WHERE name = %s", $name);
+            $option = @$wpcom_wpdb->get_row( $query );
             if($option && isset($option->value)) {
                 unset($session['name']);
-                $res = $wpcom_wpdb->update($table, $session, array('name' => $name));
+                $res = $wpcom_wpdb->update($table, $session, ['name' => $name]);
             }else{
                 $res = $wpcom_wpdb->insert($table, $session);
             }
@@ -32,7 +33,8 @@ if( !class_exists( Session::class ) ) {
             $table = $wpdb->prefix . self::$table;
             if($name) {
                 if(!preg_match('/^_/i', $name)) $name = self::session_prefix() . '_' . $name;
-                $row = $wpcom_wpdb->get_row("SELECT * FROM `$table` WHERE name = '$name'");
+                $query = $wpdb->prepare("SELECT * FROM `$table` WHERE name = %s", $name);
+                $row = $wpcom_wpdb->get_row($query);
                 if($row && isset($row->value)){
                     if( (get_date_from_gmt($row->time, 'U') + $row->expired) > current_time( 'timestamp', 1 ) ) {
                         return $row->value;
@@ -46,11 +48,12 @@ if( !class_exists( Session::class ) ) {
         public static function delete($id='', $name=''){
             global $wpcom_wpdb, $wpdb;
             self::init_database();
-            $table = $wpdb->prefix . self::$table;
+            $table = esc_sql($wpdb->prefix . self::$table);
             if( $wpcom_wpdb->get_var("SHOW TABLES LIKE '$table'") == $table ) {
-                $array = array();
-                if($id) $array['ID'] = $id;
+                $array = [];
+                if($id) $array['ID'] = absint($id);
                 if($name) {
+                    $name = sanitize_text_field($name);
                     if(!preg_match('/^_/i', $name)) $name = self::session_prefix() . '_' . $name;
                     $array['name'] = $name;
                 }
@@ -61,13 +64,14 @@ if( !class_exists( Session::class ) ) {
         public static function cron(){
             global $wpcom_wpdb, $wpdb;
             self::init_database();
-            $table = $wpdb->prefix . self::$table;
+            $table = esc_sql($wpdb->prefix . self::$table);
             if( $wpcom_wpdb->get_var("SHOW TABLES LIKE '$table'") == $table ) {
                 $timestamp = current_time( 'timestamp', 1 );
-                $temps = $wpcom_wpdb->get_results("SELECT * FROM `$table` WHERE UNIX_TIMESTAMP(time)+expired < $timestamp");
+                $query = $wpdb->prepare("SELECT * FROM `$table` WHERE UNIX_TIMESTAMP(time) + expired < %d", $timestamp);
+                $temps = $wpcom_wpdb->get_results($query);
                 if ($temps) {
                     foreach ($temps as $temp) {
-                        @$wpcom_wpdb->delete($table, array('ID' => $temp->ID));
+                        @$wpcom_wpdb->delete($table, ['ID' => $temp->ID]);
                     }
                 }
             }

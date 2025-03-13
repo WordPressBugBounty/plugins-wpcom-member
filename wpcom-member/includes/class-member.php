@@ -534,32 +534,26 @@ class Member {
             );
             $current_step = 0;
             if($by) $current_step = 1;
-            if($token) $current_step = 2;?>
+            if($token) $current_step = 2;
+            $count = is_array($steps) ? count($steps) : 0;?>
             <div class="account-bind-process-wrap">
-            <ul class="member-lp-process account-bind-process">
+            <ul class="member-lp-process account-bind-process" style="--progress-count: <?php echo $count;?>;">
                 <?php $i = 1; $active = 0; foreach ($steps as $key => $step ) {
-                    if( $key==$current_step ) {
+                    if( $key == $current_step ) {
                         $classes = 'active';
                         $active = 1;
-                    }else if( $key!=$current_step && $active == 1 ){
+                    }else if( $key != $current_step && $active == 1 ){
                         $classes = '';
                     }else{
                         $classes = 'processed active';
                     }
-                    if($key==2){ ?>
-                        <li class="last <?php echo esc_attr($classes); ?>">
-                            <i><?php echo esc_html($i); ?></i>
-                            <p><?php echo esc_html($step);?></p>
-                        </li>
-                    <?php } else{ ?>
-                        <li class="<?php echo esc_attr($classes); ?>">
-                            <div class="process-index">
-                                <i><?php echo esc_html($i); ?></i>
-                                <p><?php echo esc_html($step);?></p>
+                    $progress = sprintf("%.3f", (1 - $i / $count) * 100); ?>
+                        <li class="<?php echo esc_attr($classes); ?>" style="--circle-progress: <?php echo $progress;?>%;">
+                            <div class="process-circle">
+                                <span><?php echo esc_html($i); ?></span>
                             </div>
-                            <div class="process-line"></div>
+                            <div class="process-title"><?php echo esc_html($step);?></div>
                         </li>
-                    <?php } ?>
                     <?php $i++; } ?>
             </ul>
             </div>

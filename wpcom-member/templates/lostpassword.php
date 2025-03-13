@@ -11,8 +11,10 @@ $steps = array(
 
 <div class="member-lostpassword">
     <div class="member-lp-head">
-        <ul class="member-lp-process">
+        <?php $count = is_array($steps) ? count($steps) : 0; ?>
+        <ul class="member-lp-process" style="--progress-count: <?php echo $count;?>;">
             <?php $i = 1; $active = 0; foreach ($steps as $key => $step ) {
+                $progress = sprintf("%.3f", (1 - $i / $count) * 100);
                 if( $key==$subpage ) {
                     $classes = 'active';
                     $active = 1;
@@ -20,22 +22,14 @@ $steps = array(
                     $classes = '';
                 }else{
                     $classes = 'processed active';
-                }
-                if($key=='finished'){ ?>
-                    <li class="last <?php echo esc_attr($classes); ?>">
-                        <i><?php echo esc_html($i); ?></i>
-                        <p><?php echo esc_html($step);?></p>
-                    </li>
-                <?php } else{ ?>
-                    <li class="<?php echo esc_attr($classes); ?>">
-                        <div class="process-index">
-                            <i><?php echo esc_html($i); ?></i>
-                            <p><?php echo esc_html($step);?></p>
-                        </div>
-                        <div class="process-line"></div>
-                    </li>
-                <?php } ?>
-                <?php $i++; } ?>
+                } ?>
+                 <li class="<?php echo esc_attr($classes); ?>" style="--circle-progress: <?php echo $progress;?>%;">
+                    <div class="process-circle">
+                        <span><?php echo esc_html($i); ?></span>
+                    </div>
+                    <div class="process-title"><?php echo esc_html($step);?></div>
+                </li>
+            <?php $i++; } ?>
         </ul>
     </div>
 

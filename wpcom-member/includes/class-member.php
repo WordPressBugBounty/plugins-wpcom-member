@@ -369,11 +369,12 @@ class Member {
     }
 
     function shortcode( $atts ){
-        if( isset( $atts ['type'] ) && $atts ['type'] != '' && method_exists( $this, 'shortcode_' . $atts ['type'] ) ){
+        if( isset( $atts['type'] ) && $atts['type'] != '' && method_exists( $this, 'shortcode_' . $atts ['type'] ) ){
+            $atts = array_map('sanitize_text_field', $atts);
             $show_profile = apply_filters( 'wpcom_member_show_profile' , true );
-            $excerpt = array('userlist', 'profile');
+            $excerpt = ['userlist', 'profile'];
             if(!$show_profile && in_array($atts ['type'], $excerpt)) {
-                return '错误：不支持的短代码类型';
+                return _e('Error: Unsupported shortcode type', 'WPMX_TD');
             }else{
                 return $this->{'shortcode_'.$atts ['type']}( $atts );
             }
@@ -1088,20 +1089,20 @@ class Member {
                             else
                                 $error = __( 'Your activation link is invalid.', WPMX_TD );
 
-                            $resend_url = add_query_arg( array('approve' => 'resend', 'login' => $login), wp_registration_url() );
+                            $resend_url = add_query_arg( ['approve' => 'resend', 'login' => $login], wp_registration_url() );
                             $atts['notice'] = $error . '<p><a href="'.$resend_url.'">'.__( 'Resend activation email', WPMX_TD ).'</a></p>';
                             $atts['icon'] = 'warning';
                         }
                     }
-                } else if($_REQUEST['approve'] =='true') {
+                } else if($_REQUEST['approve'] === 'true') {
                     $atts['notice'] = __( 'Your account has been activated successfully.', WPMX_TD );
                     $atts['notice'] .= '<p><a href="'.wp_login_url().'">'.__( 'Click here to login', WPMX_TD ).'</a></p>';
                     $atts['icon'] = 'success';
-                } else if($_REQUEST['approve'] =='resend') {
+                } else if($_REQUEST['approve'] === 'resend') {
                     return $this->load_template('approve-resend', $atts);
                 }
                 return $this->load_template('approve-notice', $atts);
-            }else if( $atts['action'] == 'register' && $member_reg_active=='2' && isset($_REQUEST['approve']) && $_REQUEST['approve'] == 'false' ){
+            }else if( $atts['action'] == 'register' && $member_reg_active == '2' && isset($_REQUEST['approve']) && $_REQUEST['approve'] == 'false' ){
                 $atts['notice'] = isset($options['member_reg_notice']) && $options['member_reg_notice'] ? $options['member_reg_notice']: '';
                 return $this->load_template('approve-notice', $atts);
             } else{
@@ -1155,7 +1156,7 @@ class Member {
         $file = apply_filters('wpcom_member_load_template', $file, $template);
 
         if ( file_exists( $file ) ) {
-            extract($atts);
+            extract($atts, EXTR_SKIP);
             ob_start();
             include $file;
             $output = ob_get_contents();

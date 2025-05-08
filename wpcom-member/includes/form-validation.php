@@ -399,14 +399,15 @@ function wpcom_ajax_lostpassword() {
             $is_mobile_phone = 0;
             if (!$user && strpos($user_name, '@')) {
                 $user = get_user_by('email', $user_name);
-            } else if (!$user && is_wpcom_enable_phone() && preg_match("/^1[3-9]{1}\d{9}$/", $user_name)) {
+            } else if (!$user && is_wpcom_enable_phone(true) && preg_match("/^1[3-9]{1}\d{9}$/", $user_name)) {
                 $args = array(
                     'meta_key'     => 'mobile_phone',
                     'meta_value'   => $user_name,
                 );
                 $users = get_users($args);
                 if ($users && $users[0]->ID) {
-                    $is_mobile_phone = 1;
+                    // 确认开启手机登录，排除兼容模式
+                    if(is_wpcom_enable_phone()) $is_mobile_phone = 1;
                     Session::set('lost_password_phone', $user_name);
                     $user = $users[0];
                 }
@@ -414,14 +415,14 @@ function wpcom_ajax_lostpassword() {
 
             if ($user && $user->ID) {
                 if (!$is_mobile_phone) { // 非手机找回，则发送邮件
-                    $phone = $user->mobile_phone;
+                    $phone = is_wpcom_enable_phone() ? $user->mobile_phone : '';
                     if (!$user->user_email || wpcom_is_empty_mail($user->user_email)) { // 未设置邮箱
                         if ($phone) { // 使用手机找回
                             $is_mobile_phone = 1;
                             Session::set('lost_password_phone', $phone);
                         } else {
                             $res['result'] = 0;
-                            $res['error'] = __('No email address or phone number added, you should add first', WPMX_TD); //'未绑定邮箱或者手机，社交登录用户请绑定后再使用找回密码功能';
+                            $res['error'] = is_wpcom_enable_phone(true) ? __('No email address added. You should add it first.', WPMX_TD) : __('No email address or phone number added. You should add first.', WPMX_TD); //'未绑定邮箱或者手机，社交登录用户请绑定后再使用找回密码功能';
                         }
                     } else {
                         $reset = retrieve_password($user->user_login);

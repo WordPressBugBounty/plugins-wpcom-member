@@ -2,14 +2,14 @@
 /**
  * Plugin Name: WPCOM Member 用户中心
  * Description: WordPress用户中心插件 / User profile & membership plugin for WordPress
- * Version: 1.7.8
+ * Version: 1.7.9
  * Author: WPCOM
  * Author URI: https://www.wpcom.cn
  * Requires PHP: 7.4
  * Requires at least: 6.2
  */
 
-define( 'WPMX_VERSION', '1.7.8' );
+define( 'WPMX_VERSION', '1.7.9' );
 define( 'WPMX_DIR', plugin_dir_path( __FILE__ ) );
 define( 'WPMX_URI', plugins_url( '/', __FILE__ ) );
 define( 'WPMX_TD', 'wpcom-member');
@@ -24,7 +24,5 @@ require_once WPMX_DIR . 'includes/functions.php';
 add_action( 'wpmx_cron_flush_rewrite_rules', 'flush_rewrite_rules' );
 register_activation_hook( __FILE__, 'wpmx_plugin_activate' );
 function wpmx_plugin_activate(){
-    $args = array();
-    $args[] = wp_rand(1000, 99999) . '_' . time();
-    wp_schedule_single_event( time() + 5, 'wpmx_cron_flush_rewrite_rules', $args );
+    wp_schedule_single_event( time() + 5, 'wpmx_cron_flush_rewrite_rules', [wp_rand(1000, 99999) . '_' . time()] );
 }

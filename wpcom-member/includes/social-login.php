@@ -78,8 +78,8 @@ class Social_Login {
                     // 有跳转回前页，保存到session
                     Session::set('redirect_to', $redirect_to);
                 }
-                $this->{$this->type.'_login'}();
-            } else if ($_GET['action'] == 'callback') {
+                $this->{$this->type . '_login'}();
+            } else if ($_GET['action'] === 'callback') {
                 if(!isset($_GET['code']) || isset($_GET['error']) || isset($_GET['error_code']) || isset($_GET['error_description'])){
                     wp_die("<h3>错误：</h3>Code获取出错，请重试！");
                     exit();
@@ -99,7 +99,7 @@ class Social_Login {
                 $this->{$this->type.'_callback'}(sanitize_text_field(wp_unslash($_GET['code'])));
 
                 $access_token = Session::get('access_token');
-                if (!$access_token || strlen($access_token)<6 || !$this->type){
+                if (!$access_token || strlen($access_token) < 6 || !$this->type){
                     wp_die("<h3>错误：</h3>Token获取出错，请重试！");
                     exit();
                 }

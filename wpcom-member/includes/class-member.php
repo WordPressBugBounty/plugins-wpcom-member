@@ -75,6 +75,7 @@ class Member {
         // 小黑屋功能需要 WP 5.8.0+
         add_filter( 'wp_pre_insert_user_data', array( $this, 'pre_insert_user_data'), 10, version_compare($wp_version,'5.8','>=') ? 4 : 3);
         add_filter( 'send_email_change_email', '__return_false' );
+        add_filter( 'get_canonical_url', [$this, 'profile_canonical_url'] );
 
         add_filter( 'pre_comment_approved', [$this, 'comment_fill_login_check'], 20, 2 );
         add_filter( 'qapress_pre_insert_comment', [$this, 'qa_comment_fill_login_check'], 20 );
@@ -86,12 +87,12 @@ class Member {
 
         $account_tabs = wpcom_account_default_tabs();
         foreach ($account_tabs as $tab){
-            add_action( 'wpcom_account_tabs_' . $tab['slug'], array( $this, 'account_tabs_' . $tab['slug'] ) );
+            add_action( 'wpcom_account_tabs_' . $tab['slug'], [ $this, 'account_tabs_' . $tab['slug'] ] );
         }
 
         $profile_tabs = wpcom_profile_default_tabs();
         foreach ($profile_tabs as $tab){
-            add_action( 'wpcom_profile_tabs_' . $tab['slug'], array( $this, 'profile_tabs_' . $tab['slug'] ) );
+            add_action( 'wpcom_profile_tabs_' . $tab['slug'], [ $this, 'profile_tabs_' . $tab['slug'] ] );
         }
 
         if( isset($options['social_login_on']) && $options['social_login_on']=='1' ) {
@@ -121,7 +122,7 @@ class Member {
     }
 
     function flush_rewrite_rules(){
-        $args = array();
+        $args = [];
         $args[] = mt_rand(1000, 99999) . '_' . time();
         wp_schedule_single_event( time() + 3, 'wpcom_cron_flush_rewrite_rules', $args );
     }
@@ -130,7 +131,7 @@ class Member {
         global $permalink_structure;
         $options = $GLOBALS['wpmx_options'];
         if(!isset($permalink_structure)) $permalink_structure = get_option('permalink_structure');
-        $new_rules = array();
+        $new_rules = [];
         $pre = preg_match( '/^\/index\.php\//i', $permalink_structure) ? 'index.php/' : '';
 
         if( isset($options['member_page_account']) && $options['member_page_account'] ) {
@@ -210,7 +211,7 @@ class Member {
                 $user = get_user_by( 'ID', absint( $id_or_email ) );
                 $args['alt'] = $user ? $user->display_name : '';
             }
-            $class = array( 'avatar', 'avatar-' . (int) $args['size'], 'photo' );
+            $class = [ 'avatar', 'avatar-' . (int) $args['size'], 'photo' ];
             if ( $args['class'] ) {
                 if ( is_array( $args['class'] ) ) {
                     $class = array_merge( $class, $args['class'] );
@@ -237,11 +238,11 @@ class Member {
         if( is_wpcom_member_page( 'account' ) ||
             ( is_wpcom_member_page('profile') && ( get_current_user_id() == $profile->ID || current_user_can( 'edit_users' ) ) )
         ){
-            wp_enqueue_style( 'crop', WPMX_URI . 'css/cropper.min.css', array(), WPMX_VERSION );
-            wp_enqueue_script( 'crop', WPMX_URI . 'js/cropper.min.js', array( 'jquery' ), WPMX_VERSION, true );
-            wp_enqueue_script( 'login', WPMX_URI . 'js/login.js', array( 'jquery' ), WPMX_VERSION, true );
+            wp_enqueue_style( 'crop', WPMX_URI . 'css/cropper.min.css', [], WPMX_VERSION );
+            wp_enqueue_script( 'crop', WPMX_URI . 'js/cropper.min.js', [ 'jquery' ], WPMX_VERSION, true );
+            wp_enqueue_script( 'login', WPMX_URI . 'js/login.js', [ 'jquery' ], WPMX_VERSION, true );
         }else if( is_wpcom_member_page( 'login' ) || is_wpcom_member_page( 'register' ) || is_wpcom_member_page('lostpassword' ) ){
-            wp_enqueue_script( 'login', WPMX_URI . 'js/login.js', array( 'jquery' ), WPMX_VERSION, true );
+            wp_enqueue_script( 'login', WPMX_URI . 'js/login.js', [ 'jquery' ], WPMX_VERSION, true );
         }
     }
 
@@ -258,36 +259,36 @@ class Member {
                 $nc_scene = $nc_scene . '_h5';
             }
             $lang = get_locale();
-            $lang_nc = array('ja_JP' => 'ja', 'zh_CN' => 'cn', 'zh_HK' => 'tw', 'zh_TW' => 'tw');
+            $lang_nc = ['ja_JP' => 'ja', 'zh_CN' => 'cn', 'zh_HK' => 'tw', 'zh_TW' => 'tw'];
             if(preg_match('/^en_/i', $lang)) $lang_nc[$lang] = 'en';
 
-            $scripts['noCaptcha'] = array(
+            $scripts['noCaptcha'] = [
                 'scene' => $nc_scene,
                 'appkey' => $options['nc_appkey'],
                 'language' => isset($lang_nc[$lang]) ? $lang_nc[$lang] : $lang
-            );
+            ];
         }else if( $captcha == 'TCaptcha' && isset($options['tc_appkey']) && $options['tc_appkey']!='' && $options['tc_appid']!='' ){
-            $scripts['TCaptcha'] = array(
+            $scripts['TCaptcha'] = [
                 'appid' => $options['tc_appid']
-            );
+            ];
         }else if( $captcha == 'hCaptcha' && isset($options['hc_sitekey']) && $options['hc_sitekey']!='' && $options['hc_secret']!='' ){
-            $scripts['hCaptcha'] = array(
+            $scripts['hCaptcha'] = [
                 'sitekey' => $options['hc_sitekey']
-            );
+            ];
         }else if( $captcha == 'reCAPTCHA' && isset($options['gc_sitekey']) && $options['gc_sitekey']!='' && $options['gc_secret']!='' ){
-            $scripts['reCAPTCHA'] = array(
+            $scripts['reCAPTCHA'] = [
                 'sitekey' => $options['gc_sitekey']
-            );
+            ];
         }else if ($captcha == '_Captcha') {
-            $scripts['_Captcha'] = array(
+            $scripts['_Captcha'] = [
                 'title' => __('Security Verification', WPMX_TD),
                 'barText' => __('Drag to complete the jigsaw', WPMX_TD),
                 'loadingText' => __('Jigsaw is loading', WPMX_TD),
                 'failedText' => __('Please try again', WPMX_TD),
-            );
+            ];
         }else if ($captcha ==='aliCaptcha' && isset($options['alic_sceneId']) && $options['alic_sceneId'] !='' && $options['alic_prefix'] !='' && $options['alic_access_id'] !='' && $options['alic_access_secret'] != '') {
             $lang = get_locale();
-            $lang_nc = array('ja_JP' => 'ja', 'zh_CN' => 'cn', 'zh_HK' => 'tw', 'zh_TW' => 'tw');
+            $lang_nc = ['ja_JP' => 'ja', 'zh_CN' => 'cn', 'zh_HK' => 'tw', 'zh_TW' => 'tw'];
             if (preg_match('/^en_/i', $lang)) $lang_nc[$lang] = 'en';
             $scripts['aliCaptcha'] = [
                 'SceneId' => trim($options['alic_sceneId']),
@@ -301,10 +302,10 @@ class Member {
             $scripts['captcha_verified'] = __("You are verified", WPMX_TD);
         }
 
-        $scripts['errors'] = apply_filters( 'wpcom_member_errors', array() );
+        $scripts['errors'] = apply_filters( 'wpcom_member_errors', [] );
 
         if( is_wpcom_member_page( 'account' ) || (is_wpcom_member_page('profile') && get_current_user_id()) ){
-            $scripts['cropper'] = array(
+            $scripts['cropper'] = [
                 'title' => __('Select photo', WPMX_TD),
                 'desc_0' => __('Select your profile photo', WPMX_TD),
                 'desc_1' => __('Select your cover photo', WPMX_TD),
@@ -318,7 +319,7 @@ class Member {
                 'err_login' => __('You must login first!', WPMX_TD),
                 'err_empty' => __('Please select a photo!', WPMX_TD),
                 'ajaxerr' => __('Request failed!', WPMX_TD)
-            );
+            ];
         }
 
         return $scripts;
@@ -337,7 +338,7 @@ class Member {
                 $profile = get_user_by( 'slug', $user_slug );
             }
             if( $profile ) {
-                $tabs = apply_filters( 'wpcom_profile_tabs', array() );
+                $tabs = apply_filters( 'wpcom_profile_tabs', [] );
                 ksort($tabs);
                 $default = current($tabs);
                 $subpage = isset($wp_query->query_vars['subpage']) ? $wp_query->query_vars['subpage'] : $default['slug'];
@@ -353,7 +354,7 @@ class Member {
             }
         }else if( is_wpcom_member_page('account') ){
             global $wp_query;
-            $tabs = apply_filters( 'wpcom_account_tabs', array() );
+            $tabs = apply_filters( 'wpcom_account_tabs', [] );
             ksort($tabs);
             $default = current($tabs);
             $subpage = isset($wp_query->query_vars['subpage']) ? $wp_query->query_vars['subpage'] : $default['slug'];
@@ -391,16 +392,16 @@ class Member {
             $subpage = 'general';
         }
 
-        $tabs = apply_filters( 'wpcom_account_tabs', array() );
+        $tabs = apply_filters( 'wpcom_account_tabs', [] );
         ksort($tabs);
 
-        $atts = array(
+        $atts = [
             'subpage' => $subpage,
             'user' => wp_get_current_user(),
             'tabs' => $tabs
-        );
+        ];
 
-        $atts['args'] = apply_filters( 'wpcom_account_args', array() );
+        $atts['args'] = apply_filters( 'wpcom_account_args', [] );
         return $this->load_template('account', $atts) ;
     }
 
@@ -408,27 +409,27 @@ class Member {
         global $wp_query;
         $subpage = isset($wp_query->query['subpage']) && $wp_query->query['subpage'] ? $wp_query->query['subpage'] : 'default';
 
-        $atts = array(
+        $atts = [
             'subpage' => $subpage
-        );
+        ];
         return $this->load_template('lostpassword', $atts) ;
     }
 
     function shortcode_profile(){
         if( isset( $GLOBALS['profile'] ) ){
             global $wp_query;
-            $tabs = apply_filters( 'wpcom_profile_tabs', array() );
+            $tabs = apply_filters( 'wpcom_profile_tabs', [] );
             ksort($tabs);
             $default = current($tabs);
             $subpage = isset($wp_query->query['subpage']) && $wp_query->query['subpage'] ? $wp_query->query['subpage'] : $default['slug'];
 
-            $atts = array(
+            $atts = [
                 'profile' => $GLOBALS['profile'],
                 'subpage' => $subpage,
                 'tabs' => $tabs
-            );
+            ];
 
-            $tabs_slug = array();
+            $tabs_slug = [];
             foreach ( $tabs as $t){
                 $tabs_slug[] = $t['slug'];
             }
@@ -441,9 +442,18 @@ class Member {
         }
     }
 
+    function profile_canonical_url($url){
+        global $wp_query;
+        if(is_wpcom_member_page('profile') && isset($GLOBALS['profile']) && $GLOBALS['profile']->ID){
+            $subpage = isset($wp_query->query['subpage']) && $wp_query->query['subpage'] ? $wp_query->query['subpage'] : '';
+            $url = wpcom_profile_url($GLOBALS['profile'], $subpage);
+        }
+        return $url;
+    }
+
     function shortcode_userlist( $atts ) {
         $paged = get_query_var('paged') ? get_query_var('paged') : (get_query_var('page') ? get_query_var('page') : 1);
-        $users = null; $user_ids = array();
+        $users = null; $user_ids = [];
         $number = isset($atts['per_page']) && $atts['per_page'] ? $atts['per_page'] : 10;
         $offset = ($paged-1) * $number;
         $orderby = isset($atts['orderby']) && $atts['orderby'] ? $atts['orderby'] : 'registered';
@@ -451,7 +461,7 @@ class Member {
         $cols = isset($atts['cols']) && $atts['cols'] ? $atts['cols'] : '2';
         if( $cols!='2' && $cols!='3' && $cols!='4' ) $cols = 2;
 
-        $args = array('number' => $number, 'offset' => $offset, 'paged' => $paged, 'orderby' => $orderby, 'order' => $order);
+        $args = ['number' => $number, 'offset' => $offset, 'paged' => $paged, 'orderby' => $orderby, 'order' => $order];
 
         // 只显示审核通过的用户
         $args['user_status'] = 0;
@@ -477,7 +487,7 @@ class Member {
             $atts['users'] = $users;
             $atts['cols'] = $cols;
             echo $this->load_template( 'user-list', $atts ) ;
-            $pagi_args = array( 'paged'=> $paged, 'numpages' => ceil($users_query->total_users / $number) );
+            $pagi_args = [ 'paged'=> $paged, 'numpages' => ceil($users_query->total_users / $number) ];
             wpcom_pagination( 5, $pagi_args );
         }
         $content = ob_get_contents();
@@ -486,7 +496,7 @@ class Member {
     }
 
     function account_tabs_general(){
-        $metas = apply_filters('wpcom_account_tabs_general_metas', array() );
+        $metas = apply_filters('wpcom_account_tabs_general_metas', [] );
         ksort($metas);
         ?>
         <form class="member-account-form" action="" method="post">
@@ -504,7 +514,7 @@ class Member {
         $user = wp_get_current_user();
         $action = isset($_GET['action']) && $_GET['action'] ? sanitize_text_field($_GET['action']) : '';
         if ($action=='') {
-            $metas = apply_filters('wpcom_account_tabs_bind_metas', array());
+            $metas = apply_filters('wpcom_account_tabs_bind_metas', []);
             ksort($metas);
             ?>
             <div class="member-account-form">
@@ -513,7 +523,7 @@ class Member {
             </div>
         <?php } else if($action=='bind'){
             $type = isset($_GET['type']) ? sanitize_text_field($_GET['type']) : '';
-            $metas = $type == 'phone' ? apply_filters('wpcom_sms_code_items', array()) : apply_filters('wpcom_email_code_items', array());?>
+            $metas = $type == 'phone' ? apply_filters('wpcom_sms_code_items', []) : apply_filters('wpcom_email_code_items', []);?>
             <div class="wpcom-errmsg wpcom-alert alert-danger j-errmsg"></div>
             <form id="accountbind-form" class="j-member-form member-account-form" action="" method="post">
                 <?php wp_nonce_field( 'member_form_accountbind', 'member_form_accountbind_nonce' ); ?>
@@ -528,11 +538,11 @@ class Member {
             $type = isset($_GET['type']) ? sanitize_text_field($_GET['type']) : '';
             $by = isset($_GET['by']) && $_GET['by'] ? sanitize_text_field($_GET['by']) : '';
             $token = isset($_GET['token']) && $_GET['token'] ? sanitize_text_field($_GET['token']) : '';
-            $steps = array(
+            $steps = [
                 0 => _x('STEP 1', '验证方式', WPMX_TD),
                 1 => _x('STEP 2', '安全验证', WPMX_TD),
                 2 => _x('STEP 3', '绑定账号', WPMX_TD)
-            );
+            ];
             $current_step = 0;
             if($by) $current_step = 1;
             if($token) $current_step = 2;
@@ -559,7 +569,7 @@ class Member {
             </ul>
             </div>
             <?php if($by){
-                $metas = $by == 'phone' ? apply_filters('wpcom_sms_code_items', array()) : apply_filters('wpcom_email_code_items', array());
+                $metas = $by == 'phone' ? apply_filters('wpcom_sms_code_items', []) : apply_filters('wpcom_email_code_items', []);
                 $metas[10]['value'] = $by == 'phone' ? $user->mobile_phone : $user->user_email;
                 $metas[10]['disabled'] = true;?>
                 <div class="wpcom-errmsg wpcom-alert alert-danger j-errmsg"></div>
@@ -582,7 +592,7 @@ class Member {
                     </div>
                 <?php }else{
                     $type = isset($_GET['type']) ? sanitize_text_field($_GET['type']) : '';
-                    $metas = $type == 'phone' ? apply_filters('wpcom_sms_code_items', array()) : apply_filters('wpcom_email_code_items', array());?>
+                    $metas = $type == 'phone' ? apply_filters('wpcom_sms_code_items', []) : apply_filters('wpcom_email_code_items', []);?>
                     <div class="wpcom-errmsg wpcom-alert alert-danger j-errmsg"></div>
                     <form id="accountbind-form" class="j-member-form member-account-form" action="" method="post">
                         <?php wp_nonce_field( 'member_form_accountbind', 'member_form_accountbind_nonce' ); ?>
@@ -606,8 +616,8 @@ class Member {
                         <label class="member-account-label"><?php esc_html_e( 'Verify by', WPMX_TD ); ?></label>
                         <div class="member-account-input">
                             <select name="by">
-                                <?php if(is_wpcom_enable_phone()){ ?><option value="phone"<?php echo (isset($_POST['by'])&&$_POST['by']=='phone'?' selected':'');?>><?php echo esc_html_x( 'Phone number', 'Verify', WPMX_TD ); ?></option><?php } ?>
-                                <option value="email"<?php echo (isset($_POST['by'])&&$_POST['by']=='email'?' selected':'');?>><?php echo esc_html_x( 'Email address', 'Verify', WPMX_TD ); ?></option>
+                                <?php if(is_wpcom_enable_phone()){ ?><option value="phone"<?php echo (isset($_POST['by']) && $_POST['by'] === 'phone' ? ' selected' : '');?>><?php echo esc_html_x( 'Phone number', 'Verify', WPMX_TD ); ?></option><?php } ?>
+                                <option value="email"<?php echo (isset($_POST['by']) && $_POST['by'] === 'email' ? ' selected' : '');?>><?php echo esc_html_x( 'Email address', 'Verify', WPMX_TD ); ?></option>
                             </select>
                         </div>
                     </div>
@@ -621,7 +631,7 @@ class Member {
     }
 
     function account_tabs_password(){
-        $metas = apply_filters('wpcom_account_tabs_password_metas', array() );
+        $metas = apply_filters('wpcom_account_tabs_password_metas', [] );
         ksort($metas);
         ?>
         <form class="member-account-form" action="" method="post">
@@ -735,19 +745,19 @@ class Member {
 
         wp_reset_query();
         $per_page = get_option('posts_per_page');
-        $args = array(
+        $args = [
             'posts_per_page' => $per_page,
             'author' => $profile->ID,
-            'post_status' => $is_author ? array( 'draft', 'pending', 'publish' ) : array( 'publish' ),
+            'post_status' => $is_author ? ['draft', 'pending', 'publish'] : ['publish'],
             'no_found_rows' => true
-        );
+        ];
         $posts = new \WP_Query($args);
         $class = apply_filters( 'wpcom_profile_tabs_posts_class', 'profile-posts-list clearfix' );
         ?>
         <?php if( $posts->have_posts() ) : ?>
             <ul class="<?php echo esc_attr($class); ?>" data-user="<?php echo esc_attr($profile->ID);?>">
                 <?php while( $posts->have_posts() ) : $posts->the_post();?>
-                    <?php echo $this->load_template('post', array( 'post' => $post ));?>
+                    <?php echo $this->load_template('post', [ 'post' => $post ]);?>
                 <?php endwhile; wp_reset_postdata(); ?>
             </ul>
             <div class="load-more-wrap"><div class="wpcom-btn load-more j-user-posts"><?php esc_html_e( 'Load more posts', WPMX_TD );?></div></div>
@@ -770,18 +780,18 @@ class Member {
             $per_page = get_option('posts_per_page');
             $page = sanitize_text_field($_POST['page']);
             $page = $page ? $page : 1;
-            $arg = array(
+            $arg = [
                 'posts_per_page' => $per_page,
                 'paged' => $page,
                 'author' => $user->ID,
-                'post_status' => $is_author ? array( 'draft', 'pending', 'publish' ) : array( 'publish' ),
+                'post_status' => $is_author ? [ 'draft', 'pending', 'publish' ] : [ 'publish' ],
                 'no_found_rows' => true
-            );
+            ];
             $posts = new \WP_Query($arg);
 
             if( $posts->have_posts() ) {
                 while ($posts->have_posts()) : $posts->the_post();
-                    echo $this->load_template('post', array('post' => $post));
+                    echo $this->load_template('post', ['post' => $post]);
                 endwhile;
                 wp_reset_postdata();
             }else{
@@ -796,13 +806,13 @@ class Member {
         $is_user = get_current_user_id() == $profile->ID;
         $number = 10;
 
-        $args = array(
+        $args = [
             'number' => $number,
             'user_id' => $profile->ID,
             'status' => $is_user ? 'all':'approve',
             'offset' => 0,
             'no_found_rows' => true
-        );
+        ];
 
         $comments_query = new \WP_Comment_Query;
         $comments = $comments_query->query($args);
@@ -810,7 +820,7 @@ class Member {
         <?php if( $comments ) : ?>
             <ul class="profile-comments-list clearfix" data-user="<?php echo esc_attr($profile->ID);?>">
                 <?php foreach($comments as $comment) : ?>
-                    <?php echo $this->load_template('comment', array( 'comment' => $comment ));?>
+                    <?php echo $this->load_template('comment', [ 'comment' => $comment ]);?>
                 <?php endforeach; ?>
             </ul>
             <?php if(count($comments) >= $number){ ?><div class="load-more-wrap"><div class="wpcom-btn load-more j-user-comments"><?php esc_html_e( 'Load more comments', WPMX_TD );?></div></div><?php } ?>
@@ -827,20 +837,20 @@ class Member {
             $number = 10;
             $page = sanitize_text_field($_POST['page']);
             $page = $page ?: 1;
-            $args = array(
+            $args = [
                 'number' => $number,
                 'user_id' => $user->ID,
                 'status' => $is_user ? 'all':'approve',
                 'offset' => ($page-1) * $number,
                 'no_found_rows' => true
-            );
+            ];
 
             $comments_query = new \WP_Comment_Query;
             $comments = $comments_query->query($args);
 
             if( $comments ) {
                 foreach($comments as $comment) :
-                    echo $this->load_template('comment', array( 'comment' => $comment ));
+                    echo $this->load_template('comment', [ 'comment' => $comment ]);
                 endforeach;
             }else{
                 echo 0;
@@ -855,7 +865,7 @@ class Member {
 
     function register_form(){
         $options = $GLOBALS['wpmx_options'];
-        $items = apply_filters( 'wpcom_register_form_items', array() );
+        $items = apply_filters( 'wpcom_register_form_items', [] );
         ksort($items);
         $terms = isset($options['member_page_terms']) && $options['member_page_terms'] ? $options['member_page_terms'] : '';
         if($terms){
@@ -898,12 +908,12 @@ class Member {
     function login_form(){
         $options = $GLOBALS['wpmx_options'];
         $sms_login = is_wpcom_enable_phone() && isset($options['sms_login']) && $options['sms_login'] ? $options['sms_login'] : '0';
-        $items = apply_filters( 'wpcom_login_form_items', array() );
+        $items = apply_filters( 'wpcom_login_form_items', [] );
         if($sms_login=='1'){
-            $items2 = apply_filters( 'wpcom_sms_code_items', array() );
+            $items2 = apply_filters( 'wpcom_sms_code_items', [] );
         }else if($sms_login=='2'){
             $items2 = $items;
-            $items = apply_filters( 'wpcom_sms_code_items', array() );
+            $items = apply_filters( 'wpcom_sms_code_items', [] );
         }
         ksort($items);
         if($sms_login) ksort($items2);?>
@@ -933,7 +943,7 @@ class Member {
     }
 
     function lostpassword_form_default(){
-        $items = apply_filters( 'wpcom_lostpassword_form_items', array() );
+        $items = apply_filters( 'wpcom_lostpassword_form_items', [] );
         ksort($items);?>
         <form id="lostpassword-form" class="member-form lostpassword-form j-member-form" method="post">
             <div class="wpcom-errmsg wpcom-alert alert-danger j-errmsg"></div>
@@ -947,7 +957,7 @@ class Member {
         $is_phone = isset($_GET['phone']) && $_GET['phone'] ? 1 : 0;
         if($is_phone){
             $phone = Session::get('lost_password_phone');
-            $items = apply_filters( 'wpcom_sms_code_items', array() );
+            $items = apply_filters( 'wpcom_sms_code_items', [] );
             $items[10]['value'] = $phone;
             $items[10]['disabled'] = true;
             if($phone){ ?>
@@ -982,7 +992,7 @@ class Member {
                 <a class="wpcom-btn btn-primary" href="<?php echo esc_url(wp_lostpassword_url()); ?>"><?php esc_html_e('Click here to resend password reset email', WPMX_TD);?></a>
             </div>
         <?php }else{
-            $items = apply_filters( 'wpcom_resetpassword_form_items', array() );
+            $items = apply_filters( 'wpcom_resetpassword_form_items', [] );
             ksort($items);?>
             <form id="resetpassword-form" class="member-form resetpassword-form lostpassword-form j-member-form" method="post">
                 <div class="wpcom-errmsg wpcom-alert alert-danger j-errmsg"></div>
@@ -1113,7 +1123,7 @@ class Member {
 
     function social_login(){
         $options = $GLOBALS['wpmx_options'];
-        $socials = apply_filters( 'wpcom_socials', array() );
+        $socials = apply_filters( 'wpcom_socials', [] );
         ksort($socials);
         if( $socials ){ ?>
             <ul class="member-social-list">
@@ -1130,7 +1140,7 @@ class Member {
     }
 
     function approve_resend_form(){
-        $items = apply_filters( 'wpcom_approve_resend_form_items', array() );
+        $items = apply_filters( 'wpcom_approve_resend_form_items', [] );
         ksort($items);?>
         <div class="wpcom-errmsg wpcom-alert alert-danger j-errmsg"></div>
         <form id="approve_resend-form" class="member-form j-member-form" method="post">
@@ -1166,7 +1176,7 @@ class Member {
     }
 
     function cropped_upload(){
-        $res = array();
+        $res = [];
         $res['result'] = '';
 
         if ( ! check_ajax_referer('wpcom_cropper', 'nonce', false) )
@@ -1271,7 +1281,7 @@ class Member {
                 $approve = get_user_meta( $profile->ID, 'wpcom_approve', true );
                 if($approve=='0'){
                     update_user_meta( $profile->ID, 'wpcom_approve', '' );
-                    wp_update_user( array( 'ID' => $profile->ID, 'user_status' => -1 ) );
+                    wp_update_user( [ 'ID' => $profile->ID, 'user_status' => -1 ] );
                 }else {
                     $approve = 1;
                 }
@@ -1331,7 +1341,7 @@ class Member {
                 if ( isset( $_GET['key'] ) && isset( $_GET['login'] ) ) {
                     $value = sprintf( '%s:%s', wp_unslash( $_GET['login'] ), wp_unslash( $_GET['key'] ) );
                     setcookie( $rp_cookie, $value, 0, '/', COOKIE_DOMAIN, is_ssl(), true );
-                    wp_safe_redirect( remove_query_arg( array( 'key', 'login' ) ) );
+                    wp_safe_redirect( remove_query_arg( [ 'key', 'login' ] ) );
                     exit;
                 }
 
@@ -1360,7 +1370,7 @@ class Member {
                     $user = check_password_reset_key( $key, $login );
                     if( !$user || is_wp_error($user) ) {
                     }else if( $user->ID ) {
-                        wp_update_user( array( 'ID' => $user->ID, 'user_status' => 0 ) );
+                        wp_update_user( [ 'ID' => $user->ID, 'user_status' => 0 ] );
                         $url = wp_registration_url();
                         $url = add_query_arg( 'approve', 'true', $url );
                         wp_redirect( $url );
@@ -1419,7 +1429,7 @@ class Member {
     function block_access_wpadmin(){
         global $current_user, $pagenow;
         if(current_user_can('manage_options') || !(class_exists('\WPCOM_User_Groups') || class_exists(User_Groups::class) )) return false;
-        $can_access = array( 'admin-ajax.php', 'async-upload.php', 'media-upload.php');
+        $can_access = [ 'admin-ajax.php', 'async-upload.php', 'media-upload.php' ];
         if( in_array($pagenow, $can_access) ) return false;
         if($current_user->ID) {
             $group = wpcom_get_user_group($current_user->ID);
@@ -1475,7 +1485,7 @@ class Member {
     function user_has_cap( $allcaps, $caps, $args, $user ){
         global $pagenow, $current_user, $cap_checked;
         $options = $GLOBALS['wpmx_options'];
-        if( !isset($cap_checked) ) $cap_checked = array();
+        if( !isset($cap_checked) ) $cap_checked = [];
         if( $user->ID && in_array($user->ID, $cap_checked) ) return $allcaps;
 
         if( (class_exists('\WPCOM_User_Groups') || class_exists(User_Groups::class)) && $user->ID && ( $pagenow=='user-edit.php' || $pagenow=='users.php' || is_wpcom_member_page() ) ) {
@@ -1488,7 +1498,7 @@ class Member {
                 $allcaps = $this->set_default_role($user->ID, $group->term_id);
             }else if( isset($options['member_group']) && $options['member_group'] ){
                 // 无用户组则分配默认用户组
-                wp_set_object_terms( $user->ID, array( (int)$options['member_group'] ), 'user-groups', false );
+                wp_set_object_terms( $user->ID, [ (int)$options['member_group'] ], 'user-groups', false );
             }
         }
         return $allcaps;
@@ -1498,7 +1508,7 @@ class Member {
         $options = $GLOBALS['wpmx_options'];
         if( (class_exists('\WPCOM_User_Groups') || class_exists(User_Groups::class)) && isset($options['member_group']) && $options['member_group'] ){
             // 分配默认用户组
-            wp_set_object_terms( $user_id, array( (int)$options['member_group'] ), 'user-groups', false );
+            wp_set_object_terms( $user_id, [ (int)$options['member_group'] ], 'user-groups', false );
 
             // 分配默认系统角色
             $this->set_default_role($user_id);
@@ -1506,7 +1516,7 @@ class Member {
         $member_reg_active = isset($options['member_reg_active']) && $options['member_reg_active'] ? $options['member_reg_active']: '0';
         if( !is_wpcom_enable_phone() && $member_reg_active != '0' ){
             // 注册用户需要验证
-            wp_update_user( array( 'ID' => $user_id, 'user_status' => -1 ) );
+            wp_update_user( [ 'ID' => $user_id, 'user_status' => -1 ] );
             if( !Session::get('user') ) { // 非社交登录渠道
                 if ($member_reg_active == '1') { // 如果是邮件激活方式，则发送激活邮件给用户
                     wpcom_send_active_email($user_id);
@@ -1523,9 +1533,9 @@ class Member {
             $term_id = $term_id ? $term_id : $options['member_group'];
             $user = get_user_by('ID', $user_id);
             $sys_role = get_term_meta($term_id, 'wpcom_sys_role', true);
-            $default_roles = array('subscriber', 'contributor', 'author', 'editor', 'administrator');
+            $default_roles = ['subscriber', 'contributor', 'author', 'editor', 'administrator'];
             $roles = $user->roles;
-            if (!$roles) $roles = array();
+            if (!$roles) $roles = [];
             if (in_array($sys_role, $default_roles) && !in_array($sys_role, $roles)) { // 权限和当前用户组权限不一样
                 foreach ($roles as $role) {
                     if (in_array($role, $default_roles)) {
@@ -1544,7 +1554,7 @@ class Member {
         $member_reg_active = isset($options['member_reg_active']) && $options['member_reg_active'] ? $options['member_reg_active']: '0';
         if( $member_reg_active!='0' ){
             // 注册用户需要验证的情况，对社交登录注册的用户默认验证审核通过
-            wp_update_user( array( 'ID' => $user_id, 'user_status' => 0 ) );
+            wp_update_user( [ 'ID' => $user_id, 'user_status' => 0 ] );
         }
     }
 
@@ -1561,7 +1571,7 @@ class Member {
                     $_approve = get_user_meta( $get_user->ID, 'wpcom_approve', true );
                     if($_approve == '0'){ // 未激活用户
                         update_user_meta($get_user->ID, 'wpcom_approve', '');
-                        wp_update_user( array( 'ID' => $get_user->ID, 'user_status' => -1 ) );
+                        wp_update_user( [ 'ID' => $get_user->ID, 'user_status' => -1 ] );
                         $get_user->user_status = '-1';
                     }
                 }
@@ -1570,7 +1580,7 @@ class Member {
                 if( $get_user->user_status=='-1' && $member_reg_active!='0' ){
                     $err = '';
                     if($member_reg_active=='1'){
-                        $resend_url = add_query_arg( array('approve' => 'resend', 'login' => $username), wp_registration_url() );
+                        $resend_url = add_query_arg( ['approve' => 'resend', 'login' => $username], wp_registration_url() );
                         /* translators: %1$s: resend activation email url, %2$s: close tag </a> */
                         $err = sprintf( esc_html__( 'Please activate your account. %1$s Resend activation email %2$s', WPMX_TD ), '<a href="'.$resend_url.'" target="_blank">', '</a>' );
                     }else if($member_reg_active=='2'){
@@ -1582,11 +1592,11 @@ class Member {
                     if($err) $user = new WP_Error( 'not_approve', $err );
                 }
             }
-        }else if( is_wpcom_enable_phone() && preg_match("/^1[3-9]{1}\d{9}$/", $username) ){ // 手机登录
-            $args = array(
+        }else if( is_wpcom_enable_phone(true) && preg_match("/^1[3-9]{1}\d{9}$/", $username) ){ // 手机登录
+            $args = [
                 'meta_key'     => 'mobile_phone',
                 'meta_value'   => $username,
-            );
+            ];
             $users = get_users($args);
             if($users && $users[0]->ID && wp_check_password($password, $users[0]->user_pass, $users[0]->ID)) {
                 $user = $users[0];
@@ -1604,7 +1614,7 @@ class Member {
         return $res;
     }
 
-    function pre_insert_user_data($data, $update, $id, $userdata = array()){
+    function pre_insert_user_data($data, $update, $id, $userdata = []){
         $options = $GLOBALS['wpmx_options'];
         // 人工审核的方式会专门发送邮件给管理员，无需系统再次发送
         if( isset($options['member_reg_active']) && $options['member_reg_active']=='2' ){
@@ -1622,14 +1632,14 @@ class Member {
         $current = '';
         if ( isset($_REQUEST['status']) && $_REQUEST['status'] == 'unapproved' ) $current = 'class="current"';
 
-        $users = get_users(array('user_status' => '-1') );
+        $users = get_users(['user_status' => '-1']);
         $count = count($users);
         $views[ 'unapproved' ] = '<a href="'.admin_url('users.php').'?status=unapproved" ' . $current . '>'. __( 'Unapproved', WPMX_TD ) . ' <span class="count">（'.$count.'）</span></a>';
 
         $current2 = '';
         if ( isset($_REQUEST['status']) && $_REQUEST['status'] == 'blacklist' ) $current2 = 'class="current"';
 
-        $users2 = get_users(array('user_status' => '1') );
+        $users2 = get_users(['user_status' => '1']);
         $count2 = count($users2);
         $views[ 'blacklist' ] = '<a href="'.admin_url('users.php').'?status=blacklist" ' . $current2 . '>'. __( 'Blacklist', WPMX_TD ) . ' <span class="count">（'.$count2.'）</span></a>';
 
@@ -1696,7 +1706,7 @@ class Member {
     function sitemaps_args($args){
         $options = $GLOBALS['wpmx_options'];
         if($args['post_type'] === 'page'){
-            $args['post__not_in'] = isset( $args['post__not_in'] ) ? $args['post__not_in'] : array();
+            $args['post__not_in'] = isset( $args['post__not_in'] ) ? $args['post__not_in'] : [];
             if(isset($options['member_page_login']) && $options['member_page_login']){
                 $args['post__not_in'][] = $options['member_page_login'];
             }
@@ -1724,7 +1734,7 @@ class Member {
             $options = $GLOBALS['wpmx_options'];
             $meta_cache = wp_cache_get( $user, 'user_meta' );
             if ( ! $meta_cache ) {
-                $meta_cache = update_meta_cache( 'user', array( $user ) );
+                $meta_cache = update_meta_cache( 'user', [ $user ] );
                 if ( isset( $meta_cache[ $user ] ) ) {
                     $meta_cache = $meta_cache[ $user ];
                 } else {
@@ -1764,7 +1774,7 @@ class Member {
             foreach ( $ids as $id ){
                 $_user = get_user_by( 'ID', $id );
                 if($_user && isset($_user->ID) && $_user->ID){
-                    wp_update_user( array( 'ID' => $id, 'user_status' => 0 ) );
+                    wp_update_user( [ 'ID' => $id, 'user_status' => 0 ] );
                     // 管理员审核方式则发送邮件通知
                     if( isset($options['member_reg_active']) && $options['member_reg_active']=='2' && $_user->user_status != '0'){
                         // 检查之前的状态，有变化则通知
@@ -1774,15 +1784,15 @@ class Member {
             }
         }else if( $doaction=='disapprove' ){
             foreach ( $ids as $id ){
-                wp_update_user( array( 'ID' => $id, 'user_status' => -1 ) );
+                wp_update_user( [ 'ID' => $id, 'user_status' => -1 ] );
             }
         }else if( $doaction=='blacklist' ){
             foreach ( $ids as $id ){
-                wp_update_user( array( 'ID' => $id, 'user_status' => 1 ) );
+                wp_update_user( [ 'ID' => $id, 'user_status' => 1 ] );
             }
         }else if( $doaction=='remove-blacklist' ){
             foreach ( $ids as $id ){
-                wp_update_user( array( 'ID' => $id, 'user_status' => 0 ) );
+                wp_update_user( [ 'ID' => $id, 'user_status' => 0 ] );
             }
         }
         return $redirect_to;
@@ -1798,7 +1808,7 @@ class Member {
 
     function users_columns( $columns ) {
         $columns['registered'] = __('Registered', WPMX_TD);
-        $_columns = array();
+        $_columns = [];
         foreach ($columns as $key => $column){
             switch ($key) {
                 case 'username':
@@ -1839,7 +1849,7 @@ class Member {
                 $val = $email;
                 break;
             case 'user' :
-                $actions     = array();
+                $actions = [];
                 $super_admin = '';
                 if ( is_multisite() && current_user_can( 'manage_network_users' ) ) {
                     if ( in_array( $user->user_login, get_super_admins(), true ) ) {
@@ -2103,7 +2113,7 @@ class Member {
                 $err = new WP_Error( 'need_fill_login', $this->fill_login_check_msg(false), 400);
                 return $err;
             }else{
-                add_filter('redirect_post_location', array( $this, 'redirect_post_location_filter'), 88);
+                add_filter('redirect_post_location', [ $this, 'redirect_post_location_filter' ], 88);
             }
         }
         return $data;

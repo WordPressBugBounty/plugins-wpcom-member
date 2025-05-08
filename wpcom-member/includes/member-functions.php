@@ -11,7 +11,7 @@ function wpcom_login_form_items( $items = array() ){
             'icon' => 'user',
             'name' => 'user_login',
             'require' => true,
-            'placeholder' =>  is_wpcom_enable_phone() ? __('Phone number / E-mail / Username', WPMX_TD) : __('Username or email address', WPMX_TD)
+            'placeholder' =>  is_wpcom_enable_phone(true) ? __('Phone number / E-mail / Username', WPMX_TD) : __('Username or email address', WPMX_TD)
         ),
         20 => array(
             'type' => 'password',
@@ -366,7 +366,7 @@ function wpcom_lostpassword_form_items( $items = array() ){
             'icon' => 'user',
             'name' => 'user_login',
             'require' => true,
-            'placeholder' =>  is_wpcom_enable_phone() ? __('Phone number / E-mail / Username', WPMX_TD) : __('Username or email address', WPMX_TD)
+            'placeholder' =>  is_wpcom_enable_phone(true) ? __('Phone number / E-mail / Username', WPMX_TD) : __('Username or email address', WPMX_TD)
         ),
         30 => array(
             'type' => wpcom_member_captcha_type()
@@ -809,9 +809,15 @@ function wpcom_is_login(){
     wp_send_json($res);
 }
 
-function is_wpcom_enable_phone(){
+function is_wpcom_enable_phone($compatible = false){
     $options = $GLOBALS['wpmx_options'];
-    return function_exists('wpcom_sms_code_sender') && isset($options['enable_phone']) && $options['enable_phone'];
+    if($compatible){
+        // 未开启手机登录时的兼容模式，主要用于保留手机号作为用户名登录
+        $res = isset($options['phone_compatible']) && $options['phone_compatible'] == 1 && $options['enable_phone'] == 0;
+    }else{
+        $res = function_exists('wpcom_sms_code_sender') && isset($options['enable_phone']) && $options['enable_phone'];
+    }
+    return $res;
 }
 
 function wpcom_check_sms_code($phone, $val){

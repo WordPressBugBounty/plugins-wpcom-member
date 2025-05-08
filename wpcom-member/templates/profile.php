@@ -32,7 +32,7 @@ $classes = apply_filters('wpcom_profile_head_classes', 'wpcom-profile-head');
     <?php if($tabs){ ?>
         <ul class="wpcom-profile-nav">
             <?php $default = current($tabs); foreach ( $tabs as $tab ) {
-                $tab_url = wpcom_profile_url( $profile, $tab['slug']==$default['slug']?'':$tab['slug'] );
+                $tab_url = wpcom_profile_url( $profile, $tab['slug'] === $default['slug'] ? '' : $tab['slug'] );
                 $tab_html = '<a href="' . $tab_url . '">'.$tab['title'].'</a>'; ?>
                 <li<?php echo $tab['slug'] === $subpage ? ' class="active"' : '';?>>
                     <?php echo wp_kses(apply_filters( 'wpcom_profile_tab_url', $tab_html, $tab, $tab_url ), 'post');?>

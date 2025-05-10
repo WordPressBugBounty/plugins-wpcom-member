@@ -2,7 +2,7 @@
 
 // Pagenavi
 if(!function_exists('wpcom_pagination')){
-    function wpcom_pagination( $range = 9, $args = array() ) {
+    function wpcom_pagination( $range = 6, $args = array() ) {
         global $paged, $wp_query, $page, $numpages, $multipage;
         if ( ($args && $args['numpages'] > 1) || ( isset($multipage) && $multipage && is_singular() ) ) {
             if($args) {
@@ -43,8 +43,7 @@ if(!function_exists('wpcom_pagination')){
             if ( $next <= $numpages ) {
                 echo '<li class="next">'. wpcom_link_page($next, $args) . '<span>'.esc_html_x('Next', 'pagination', WPMX_TD).'</span></a></li>';
             }
-            $paged_arg = isset($args['paged_arg']) && $args['paged_arg'] ? $args['paged_arg'] : 'page';
-            echo '<li class="pagination-go"><form method="get"><input class="pgo-input" type="text" name="'.esc_attr($paged_arg).'" placeholder="'.esc_attr(_x('GO', '页码', WPMX_TD)).'" /><button class="pgo-btn" type="submit" aria-label="'.esc_html_x('GO', '页码', WPMX_TD).'"></button></form></li>';
+            echo wpcom_pagination_form($args['paged_arg'] ?? 'page');
             echo '</ul>';
         }else if( ($max_page = $wp_query->max_num_pages) > 1 ){
             echo ' <ul class="pagination">';
@@ -77,9 +76,7 @@ if(!function_exists('wpcom_pagination')){
             }
             $next = get_next_posts_link('<span>'._x('Next', 'pagination', WPMX_TD).'</span>');
             if($next) echo '<li class="next">'.wp_kses($next, wpmx_allowed_html()).'</li>';
-            echo '<li class="pagination-go"><form method="get">';
-            if(is_search()) echo '<input type="hidden" name="s" value="' . esc_attr(get_search_query()) . '">';
-            echo '<input class="pgo-input" type="text" name="paged" placeholder="'.esc_attr_x('GO', '页码', WPMX_TD).'" /><button class="pgo-btn" type="submit" aria-label="'.esc_html_x('GO', '页码', WPMX_TD).'"></button></form></li>';
+            echo wpcom_pagination_form('paged', true);
             echo '</ul>';
         }
     }
@@ -96,6 +93,11 @@ if(!function_exists('wpcom_pagination')){
             $url = _wp_link_page($i);
         }
         return wp_kses($url, wpmx_allowed_html());
+    }
+
+    function wpcom_pagination_form($name = 'paged', $search = false){
+        $search = $search && is_search() ? '<input type="hidden" name="s" value="' . get_search_query() . '">' : '';
+        return '<li class="pagination-go"><form method="get"><input class="pgo-input" type="text" name="' . esc_attr($name) . '" placeholder="' . _x('GO', '页码', WPMX_TD) . '" /><button class="pgo-btn" type="submit" aria-label="' . _x('GO', '页码', WPMX_TD) . '"></button></form></li>';
     }
 
     add_filter('previous_posts_link_attributes', 'wpcom_prev_posts_link_attr');

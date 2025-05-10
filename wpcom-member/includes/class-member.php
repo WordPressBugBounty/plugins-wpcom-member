@@ -488,7 +488,7 @@ class Member {
             $atts['cols'] = $cols;
             echo $this->load_template( 'user-list', $atts ) ;
             $pagi_args = [ 'paged'=> $paged, 'numpages' => ceil($users_query->total_users / $number) ];
-            wpcom_pagination( 5, $pagi_args );
+            wpcom_pagination( 4, $pagi_args );
         }
         $content = ob_get_contents();
         ob_end_clean();

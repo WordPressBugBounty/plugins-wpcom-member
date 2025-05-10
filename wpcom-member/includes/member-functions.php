@@ -811,11 +811,10 @@ function wpcom_is_login(){
 
 function is_wpcom_enable_phone($compatible = false){
     $options = $GLOBALS['wpmx_options'];
-    if($compatible){
+    $res = function_exists('wpcom_sms_code_sender') && isset($options['enable_phone']) && $options['enable_phone'];
+    if(!$res && $compatible){
         // 未开启手机登录时的兼容模式，主要用于保留手机号作为用户名登录
         $res = isset($options['phone_compatible']) && $options['phone_compatible'] == 1 && $options['enable_phone'] == 0;
-    }else{
-        $res = function_exists('wpcom_sms_code_sender') && isset($options['enable_phone']) && $options['enable_phone'];
     }
     return $res;
 }

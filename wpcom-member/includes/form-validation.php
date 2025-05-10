@@ -135,10 +135,10 @@ if (!function_exists('wpcom_ajax_login')) {
 
         if ($res['result'] == 1) {
             if ($sms_login && $user_phone !== '' && isset($_POST['sms_code']) && wpcom_check_sms_code($user_phone, sanitize_text_field($_POST['sms_code']))) { // 手机快捷登录
-                $args = array(
+                $args = [
                     'meta_key'     => 'mobile_phone',
                     'meta_value'   => $user_phone,
-                );
+                ];
                 $users = get_users($args);
                 if ($users && $users[0]->ID) { // 用户存在
                     $user = $users[0];

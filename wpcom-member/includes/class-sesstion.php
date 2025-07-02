@@ -127,7 +127,7 @@ if( !class_exists( Session::class ) ) {
                 $session_prefix = isset($_SERVER['SessionPrefix']) ? $_SERVER['SessionPrefix'] : (isset($_SERVER['HTTP_SESSIONPREFIX']) ? $_SERVER['HTTP_SESSIONPREFIX'] : '');
             }
             $session_prefix = sanitize_text_field(wp_unslash($session_prefix));
-            if( $session_prefix == '' ) {
+            if( $session_prefix === '' ) {
                 $ip = '';
                 if(!empty($_SERVER['HTTP_CLIENT_IP'])){
                     $ip = $_SERVER['HTTP_CLIENT_IP'];
@@ -150,5 +150,8 @@ if( !class_exists( Session::class ) ) {
 
     add_action('wpcom_themer_maybe_updated', function(){
         Session::init_database();
+    });
+    add_action('after_setup_theme', function(){
+        Session::session_prefix();
     });
 }

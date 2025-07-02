@@ -2,7 +2,7 @@
 /**
  * Plugin Name: WPCOM Member 用户中心
  * Description: WordPress用户中心插件 / User profile & membership plugin for WordPress
- * Version: 1.7.10
+ * Version: 1.7.11
  * Author: WPCOM
  * Author URI: https://www.wpcom.cn
  * Requires PHP: 7.4

@@ -1163,7 +1163,7 @@ class Member {
             $file = apply_filters('wpcom_member_path', untrailingslashit(WPMX_DIR)) . '/templates/' . $template . '.php';
         }
 
-        $file = apply_filters('wpcom_member_load_template', $file, $template);
+        $file = apply_filters('wpcom_member_load_template', $file, $template, $atts);
 
         if ( file_exists( $file ) ) {
             extract($atts, EXTR_SKIP);
@@ -1277,15 +1277,7 @@ class Member {
 
             // 检查用户状态
             $approve = '';
-            if(isset($profile->ID) && $profile->user_status == '0'){ // 查查旧数据
-                $approve = get_user_meta( $profile->ID, 'wpcom_approve', true );
-                if($approve=='0'){
-                    update_user_meta( $profile->ID, 'wpcom_approve', '' );
-                    wp_update_user( [ 'ID' => $profile->ID, 'user_status' => -1 ] );
-                }else {
-                    $approve = 1;
-                }
-            }else if(isset($profile->user_status)){
+            if(isset($profile->user_status)){
                 $approve = $profile->user_status == '0' ? 1 : 0;
             }
 
@@ -1399,7 +1391,7 @@ class Member {
     }
 
     function login_head(){
-        if(isset($_GET['redirect_to']) && $_GET['redirect_to'] && $login_url = wp_login_url(sanitize_url($_GET['redirect_to']))){
+        if(!is_user_logged_in() && isset($_GET['redirect_to']) && $_GET['redirect_to'] && $login_url = wp_login_url(sanitize_url($_GET['redirect_to']))){
             wp_redirect($login_url);
             exit;
         }
@@ -1782,15 +1774,15 @@ class Member {
                     }
                 }
             }
-        }else if( $doaction=='disapprove' ){
+        }else if( $doaction === 'disapprove' ){
             foreach ( $ids as $id ){
                 wp_update_user( [ 'ID' => $id, 'user_status' => -1 ] );
             }
-        }else if( $doaction=='blacklist' ){
+        }else if( $doaction === 'blacklist' ){
             foreach ( $ids as $id ){
                 wp_update_user( [ 'ID' => $id, 'user_status' => 1 ] );
             }
-        }else if( $doaction=='remove-blacklist' ){
+        }else if( $doaction === 'remove-blacklist' ){
             foreach ( $ids as $id ){
                 wp_update_user( [ 'ID' => $id, 'user_status' => 0 ] );
             }
@@ -2107,7 +2099,7 @@ class Member {
     function pre_insert_post($data, $attr, $rest = 0){
         $user_id = isset($data['post_author']) && $data['post_author'] ? (int)$data['post_author'] : get_current_user_id();
         $needed_types = apply_filters('wpmx_need_fill_login_post_types', ['post', 'page', 'kuaixun', 'qa_post']);
-        if($user_id && $data['post_type'] && in_array($data['post_status'], $needed_types) && wpcom_need_fill_login($user_id)){
+        if($user_id && $data['post_type'] && in_array($data['post_type'], $needed_types) && wpcom_need_fill_login($user_id)){
             $data['post_status'] = 'inherit';
             if($rest){
                 $err = new WP_Error( 'need_fill_login', $this->fill_login_check_msg(false), 400);

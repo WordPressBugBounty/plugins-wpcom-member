@@ -35,7 +35,6 @@ function wpmx_init() {
     require_once WPMX_DIR . 'includes/required.php';
     if( !class_exists('\WPCOM_Session') && !class_exists( Session::class ) ) {
         require_once WPMX_DIR . 'includes/class-sesstion.php';
-        Session::session_prefix();
         add_action( 'wpcom_sessions_clear', array( Session::class, 'cron') );
     }else if( !class_exists( Session::class ) ){ // 兼容旧版本主题
         require_once WPMX_DIR . 'includes/class-sesstion.php';

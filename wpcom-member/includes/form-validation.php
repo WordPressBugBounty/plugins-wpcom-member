@@ -495,12 +495,17 @@ function wpcom_ajax_resetpassword() {
 }
 
 add_filter('retrieve_password_message', function ($message, $key, $user_login, $user_data) {
+    if($url = wpcom_lostpassword_url()){
+        $url = add_query_arg(array(
+            'subpage' => 'reset',
+            'key' => $key,
+            'login' => rawurlencode($user_login)
+        ), $url);
+    }else{
+        return $message;
+    }
+
     $site_name = is_multisite() ?  get_network()->site_name : wp_specialchars_decode(get_option('blogname'), ENT_QUOTES);
-    $url = add_query_arg(array(
-        'subpage' => 'reset',
-        'key' => $key,
-        'login' => rawurlencode($user_login)
-    ), wpcom_lostpassword_url());
 
     $message = __('Someone has requested a password reset for the following account:') . "<br><br>";
     /* translators: %s: Site name. */

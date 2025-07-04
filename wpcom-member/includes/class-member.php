@@ -1185,7 +1185,6 @@ class Member {
         if( $res['result']=='' ) {
             $user = wp_get_current_user();
             if ($user->ID) {
-                $img = isset($_POST['image']) ? sanitize_textarea_field($_POST['image']) : '';
                 $type = isset($_POST['type']) ? sanitize_text_field($_POST['type']) : 0;
                 $type = $type ?: 0; // 0: 头像； 1: 封面
                 $uid = isset($_POST['user']) ? sanitize_text_field($_POST['user']) : 0;
@@ -1193,27 +1192,80 @@ class Member {
                 if ($uid && $uid != $user->ID && current_user_can('edit_users')) {
                     $corp_user = $uid;
                 }
-
                 $GLOBALS['image_type'] = $type;
 
-                $filename = substr(md5($corp_user), 5, 16) . '.' . time() . '.jpg';
-                $mirror = wp_upload_bits($filename, '', base64_decode(str_replace('data:image/jpeg;base64,', '', $img)), '1234/06');
-                if (!$mirror['error']) {
-                    $res['result'] = 1;
-                    $res['url'] = $mirror['url'];
+                // 1. 检查文件上传
+                if (!isset($_FILES['file']) || !is_uploaded_file($_FILES['file']['tmp_name'])) {
+                    $res['result'] = -2;
+                    wp_send_json($res);
+                }
 
+                // 2. 获取裁剪参数
+                $x = isset($_POST['x']) ? intval($_POST['x']) : 0;
+                $y = isset($_POST['y']) ? intval($_POST['y']) : 0;
+                $w = isset($_POST['width']) ? intval($_POST['width']) : 0;
+                $h = isset($_POST['height']) ? intval($_POST['height']) : 0;
+
+                // 3. 保存原图到临时目录
+                $tmp_file = $_FILES['file']['tmp_name'];
+                $mime = $_FILES['file']['type'];
+                $allowed_types = ['image/jpg', 'image/jpeg', 'image/png', 'image/gif'];
+                if (!in_array($mime, $allowed_types)) {
+                    $res['result'] = -4;
+                    wp_send_json($res);
+                }
+
+                // 4. 使用 WP_Image_Editor 裁剪
+                $editor = wp_get_image_editor($tmp_file);
+                if (is_wp_error($editor)) {
+                    $res['result'] = -2;
+                    wp_send_json($res);
+                }
+                $editor->crop($x, $y, $w, $h);
+                if ($type == 0 && $w > 300) {
+                    $editor->resize(300, 300, true);
+                }
+
+                $uploads = wp_upload_dir();
+                $filename = substr(md5($corp_user), 5, 16) . '.' . time();
+                switch ($mime) {
+                    case 'image/jpeg':
+                    case 'image/jpg':
+                        $filename .= '.jpg';
+                        break;
+                    case 'image/png':
+                        $filename .= '.png';
+                        break;
+                    case 'image/gif':
+                        $filename .= '.gif';
+                        break;
+                }
+                $subdir = '/member/' . ($type ? 'covers' : 'avatars');
+                $save_path = $uploads['basedir'] . $subdir . '/' . $filename;
+                if (!file_exists($uploads['basedir'] . $subdir)) {
+                    wp_mkdir_p($uploads['basedir'] . $subdir);
+                }
+                $saved = $editor->save($save_path);
+
+                if (!is_wp_error($saved) && isset($saved['path']) && file_exists($saved['path'])) {
+                    $res['result'] = 1;
+                    $res['url'] = $uploads['baseurl'] . $subdir . '/' . $filename;
 
                     $key = $type ? 'wpcom_cover' : 'wpcom_avatar';
                     $pre_img = get_user_meta($corp_user, $key, 1);
-                    $uploads = wp_upload_dir();
                     if ($pre_img) {
                         $pre_img = str_replace($uploads['baseurl'], '', $pre_img);
                         @unlink($uploads['basedir'] . $pre_img);
                     }
                     update_user_meta($corp_user, $key, str_replace($uploads['baseurl'], '', $res['url']));
-                    // 基于wp_generate_attachment_metadata钩子，兼容云储存插件同步
-                    $mirror['file'] = str_replace($uploads['basedir']. '/', '', $mirror['file']);
-                    apply_filters ( 'wp_generate_attachment_metadata', $mirror, 0, 'create' );
+                    // 兼容云储存插件同步
+                    $mirror = [
+                        'file'  => 'member/' . ($type ? 'covers' : 'avatars') . '/' . $filename,
+                        'url'   => $uploads['baseurl'] . $subdir . '/' . $filename,
+                        'type'  => $mime,
+                        'error' => false
+                    ];
+                    apply_filters('wp_generate_attachment_metadata', $mirror, 0, 'create');
                 } else {
                     $res['result'] = -2;
                 }

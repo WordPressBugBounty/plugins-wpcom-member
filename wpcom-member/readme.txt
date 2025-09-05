@@ -3,8 +3,8 @@ Contributors: whyun
 Donate link: https://www.wpcom.cn/plugins/wpcom-member-pro.html
 Tags: 用户中心, membership
 Requires at least: 6.2.0
-Tested up to: 6.8.1
-Stable tag: 1.7.12
+Tested up to: 6.8.2
+Stable tag: 1.7.13
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -44,6 +44,7 @@ WordPress用户中心插件 / User profile & membership plugin for WordPress
 - 会员订阅功能；
 - 我的钱包功能，可实现余额支付；
 - 积分功能；
+- 卡密销售功能；
 - 代金券充值功能；
 - 付费查看内容、付费阅读全文；
 - 付费下载内容；
@@ -60,6 +61,12 @@ WordPress用户中心插件 / User profile & membership plugin for WordPress
 == Changelog ==
 
 ### 更新记录
+
+**1.7.13** - 2025-09-05
+
+- 优化分页组件与WPCOM主题兼容性；
+- 优化css样式，移除低版本WPCOM主题兼容支持；
+- 优化部分细节css问题；
 
 **1.7.12** - 2025-07-04
 

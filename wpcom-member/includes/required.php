@@ -2,7 +2,7 @@
 
 // Pagenavi
 if(!function_exists('wpcom_pagination')){
-    function wpcom_pagination( $range = 6, $args = array() ) {
+    function wpcom_pagination( $range = 6, $args = [] ) {
         global $paged, $wp_query, $page, $numpages, $multipage;
         if ( ($args && $args['numpages'] > 1) || ( isset($multipage) && $multipage && is_singular() ) ) {
             if($args) {
@@ -12,7 +12,7 @@ if(!function_exists('wpcom_pagination')){
             echo ' <ul class="pagination">';
             $prev = $page - 1;
             if ( $prev > 0 ) {
-                echo '<li class="prev">'. wpcom_link_page( $prev, $args ) . '<span>'.esc_html_x('Previous', 'pagination', WPMX_TD).'</span>' . '</a></li>';
+                echo '<li class="prev">'. wpcom_link_page( $prev, $args ) . '</a></li>';
             }
 
             if($numpages > $range){
@@ -41,7 +41,7 @@ if(!function_exists('wpcom_pagination')){
 
             $next = $page + 1;
             if ( $next <= $numpages ) {
-                echo '<li class="next">'. wpcom_link_page($next, $args) . '<span>'.esc_html_x('Next', 'pagination', WPMX_TD).'</span></a></li>';
+                echo '<li class="next">'. wpcom_link_page($next, $args) . '</a></li>';
             }
             echo wpcom_pagination_form($args['paged_arg'] ?? 'page');
             echo '</ul>';
@@ -49,7 +49,7 @@ if(!function_exists('wpcom_pagination')){
             echo ' <ul class="pagination">';
             if(!$paged) $paged = 1;
             echo '<li class="disabled"><span>'.esc_html($paged).' / '.esc_html($max_page).'</span></li>';
-            $prev = get_previous_posts_link('<span>'._x('Previous', 'pagination', WPMX_TD).'</span>');
+            $prev = get_previous_posts_link('');
             if($prev) echo '<li class="prev">'.wp_kses($prev, wpmx_allowed_html()).'</li>';
             if($max_page > $range){
                 if($paged < $range){
@@ -74,7 +74,7 @@ if(!function_exists('wpcom_pagination')){
                     echo '<a href="' . get_pagenum_link($i) .'">'.esc_html($i).'</a></li>';
                 }
             }
-            $next = get_next_posts_link('<span>'._x('Next', 'pagination', WPMX_TD).'</span>');
+            $next = get_next_posts_link('');
             if($next) echo '<li class="next">'.wp_kses($next, wpmx_allowed_html()).'</li>';
             echo wpcom_pagination_form('paged', true);
             echo '</ul>';

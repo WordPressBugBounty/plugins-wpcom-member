@@ -3,7 +3,7 @@
 use WPCOM\Themer\Session;
 
 add_filter( 'wpcom_login_form_items', 'wpcom_login_form_items' );
-function wpcom_login_form_items( $items = array() ){
+function wpcom_login_form_items( $items = [] ){
     $items += array(
         10 => array(
             'type' => 'text',
@@ -29,9 +29,9 @@ function wpcom_login_form_items( $items = array() ){
 }
 
 add_filter( 'wpcom_register_form_items', 'wpcom_register_form_items' );
-function wpcom_register_form_items( $items = array() ){
+function wpcom_register_form_items( $items = [] ){
     if(is_wpcom_enable_phone()) {
-        $items += apply_filters( 'wpcom_sms_code_items', array() );
+        $items += apply_filters( 'wpcom_sms_code_items', [] );
         $items += array(
             40 => array(
                 'type' => 'password',
@@ -111,7 +111,7 @@ function wpcom_email_code_items($items){
 
 // 插入默认的配置数据
 add_filter( 'wpcom_account_tabs', 'wpcom_account_default_tabs' );
-function wpcom_account_default_tabs( $tabs = array() ){
+function wpcom_account_default_tabs( $tabs = [] ){
     $options = $GLOBALS['wpmx_options'];
     $tabs += array(
         10 => array(
@@ -286,7 +286,7 @@ function wpcom_account_tabs_bind_metas( $metas ){
     );
     if(isset($options['social_login_on']) && $options['social_login_on']=='1'){
         $key = 20;
-        $socials = apply_filters( 'wpcom_socials', array() );
+        $socials = apply_filters( 'wpcom_socials', [] );
         ksort($socials);
         if( $socials ){
             foreach ( $socials as $social ){
@@ -358,7 +358,7 @@ function wpcom_account_tabs_password_metas( $metas ){
 }
 
 add_filter( 'wpcom_lostpassword_form_items', 'wpcom_lostpassword_form_items' );
-function wpcom_lostpassword_form_items( $items = array() ){
+function wpcom_lostpassword_form_items( $items = [] ){
     $items += array(
         10 => array(
             'type' => 'text',
@@ -376,7 +376,7 @@ function wpcom_lostpassword_form_items( $items = array() ){
 }
 
 add_filter( 'wpcom_resetpassword_form_items', 'wpcom_resetpassword_form_items' );
-function wpcom_resetpassword_form_items( $items = array() ){
+function wpcom_resetpassword_form_items( $items = [] ){
     $items += array(
         10 => array(
             'type' => 'password',
@@ -430,7 +430,7 @@ function wpcom_member_errors( $errors ){
 
 // 插入默认的配置数据
 add_filter( 'wpcom_profile_tabs', 'wpcom_profile_default_tabs' );
-function wpcom_profile_default_tabs( $tabs = array() ){
+function wpcom_profile_default_tabs( $tabs = [] ){
     $tabs[10] = array(
         'slug' => 'posts',
         'title' => __( 'Posts', WPMX_TD )
@@ -531,9 +531,9 @@ function wpcom_socials( $social ){
     }else if($has_wechat > -1 && !wp_is_mobile()){ // 电脑端，配置了开放平台登录，则使用开放平台登录
         if ($has_wechat2 > -1) unset($social[$has_wechat2]);
         if ($has_weapp > -1) unset($social[$has_weapp]);
-    } else if ($is_wechat && $has_wechat && $has_weapp) { // 微信内置浏览器，未配置公众号登录，同时配置了开放平台登录和小程序登录，使用小程序
+    } else if ($is_wechat && $has_wechat > -1 && $has_weapp > -1) { // 微信内置浏览器，未配置公众号登录，同时配置了开放平台登录和小程序登录，使用小程序
         unset($social[$has_wechat]);
-    } else if (!wp_is_mobile() && $has_wechat2 && $has_weapp) { // 电脑端，未配置开放平台登录，同时配置了公众号登录和小程序登录，使用公众号
+    } else if (!wp_is_mobile() && $has_wechat2 > -1 && $has_weapp > -1) { // 电脑端，未配置开放平台登录，同时配置了公众号登录和小程序登录，使用公众号
         unset($social[$has_weapp]);
     }else if(wp_is_mobile() && !$is_wechat){ // 手机浏览器
         if($has_weapp > -1){ // 优先使用小程序，企业认证小程序可直接跳转，未认证小程序也可截图
@@ -547,7 +547,7 @@ function wpcom_socials( $social ){
 }
 
 add_filter( 'wpcom_approve_resend_form_items', 'wpcom_approve_resend_form_items' );
-function wpcom_approve_resend_form_items( $items = array() ){
+function wpcom_approve_resend_form_items( $items = [] ){
     $value = isset($_REQUEST['login']) ? wp_unslash($_REQUEST['login']) : '';
     $items += array(
         10 => array(
@@ -723,7 +723,7 @@ function wpcom_send_email_code( $email ){
     /* translators: %s: display_name */
     $message = '<p>' . sprintf( __( 'Hi, %s!', WPMX_TD ), $user->display_name ) . '</p>';
     /* translators: %s: verification code */
-    $message .= '<p>' . sprintf( __( 'Your verification code is <b style="color:red;">%s</b>, please enter in 10 minutes.', WPMX_TD ), $code ) . '</p>';
+    $message .= '<p>' . sprintf( __( 'Your verification code is <b style="color:red;">%s</b>, please enter in %d minutes.', WPMX_TD ), $code, wpcom_sms_code_expire(false) ) . '</p>';
     $message .= '<p></p>';
     $message .= '<p>' . __( 'If this was a mistake, ignore this email and nothing will happen.', WPMX_TD ) . "</p>";
 
@@ -742,7 +742,7 @@ add_action('wp_ajax_wpcom_is_login', 'wpcom_is_login');
 add_action('wp_ajax_nopriv_wpcom_is_login', 'wpcom_is_login');
 // 登录状态
 function wpcom_is_login(){
-    $res = array();
+    $res = [];
     $current_user = wp_get_current_user();
     if($current_user->ID){
         $options = $GLOBALS['wpmx_options'];
@@ -752,7 +752,7 @@ function wpcom_is_login(){
         if( function_exists('wpcom_account_url') ) $res['account'] = wpcom_account_url();
         $res['display_name'] = $current_user->display_name;
 
-        $menus = array();
+        $menus = [];
 
         $show_profile = apply_filters( 'wpcom_member_show_profile' , true );
         if($show_profile) {
@@ -820,20 +820,32 @@ function is_wpcom_enable_phone($compatible = false){
 }
 
 function wpcom_check_sms_code($phone, $val){
+    $attempts_key = 'attempts_'.$phone;
+    $attempts = Session::get($attempts_key) ?: 0;
+    // Lockout after 5 failed attempts
+    if($attempts >= 5) return false;
+
     // 检查session、验证码值
     $key = 'code_'.$phone;
     $code = Session::get($key);
     if($phone && $val && $code && $code == $val ){
         return true;
     }
+    Session::set($attempts_key, $attempts + 1, wpcom_sms_code_expire());
     return false;
 }
 
 function wpcom_generate_sms_code($phone){
     $code = '' . wp_rand(0,9) . '' . wp_rand(0,9) . '' . wp_rand(0,9) . '' . wp_rand(100,999);
     $key = 'code_'.$phone;
-    Session::set($key, $code, 600);
+    Session::set($key, $code, wpcom_sms_code_expire());
     return $code;
+}
+
+function wpcom_sms_code_expire($seconds = true){
+    $minutes = apply_filters('wpcom_sms_code_expire_minutes', 5);
+    $minutes = max(2, intval($minutes));
+    return $seconds ? ($minutes * 60) : $minutes;
 }
 
 function wpcom_generate_unique_username( $username ) {
@@ -1074,7 +1086,7 @@ function wpcom_send_notification($to, $title, $content){
 
 add_filter( 'wpmx_localize_script', 'wpcom_login_js_lang' );
 function wpcom_login_js_lang($scripts){
-    $scripts['js_lang'] = isset($scripts['js_lang']) ? $scripts['js_lang'] : array();
+    $scripts['js_lang'] = isset($scripts['js_lang']) ? $scripts['js_lang'] : [];
     $scripts['js_lang'] += array(
         'login_desc' => __('You are not signed in, please sign in before proceeding with related operations!', WPMX_TD),
         'login_title' => __('Please sign in', WPMX_TD),
@@ -1234,11 +1246,11 @@ if (!function_exists('wpcom_setup') && !defined('WPCOM_MP_VERSION')) {
     add_action('wp_ajax_nopriv_wpcom_send_sms_code', 'wpmx_send_sms_code');
 }
 function wpmx_send_sms_code(){
-    $res = array();
+    $res = [];
     $res['result'] = 1; // 0：发送失败；1：发送成功；-1：nonce校验失败；-2：滑动解锁验证失败；-3：请先滑动解锁
     $res['error'] = '';
 
-    $errors = apply_filters( 'wpcom_member_errors', array() );
+    $errors = apply_filters( 'wpcom_member_errors', [] );
 
     $msg = array(
         '0' => __( 'Failed to send', WPMX_TD ),
@@ -1254,7 +1266,7 @@ function wpmx_send_sms_code(){
     }else{
         $filter = 'wpcom_sms_code_items';
     }
-    $items = apply_filters($filter, array());
+    $items = apply_filters($filter, []);
     $target = 'user_phone';
     if($items){
         foreach ($items as $item){

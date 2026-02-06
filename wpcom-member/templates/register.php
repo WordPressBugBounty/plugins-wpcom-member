@@ -12,7 +12,9 @@ $logo = isset($options['login_logo']) && $options['login_logo'] ? wp_get_attachm
         <?php } ?>
         <?php if($logo){ ?>
         <div class="member-form-head">
-            <a class="member-form-logo" href="<?php bloginfo('url');?>" rel="home"><img class="j-lazy" src="<?php echo esc_url($logo); ?>" alt="<?php echo esc_attr(get_bloginfo( 'name' ));?>"></a>
+            <a class="member-form-logo" href="<?php bloginfo('url');?>" rel="home">
+                <?php echo wpmx_image($logo, get_bloginfo( 'name' ), '', '', 'j-lazy');?>
+            </a>
         </div>
         <?php } ?>
         <div class="member-form-title">

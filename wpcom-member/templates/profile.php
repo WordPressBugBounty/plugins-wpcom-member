@@ -6,7 +6,9 @@ $classes = apply_filters('wpcom_profile_head_classes', 'wpcom-profile-head');
 
 <div class="wpcom-profile">
     <div class="<?php echo esc_attr($classes);?>">
-        <div class="wpcom-ph-bg"><img src="<?php echo esc_url(wpcom_get_cover_url($profile->ID))?>" alt="<?php echo esc_attr($profile->display_name);?>"></div>
+        <div class="wpcom-ph-bg">
+            <?php echo wpmx_image(wpcom_get_cover_url($profile->ID), $profile->display_name);?>
+        </div>
         <div class="wpcom-ph-inner">
             <div class="wpcom-ph-user">
                 <div class="wpcom-ph-avatar">

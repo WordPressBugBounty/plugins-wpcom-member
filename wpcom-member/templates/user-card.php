@@ -4,7 +4,7 @@ $display_name = apply_filters('wpcom_user_display_name', '<span class="display-n
 ?>
 <div class="user-card-header">
     <div class="user-card-cover">
-        <img src="<?php echo esc_url($cover_photo); ?>" alt="<?php echo esc_attr($user->display_name);?>">
+        <?php echo wpmx_image($cover_photo, $user->display_name);?>
     </div>
     <a class="user-card-avatar" href="<?php echo esc_url(get_author_posts_url( $user->ID ));?>" target="_blank">
         <?php echo get_avatar( $user->ID, 60 );?>

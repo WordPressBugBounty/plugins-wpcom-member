@@ -14,10 +14,10 @@ class Social_Login {
         if( isset($options['social_login_on']) && $options['social_login_on']=='1' ) {
             $this->type = '';
 
-            $socials = apply_filters( 'wpcom_socials', array() );
+            $socials = apply_filters( 'wpcom_socials', [] );
             ksort($socials);
 
-            $this->social = array();
+            $this->social = [];
             foreach ( $socials as $social ){
                 if( $social['id'] && $social['key'] ) {
                     $social['id'] = trim($social['id']);
@@ -796,7 +796,7 @@ class Social_Login {
             wp_send_json(array('result'=> 3));
         }
 
-        $res = array();
+        $res = [];
 
         if(isset($_POST['username'])){
             $username = sanitize_user($_POST['username']);
@@ -880,7 +880,7 @@ class Social_Login {
             wp_send_json(array('result'=> 3));
         }
 
-        $res = array();
+        $res = [];
 
         $newuser_id = isset($newuser['unionid']) && $newuser['unionid'] ? $newuser['unionid'] : $newuser['openid'];
 
@@ -971,7 +971,7 @@ class Social_Login {
         wp_send_json($res);
     }
 
-    function http_request($url, $body=array(), $method='GET', $headers=array()){
+    function http_request($url, $body=[], $method='GET', $headers=[]){
         $result = wp_remote_request($url, array('method' => $method, 'timeout' => 20, 'sslverify' => false, 'httpversion' => '1.1', 'body'=>$body, 'headers' => $headers));
         if(is_wp_error($result)){
             wp_die(wp_json_encode($result->errors));
@@ -1042,7 +1042,7 @@ class Social_Login {
     }
 
     function wechat2_login_check(){
-        $res = array();
+        $res = [];
         $uuid = isset($_POST['uuid']) ? sanitize_key($_POST['uuid']) : '';
         if( $uuid && isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest' ){
             if(isset($_POST['type']) && $_POST['type'] == 3){
@@ -1187,9 +1187,9 @@ class Social_Login {
                             if(isset($res->Content) && isset($this->social['wechat2']) && isset($this->social['wechat2']['keyword']) && (trim($res->Content) === $this->social['wechat2']['keyword'] || (trim($res->Content) === '登陆' && $this->social['wechat2']['keyword'] === '登录')) && $this->social['wechat2']['code']){
                                 $content = $this->social['wechat2']['code'];
                                 $_code = wpcom_generate_sms_code($res->ToUserName);
-                                Session::set('_wxcode_' . $_code, wp_json_encode($res), 600);
+                                Session::set('_wxcode_' . $_code, wp_json_encode($res), wpcom_sms_code_expire());
                                 if (preg_match('%CODE%', $content)) $content = str_replace('%CODE%', $_code, $content);
-                                if (preg_match('%TIME%', $content)) $content = str_replace('%TIME%', 10, $content);
+                                if (preg_match('%TIME%', $content)) $content = str_replace('%TIME%', wpcom_sms_code_expire(false), $content);
                                 echo '<xml><ToUserName><![CDATA[' . esc_html($res->FromUserName) . ']]></ToUserName><FromUserName><![CDATA[' . esc_html($res->ToUserName) . ']]></FromUserName><CreateTime>' . esc_html(time()) . '</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[' . wp_kses_post($content) . ']]></Content></xml>';
                                 exit;
                             }

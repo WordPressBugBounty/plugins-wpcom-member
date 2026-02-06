@@ -3,8 +3,8 @@ Contributors: whyun
 Donate link: https://www.wpcom.cn/plugins/wpcom-member-pro.html
 Tags: 用户中心, membership
 Requires at least: 6.2.0
-Tested up to: 6.8.2
-Stable tag: 1.7.13
+Tested up to: 6.9.0
+Stable tag: 1.7.18
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -61,6 +61,29 @@ WordPress用户中心插件 / User profile & membership plugin for WordPress
 == Changelog ==
 
 ### 更新记录
+
+**1.7.18** - 2026-01-06
+
+- 优化头像图片以及部分其他图片可支持 loading、decoding 属性；
+- 优化注册登录表单部分情况下手机号输入选项获取出错的问题；
+
+**1.7.17** - 2025-12-04
+
+- 增加filter `wpcom_sms_code_expire_minutes`：验证码有效分钟数，默认5分钟；
+- 优化验证码功能，错误达到5次锁定（锁定时间为`wpcom_sms_code_expire_minutes`返回分钟数），避免暴力破解；
+
+**1.7.16** - 2025-10-29
+
+- 优化与部分插件的兼容问题导致模板文件无法加载的情况
+
+**1.7.15** - 2025-10-28
+
+- 优化代码可能存在的安全问题
+
+**1.7.14** - 2025-10-22
+
+- 优化多个微信登录方式可能显示异常的问题；
+- 优化`补充电子邮箱`/`补充手机号码`功能由于用户权限判断出错导致不显示提示信息的问题；
 
 **1.7.13** - 2025-09-05
 

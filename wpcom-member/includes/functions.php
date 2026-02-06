@@ -842,7 +842,7 @@ function wpcom_back_home(){
 
 function wpcom_need_fill_login($user_id){
     $options = $GLOBALS['wpmx_options'];
-    if($user_id && isset($options['member_fill_login']) && $options['member_fill_login'] == 1 && !user_can($user_id, 'edit_posts')){
+    if($user_id && isset($options['member_fill_login']) && $options['member_fill_login'] == 1 && !user_can($user_id, 'publish_posts')){
         // 当前登录用户不是被判断的用户，比如管理员、编辑后台选择作者
         if((int)get_current_user_id() !== (int)$user_id && current_user_can('edit_others_posts')){
             return false;
@@ -859,6 +859,21 @@ function wpcom_need_fill_login($user_id){
         }
     }
     return false;
+}
+
+function wpmx_image( $img, $alt = '', $width = '', $height = '', $class = '' ){
+    $class_html = $class ? ' class="' . $class . '"' : '';
+    $size = $width ? ' width="' . intval($width) . '"' : '';
+    $size .= $height ? ' height="' . intval($height) . '"' : '';
+    $size .= ' decoding="async"';
+
+    if(!function_exists('wpcom_get_img_lazyload') || wpcom_get_img_lazyload() == 1) $size .= ' loading="lazy"';
+    if(!preg_match('/^data:image\//i', $img) && class_exists('WPCOM')){
+        $img = esc_url(WPCOM::get_webp_url($img));
+    }
+    $html = '<img' . $class_html . ' src="' . $img . '" alt="' . esc_attr($alt) . '"' . $size . '>';
+
+    return $html;
 }
 
 add_filter('eztoc_do_shortcode', function($isEligible){

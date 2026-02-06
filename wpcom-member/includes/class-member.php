@@ -219,6 +219,40 @@ class Member {
                     $class[] = $args['class'];
                 }
             }
+
+            // Add `loading`, `fetchpriority`, and `decoding` attributes.
+            $extra_attr = $args['extra_attr'];
+
+            if ( in_array( $args['loading'], array( 'lazy', 'eager' ), true )
+                && ! preg_match( '/\bloading\s*=/', $extra_attr )
+            ) {
+                if ( ! empty( $extra_attr ) ) {
+                    $extra_attr .= ' ';
+                }
+
+                $extra_attr .= "loading='{$args['loading']}'";
+            }
+
+            if ( in_array( $args['fetchpriority'], array( 'high', 'low', 'auto' ), true )
+                && ! preg_match( '/\bfetchpriority\s*=/', $extra_attr )
+            ) {
+                if ( ! empty( $extra_attr ) ) {
+                    $extra_attr .= ' ';
+                }
+
+                $extra_attr .= "fetchpriority='{$args['fetchpriority']}'";
+            }
+
+            if ( in_array( $args['decoding'], array( 'async', 'sync', 'auto' ), true )
+                && ! preg_match( '/\bdecoding\s*=/', $extra_attr )
+            ) {
+                if ( ! empty( $extra_attr ) ) {
+                    $extra_attr .= ' ';
+                }
+
+                $extra_attr .= "decoding='{$args['decoding']}'";
+            }
+
             $avatar = sprintf(
                     "<img alt='%s' src='%s' class='%s' height='%d' width='%d' %s/>",
                     /* translators: %s: display_name */
@@ -227,7 +261,7 @@ class Member {
                     esc_attr( join( ' ', $class ) ),
                     (int) $args['height'],
                     (int) $args['width'],
-                    $args['extra_attr']
+                    $extra_attr
             );
         }
         return $avatar;
@@ -1151,6 +1185,7 @@ class Member {
     <?php }
 
     public static function load_template( $template, $atts = [] ) {
+        $template = preg_replace('/[^a-zA-Z0-9_-]/', '', $template);
         if (file_exists(get_stylesheet_directory() . '/member/' . $template . '.php')) {
             $file = get_stylesheet_directory() . '/member/' . $template . '.php';;
         }else if(file_exists( get_template_directory() . '/member/' . $template . '.php' )){

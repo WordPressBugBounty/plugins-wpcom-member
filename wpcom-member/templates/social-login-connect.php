@@ -2,7 +2,7 @@
 <?php if($is_bind){ ?>
     <div class="sl-info-notice" style="border-bottom: 0;padding-top: 20px;">
         <div class="sl-info-avatar">
-            <?php echo wpmx_image($avatar, $newuser['nickname'], '', '', 'j-lazy');?>
+            <?php echo wpmx_image($avatar, $newuser['nickname'], 'j-lazy');?>
         </div>
         <div class="sl-info-text">
             <?php /* translators: %s: nickname */ ?>
@@ -14,7 +14,7 @@
  <?php } else { ?>
     <div class="sl-info-notice">
         <div class="sl-info-avatar">
-            <?php echo wpmx_image($avatar, $newuser['nickname'], '', '', 'j-lazy');?>
+            <?php echo wpmx_image($avatar, $newuser['nickname'], 'j-lazy');?>
         </div>
         <div class="sl-info-text">
             <?php /* translators: %s: nickname */ ?>

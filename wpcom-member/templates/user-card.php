@@ -7,7 +7,7 @@ $display_name = apply_filters('wpcom_user_display_name', '<span class="display-n
         <?php echo wpmx_image($cover_photo, $user->display_name);?>
     </div>
     <a class="user-card-avatar" href="<?php echo esc_url(get_author_posts_url( $user->ID ));?>" target="_blank">
-        <?php echo get_avatar( $user->ID, 60 );?>
+        <?php echo get_avatar( $user->ID, 60, '', $user->display_name, ['decoding' => 'async', 'loading' => 'lazy'] );?>
     </a>
     <a class="user-card-name" href="<?php echo esc_url(get_author_posts_url( $user->ID ));?>" target="_blank"><?php echo wp_kses_post($display_name);?></a>
     <?php if(wpmx_description_length() > 0) { ?><p class="user-card-desc"><?php echo wp_kses($user->description, 'user_description');?></p><?php } ?>

@@ -3,7 +3,7 @@
 $options = $GLOBALS['wpmx_options'];
 $social_login_on = isset($options['social_login_on']) && $options['social_login_on']=='1' ? 1 : 0;
 $classes = apply_filters('wpcom_login_form_classes', 'member-form-wrap member-form-login');
-$logo = isset($options['login_logo']) && $options['login_logo'] ? wp_get_attachment_url( $options['login_logo'] ) : (function_exists('wpcom_logo') ? wpcom_logo() : '');
+$logo = isset($options['login_logo']) && $options['login_logo'] ? wp_get_attachment_url( $options['login_logo'] ) : '';
 ?>
 <div class="<?php echo esc_attr($classes);?>">
     <div class="member-form-inner">
@@ -11,7 +11,7 @@ $logo = isset($options['login_logo']) && $options['login_logo'] ? wp_get_attachm
         <div class="member-form-head">
             <div class="member-form-head">
                 <a class="member-form-logo" href="<?php bloginfo('url');?>" rel="home">
-                    <?php echo wpmx_image($logo, get_bloginfo( 'name' ), '', '', 'j-lazy');?>
+                    <?php echo wpmx_image($logo, get_bloginfo('name'));?>
                 </a>
             </div>
         </div>

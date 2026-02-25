@@ -861,15 +861,16 @@ function wpcom_need_fill_login($user_id){
     return false;
 }
 
-function wpmx_image( $img, $alt = '', $width = '', $height = '', $class = '' ){
+function wpmx_image( $img, $alt = '', $class = '', $width = '', $height = '' ){
     $class_html = $class ? ' class="' . $class . '"' : '';
     $size = $width ? ' width="' . intval($width) . '"' : '';
     $size .= $height ? ' height="' . intval($height) . '"' : '';
     $size .= ' decoding="async"';
 
     if(!function_exists('wpcom_get_img_lazyload') || wpcom_get_img_lazyload() == 1) $size .= ' loading="lazy"';
-    if(!preg_match('/^data:image\//i', $img) && class_exists('WPCOM')){
-        $img = esc_url(WPCOM::get_webp_url($img));
+    if(!preg_match('/^data:image\//i', $img) && class_exists('WPCOM') && method_exists('WPCOM', 'get_webp_url')) {
+        $webp = WPCOM::get_webp_url($img);
+        $img = esc_url($webp ?: $img);
     }
     $html = '<img' . $class_html . ' src="' . $img . '" alt="' . esc_attr($alt) . '"' . $size . '>';
 

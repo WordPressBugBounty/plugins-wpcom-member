@@ -896,7 +896,7 @@ function wpcom_aliyun_afs( $csessionid, $token, $sig, $scene ){
         'Version' => '2018-01-12'
     );
     $body['Signature'] = wpcom_aliyun_afs_signature($body, trim($options['nc_access_secret']));
-    $result = wp_remote_request('http://afs.aliyuncs.com/',
+    $result = wp_remote_request('https://afs.aliyuncs.com/',
         array(
             'method' => 'POST',
             'timeout' => 10,

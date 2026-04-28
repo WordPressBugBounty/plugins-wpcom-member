@@ -1174,7 +1174,7 @@ class Social_Login {
                     switch ($res->MsgType){
                         case 'event':
                             $type = strtolower($res->Event);
-                            if(($type === 'subscribe' || $type === 'scan') && $res->EventKey && preg_match('/^(login_|qrscene_login_)/i', $res->EventKey)){
+                            if(($type === 'subscribe' || $type === 'scan') && $res->EventKey && is_string($res->EventKey) && preg_match('/^(login_|qrscene_login_)/i', $res->EventKey)){
                                 $uuid = preg_replace('/^(login_|qrscene_login_)/i', '', $res->EventKey);
                                 Session::set('_'.$uuid, wp_json_encode($res));
                                 if($this->social['wechat2']['welcome']){

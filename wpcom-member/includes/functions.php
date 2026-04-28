@@ -119,6 +119,7 @@ function wpmx_scripts(){
         $script = array(
             'ajaxurl' => admin_url( 'admin-ajax.php'),
             'plugin_url' => WPMX_URI,
+            'ver' => WPMX_VERSION,
             'max_upload_size' => wp_max_upload_size()
         );
         if(is_singular()) $script['post_id'] = get_queried_object_id();

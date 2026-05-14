@@ -4,7 +4,7 @@ Donate link: https://www.wpcom.cn/plugins/wpcom-member-pro.html
 Tags: 用户中心, membership
 Requires at least: 6.2.0
 Tested up to: 6.9.4
-Stable tag: 1.7.21
+Stable tag: 1.7.22
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -61,6 +61,11 @@ WordPress用户中心插件 / User profile & membership plugin for WordPress
 == Changelog ==
 
 ### 更新记录
+
+**1.7.22** - 2026-05-14
+
+- 优化开启`补充电子邮箱`/`补充手机号码`功能后 `REST API` 的返回格式以及与`JustWeapp`小程序的兼容；
+
 
 **1.7.21** - 2026-04-28
 

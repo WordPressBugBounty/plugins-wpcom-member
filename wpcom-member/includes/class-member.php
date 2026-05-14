@@ -80,7 +80,7 @@ class Member {
         add_filter( 'pre_comment_approved', [$this, 'comment_fill_login_check'], 20, 2 );
         add_filter( 'qapress_pre_insert_comment', [$this, 'qa_comment_fill_login_check'], 20 );
         add_filter( 'wp_insert_post_data', array( $this, 'pre_insert_post'), 10 ,2 );
-        add_filter( 'rest_pre_insert_post', array( $this, 'rest_pre_insert_post') );
+        add_action( 'rest_api_init', array( $this, 'add_rest_pre_insert_hooks' ) );
         add_filter( 'wpcom_tougao_notice', array( $this, 'tougao_notice'), 10, 2 );
         add_action( 'admin_notices', array($this, 'post_fill_login_error') );
         add_filter( 'qapress_pre_insert_question', [$this, 'qa_post_fill_login_check'], 20 );
@@ -2171,14 +2171,14 @@ class Member {
 
     function comment_fill_login_check($approved, $comment){
         if(!is_wp_error($approved) && isset($comment['user_id']) && $comment['user_id'] && wpcom_need_fill_login($comment['user_id'])){
-            return new WP_Error('need_fill_login', $this->fill_login_check_msg(), 400);
+            return new WP_Error('need_fill_login', $this->fill_login_check_msg(), $this->fill_login_check_status());
         }
         return $approved;
     }
 
     function qa_comment_fill_login_check($comment){
         if(!is_wp_error($comment) && isset($comment['user_id']) && $comment['user_id'] && wpcom_need_fill_login($comment['user_id'])){
-            $comment = new WP_Error('need_fill_login', $this->fill_login_check_msg(), 400);
+            $comment = new WP_Error('need_fill_login', $this->fill_login_check_msg(), $this->fill_login_check_status());
         }
         return $comment;
     }
@@ -2189,13 +2189,20 @@ class Member {
         if($user_id && $data['post_type'] && in_array($data['post_type'], $needed_types) && wpcom_need_fill_login($user_id)){
             $data['post_status'] = 'inherit';
             if($rest){
-                $err = new WP_Error( 'need_fill_login', $this->fill_login_check_msg(false), 400);
+                $err = new WP_Error( 'need_fill_login', $this->fill_login_check_msg(false), $this->fill_login_check_status());
                 return $err;
             }else{
                 add_filter('redirect_post_location', [ $this, 'redirect_post_location_filter' ], 88);
             }
         }
         return $data;
+    }
+
+    function add_rest_pre_insert_hooks(){
+        $needed_types = apply_filters('wpmx_need_fill_login_post_types', ['post', 'page', 'kuaixun', 'qa_post']);
+        foreach ($needed_types as $type) {
+            add_filter( 'rest_pre_insert_' . $type, array( $this, 'rest_pre_insert_post') );
+        }
     }
 
     function rest_pre_insert_post($post){
@@ -2239,7 +2246,7 @@ class Member {
 
     function qa_post_fill_login_check($post){
         if(!is_wp_error($post) && isset($post['post_author']) && $post['post_author'] && wpcom_need_fill_login($post['post_author'])){
-            $post = new WP_Error('need_fill_login', $this->fill_login_check_msg(), 400);
+            $post = new WP_Error('need_fill_login', $this->fill_login_check_msg(), $this->fill_login_check_status());
         }
         return $post;
     }
@@ -2260,6 +2267,14 @@ class Member {
         }
         $msg = sprintf( __('Action failed. Please %s before proceeding with this action.', WPMX_TD), $bind_link);
         return apply_filters('wpmx_fill_login_check_msg', $msg);
+    }
+
+    private function fill_login_check_status(){
+        return [
+            'status'   => 200,
+            'required' => is_wpcom_enable_phone() ? 'phone' : 'email',
+            'bind_url' => wpcom_subpage_url('bind'),
+        ];
     }
 }
 

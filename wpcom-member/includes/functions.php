@@ -122,6 +122,7 @@ function wpmx_scripts(){
             'ver' => WPMX_VERSION,
             'max_upload_size' => wp_max_upload_size()
         );
+        if(is_multisite()) $script['site_id'] = get_current_blog_id();
         if(is_singular()) $script['post_id'] = get_queried_object_id();
         if($wpmx_options && isset($wpmx_options['sl_wechat_follow']) && $wpmx_options['sl_wechat_follow']){
             foreach ($wpmx_options['sl_wechat_follow'] as $i => $f){

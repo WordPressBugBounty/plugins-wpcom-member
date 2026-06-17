@@ -216,7 +216,7 @@ class Social_Login {
             'scope' => 'snsapi_login',
             'state' => md5(uniqid(wp_rand(), true))
         );
-        if(isset($_GET['from']) && $_GET['from']==='scan'){
+        if(isset($_GET['from']) && $_GET['from'] === 'scan'){
             $params['href'] = 'data:text/css;base64,LmltcG93ZXJCb3ggLnFyY29kZSB7d2lkdGg6IDIxNnB4O2JvcmRlcjowO21heC13aWR0aDogMTAwJTttYXJnaW4tdG9wOjA7dmVydGljYWwtYWxpZ246IHRvcDt9Ci5pbXBvd2VyQm94IC50aXRsZSB7ZGlzcGxheTogbm9uZTt9Ci5pbXBvd2VyQm94IC5pbmZvIHt3aWR0aDogMjE2cHg7bWF4LXdpZHRoOiAxMDAlO2JhY2tncm91bmQ6I2ZmZjt9Ci5zdGF0dXNfaWNvbiB7ZGlzcGxheTpub25lO30KLmltcG93ZXJCb3ggLnN0YXR1cyB7dGV4dC1hbGlnbjogY2VudGVyO21hcmdpbi10b3A6IC0xMHB4O30KLmltcG93ZXJCb3ggLmljb24zOF9tc2d7ZGlzcGxheTogbm9uZTt9';
         }else if($options && isset($options['dark_style']) && $options['dark_style']){
             if($options['dark_style'] == '1'){
@@ -225,8 +225,7 @@ class Social_Login {
                 $params['href'] = 'data:text/css;base64,QG1lZGlhIChwcmVmZXJzLWNvbG9yLXNjaGVtZTogZGFyaykgewoJLmltcG93ZXJCb3ggLnRpdGxlIHtjb2xvcjojZmZmO30KCS5pbXBvd2VyQm94IC5zdGF0dXN7Y29sb3I6I2ZmZjt9Cn0=';
             }
         }
-        wp_redirect('https://open.weixin.qq.com/connect/qrconnect?'.http_build_query($params).'#wechat_redirect');
-        exit();
+        wp_send_json([ 'url' => 'https://open.weixin.qq.com/connect/qrconnect?' . http_build_query($params) ]);
     }
 
     function wechat2_login() {

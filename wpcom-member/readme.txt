@@ -3,8 +3,8 @@ Contributors: whyun
 Donate link: https://www.wpcom.cn/plugins/wpcom-member-pro.html
 Tags: 用户中心, membership
 Requires at least: 6.2.0
-Tested up to: 6.9.4
-Stable tag: 1.7.22
+Tested up to: 7.0
+Stable tag: 1.7.23
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -61,6 +61,10 @@ WordPress用户中心插件 / User profile & membership plugin for WordPress
 == Changelog ==
 
 ### 更新记录
+
+**1.7.23** - 2026-06-17
+
+- 优化电脑端微信登录与Chrome浏览器安全策略适配的问题，如果登录了电脑版微信后可直接获取登录状态快捷登录；
 
 **1.7.22** - 2026-05-14
 

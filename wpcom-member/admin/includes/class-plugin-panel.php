@@ -393,7 +393,7 @@ class Panel_Free{
                 $output .= '</div>';
                 break;
             case 'version':
-                $output = '<div class="form-group clearfix"><label class="form-label">'.$title.'</label><div class="form-input" style="padding-top:5px;">'.(isset($option['ver']) ? $option['ver'] : $this->version).' <a class="check-version" id="j-check-version" data-action="'.(isset($option['action']) ? $option['action'] : '').'" href="javascript:;">检查更新</a>'.$notice.'</div></div>';
+                $output = '<div class="form-group clearfix"><label class="form-label">'.$title.'</label><div class="form-input" style="padding-top:5px;">'.(isset($option['ver']) ? $option['ver'] : $this->version).' <a class="check-version" id="j-check-version" data-action="'.(isset($option['action']) ? $option['action'] : '').'" href="#">检查更新</a>'.$notice.'</div></div>';
                 break;
             default:
                 break;

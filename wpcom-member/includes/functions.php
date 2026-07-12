@@ -735,7 +735,7 @@ function wpmx_admin_options(){
                                 'weapp' => '微信小程序（依赖JustWeapp小程序）',
                                 'google' => 'Google',
                                 'facebook' => 'Facebook',
-                                'twitter' => 'Twitter',
+                                'twitter' => 'X / Twitter',
                                 'github' => 'Github',
                             )
                         ),

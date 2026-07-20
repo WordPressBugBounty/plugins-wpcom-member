@@ -797,12 +797,8 @@ class Social_Login {
 
         $res = [];
 
-        if(isset($_POST['username'])){
-            $username = sanitize_user($_POST['username']);
-        }
-        if(isset($_POST['password'])){
-            $password = $_POST['password'];
-        }
+        $username = isset($_POST['username']) ? sanitize_user($_POST['username']) : '';
+        $password = isset($_POST['password']) ? $_POST['password'] : '';
 
         if($username === '' || $password === '') {
             $res['result'] = 1;
@@ -882,13 +878,14 @@ class Social_Login {
         $res = [];
 
         $newuser_id = isset($newuser['unionid']) && $newuser['unionid'] ? $newuser['unionid'] : $newuser['openid'];
+        $username = $this->generate_username($newuser['type']);
 
         if(isset($_POST['email']) && !empty($_POST['email'])){
             $email = sanitize_email(wp_unslash($_POST['email']));
         }else if(isset($newuser['user_email']) && is_email($newuser['user_email'])){
             $email = $newuser['user_email'];
         }else{
-            $email = $newuser_id . '@email.empty';
+            $email = $username . '@email.empty';
         }
 
         if($email=='') $res['result'] = 1;
@@ -919,12 +916,12 @@ class Social_Login {
 
                     $userdata = array(
                         'user_pass' => wp_generate_password(),
-                        'user_login' => strtoupper($newuser['type']).$newuser['openid'],
+                        'user_login' => $username,
                         'user_email' => $email,
                         'nickname' => $newuser['nickname'],
                         'display_name' => $newuser['display_name']
                     );
-                    if($newuser['type']=='weibo') $userdata['user_url'] = $newuser['user_url'];
+                    if($newuser['type'] === 'weibo') $userdata['user_url'] = $newuser['user_url'];
 
                     if(!function_exists('wp_insert_user')){
                         include_once( ABSPATH . WPINC . '/registration.php' );
@@ -947,7 +944,7 @@ class Social_Login {
                         if($newuser['type'] === 'weapp'){
                             if(isset($newuser['unionid']) && $newuser['unionid']){
                                 update_user_option($user_id, 'social_type_wechat', $newuser_id);
-                                update_user_option($user->ID, 'social_type_wechat_name', $newuser['nickname']);
+                                update_user_option($user_id, 'social_type_wechat_name', $newuser['nickname']);
                             }else{
                                 $newuser['type'] = 'wxxcx';
                             }
@@ -970,6 +967,12 @@ class Social_Login {
         wp_send_json($res);
     }
 
+    function generate_username($type = ''){
+        $type = $type === 'wechat2' ? 'wechat' : $type;
+        $username = ($type ? strtolower($type) . '_' : 'user_') . strtolower(wp_generate_password(8, false, false));
+        return wpcom_generate_unique_username($username);
+    }
+
     function http_request($url, $body=[], $method='GET', $headers=[]){
         $result = wp_remote_request($url, array('method' => $method, 'timeout' => 20, 'sslverify' => false, 'httpversion' => '1.1', 'body'=>$body, 'headers' => $headers));
         if(is_wp_error($result)){
@@ -990,7 +993,7 @@ class Social_Login {
         if(!$openid) return false;
         if( $type == 'wechat2' ) $type = 'wechat';
 
-        if( ($type=='wechat' || $type=='qq') && $unionid!='' ){
+        if( ($type === 'wechat' || $type === 'qq') && $unionid !== '' ){
             $args = array(
                 'meta_key'     => $wpdb->get_blog_prefix() . 'social_type_' . $type,
                 'meta_value'   => $unionid,
@@ -1007,7 +1010,7 @@ class Social_Login {
                     return $user;
                 }
             }
-        }else if($type == 'weapp' && $unionid!=''){
+        }else if($type === 'weapp' && $unionid !== ''){
             $args = array(
                 'meta_key'     => $wpdb->get_blog_prefix() . 'social_type_wechat',
                 'meta_value'   => $unionid,

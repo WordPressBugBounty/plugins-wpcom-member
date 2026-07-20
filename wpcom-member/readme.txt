@@ -3,8 +3,8 @@ Contributors: whyun
 Donate link: https://www.wpcom.cn/plugins/wpcom-member-pro.html
 Tags: 用户中心, membership
 Requires at least: 6.2.0
-Tested up to: 7.0
-Stable tag: 1.7.25
+Tested up to: 7.0.2
+Stable tag: 1.7.26
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -61,6 +61,11 @@ WordPress用户中心插件 / User profile & membership plugin for WordPress
 == Changelog ==
 
 ### 更新记录
+
+**1.7.26** - 2026-07-20
+
+- 优化社交登录方式注册用户的用户名，不使用openid；
+- 优化社交登录方式注册的时候检查并生成不重复的用户名；
 
 **1.7.25** - 2026-07-12
 

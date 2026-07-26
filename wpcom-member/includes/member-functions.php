@@ -295,9 +295,11 @@ function wpcom_account_tabs_bind_metas( $metas ){
                     $url = add_query_arg(array('from' => 'bind'), wpcom_social_login_url($social['name']));
                     $value = __('Not set', WPMX_TD) . '<a class="member-bind-url j-social-bind '.$social['name'].'" href="'.$url.'">'.__('Connect', WPMX_TD).'</a>';
                     $social_name = $social['name'];
-                    $social['name'] = $social['name'] === 'wechat2' ? 'wechat' : $social['name'];
-                    $type_name = $social['name'] === 'weapp' ? 'wxxcx' : $social['name'];
+                    $type_name = ($social['name'] === 'wechat2' || $social['name'] === 'weapp') ? 'wechat' : $social['name'];
                     $openid = get_user_meta($user->ID, $wpdb->get_blog_prefix() . 'social_type_'.$type_name, true);
+                    if(!$openid && $social['name'] === 'weapp'){
+                        $openid = get_user_meta($user->ID, $wpdb->get_blog_prefix() . 'social_type_wxxcx', true);
+                    }
                     if($openid){
                         $value = __('Connected', WPMX_TD);
                         $name = get_user_meta($user->ID, $wpdb->get_blog_prefix() . 'social_type_'.$type_name.'_name', true);

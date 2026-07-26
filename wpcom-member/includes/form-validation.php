@@ -883,9 +883,12 @@ function wpcom_social_unbind() {
             $socials = apply_filters('wpcom_socials', array());
             if ($socials) {
                 foreach ($socials as $social) {
-                    $social['name'] = $social['name'] === 'wechat2' ? 'wechat' : $social['name'];
-                    if ($name != $social['name'] && $social['id'] && $social['key']) {
-                        $openid = get_user_meta($user->ID, $wpdb->get_blog_prefix() . 'social_type_' . $social['name'], true);
+                    if ($name !== $social['name'] && $social['id'] && $social['key']) {
+                        $social_name = ($social['name'] === 'wechat2' || $social['name'] === 'weapp') ? 'wechat' : $social['name'];
+                        $openid = get_user_meta($user->ID, $wpdb->get_blog_prefix() . 'social_type_' . $social_name, true);
+                        if(!$openid && $social['name'] === 'weapp'){
+                            $openid = get_user_meta($user->ID, $wpdb->get_blog_prefix() . 'social_type_wxxcx', true);
+                        }
                         if ($openid) {
                             $can_unbind = true;
                             break;
@@ -898,7 +901,12 @@ function wpcom_social_unbind() {
             }
         }
         if ($can_unbind) {
-            update_user_option($user->ID, 'social_type_' . ($name === 'wechat2' ? 'wechat' : $name), '');
+            if($name === 'weapp'){
+                update_user_option($user->ID, 'social_type_wxxcx', '');
+                update_user_option($user->ID, 'social_type_wechat', '');
+            }else{
+                update_user_option($user->ID, 'social_type_' . ($name === 'wechat2' ? 'wechat' : $name), '');
+            }
             $url = add_query_arg(array('from' => 'bind'), wpcom_social_login_url($name));
             $res['error'] = __('Not set', WPMX_TD) . '<a class="member-bind-url j-social-bind ' . $name . '" href="' . $url . '">' . __('Connect', WPMX_TD) . '</a>';
         } else {

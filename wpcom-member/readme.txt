@@ -4,7 +4,7 @@ Donate link: https://www.wpcom.cn/plugins/wpcom-member-pro.html
 Tags: 用户中心, membership
 Requires at least: 6.2.0
 Tested up to: 7.0.2
-Stable tag: 1.7.26
+Stable tag: 1.7.27
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -61,6 +61,11 @@ WordPress用户中心插件 / User profile & membership plugin for WordPress
 == Changelog ==
 
 ### 更新记录
+
+**1.7.27** - 2026-07-26
+
+- 优化微信小程序登录方式的兼容性；
+- 优化微信unionid个别情况下识别异常的问题；
 
 **1.7.26** - 2026-07-20
 

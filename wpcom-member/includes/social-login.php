@@ -114,8 +114,9 @@ class Social_Login {
                 if($bind_user && $bind_user->ID){
                     do_action('wpcom_sl_unionid_login', $bind_user->ID, $this->type, $openid, $unionid);
                     if(!$bind) {
-                        if (isset($newuser['nickname']))
-                            update_user_option($bind_user->ID, 'social_type_' . $newuser['type'] . '_name', $newuser['nickname']);
+                        if (isset($newuser['nickname'])){
+                            update_user_option($bind_user->ID, 'social_type_' . ($newuser['type'] === 'weapp' ? 'wechat' : $newuser['type']) . '_name', $newuser['nickname']);
+                        }
                         Session::delete('', 'openid');
                         Session::delete('', 'from');
                         Session::delete('', 'access_token');
@@ -149,8 +150,9 @@ class Social_Login {
                         $user = wp_get_current_user();
                         if($user && $user->ID){
                             $newuser_id = isset($newuser['unionid']) && $newuser['unionid'] ? $newuser['unionid'] : $newuser['openid'];
-                            update_user_option($user->ID, 'social_type_'.$newuser['type'], $newuser_id);
-                            update_user_option($user->ID, 'social_type_'.$newuser['type'].'_name', $newuser['nickname']);
+                            $social_type = $newuser['type'] === 'weapp' ? (isset($newuser['unionid']) && $newuser['unionid'] ? 'wechat' : 'wxxcx') : $newuser['type'];
+                            update_user_option($user->ID, 'social_type_'.$social_type, $newuser_id);
+                            update_user_option($user->ID, 'social_type_'.($newuser['type'] === 'weapp' ? 'wechat' : $newuser['type']).'_name', $newuser['nickname']);
                         }else{
                             wp_die("<h3>错误：</h3>请登录后再进行绑定操作！");
                             exit();
@@ -825,7 +827,7 @@ class Social_Login {
                     Session::delete('', 'redirect_to');
                     $res['redirect'] = $redirect_to;
                     Session::delete('', 'user');
-                    update_user_option($user->ID, 'social_type_'.$newuser['type'].'_name', $newuser['nickname']);
+                    update_user_option($user->ID, 'social_type_'.($newuser['type'] === 'weapp' ? 'wechat' : $newuser['type']).'_name', $newuser['nickname']);
                     $this->login($user->ID);
                 }else{
                     $res['result'] = 4;
@@ -833,15 +835,13 @@ class Social_Login {
             }else{
                 $newuser_id = isset($newuser['unionid']) && $newuser['unionid'] ? $newuser['unionid'] : $newuser['openid'];
                 if($newuser['type'] === 'weapp'){
-                    if(isset($newuser['unionid']) && $newuser['unionid']){
-                        update_user_option($user->ID, 'social_type_wechat', $newuser_id);
-                        update_user_option($user->ID, 'social_type_wechat_name', $newuser['nickname']);
-                    }else{
-                        $newuser['type'] = 'wxxcx';
-                    }
+                    $_type = isset($newuser['unionid']) && $newuser['unionid'] ? 'wechat' : 'wxxcx';
+                    update_user_option($user->ID, 'social_type_' . $_type, $newuser_id);
+                    update_user_option($user->ID, 'social_type_wechat_name', $newuser['nickname']);
+                }else{
+                    update_user_option($user->ID, 'social_type_'.$newuser['type'], $newuser_id);
+                    update_user_option($user->ID, 'social_type_'.$newuser['type'].'_name', $newuser['nickname']);
                 }
-                update_user_option($user->ID, 'social_type_'.$newuser['type'], $newuser_id);
-                update_user_option($user->ID, 'social_type_'.$newuser['type'].'_name', $newuser['nickname']);
                 $res['result'] = 0;
                 $redirect_to = Session::get('redirect_to') ?: '';
                 if($redirect_to === '' && isset($options['login_redirect']) && $options['login_redirect'] !== ''){
@@ -942,15 +942,13 @@ class Social_Login {
                         do_action('register_new_user', $user_id);
                         do_action('wpcom_social_new_user', $user_id, $_POST);
                         if($newuser['type'] === 'weapp'){
-                            if(isset($newuser['unionid']) && $newuser['unionid']){
-                                update_user_option($user_id, 'social_type_wechat', $newuser_id);
-                                update_user_option($user_id, 'social_type_wechat_name', $newuser['nickname']);
-                            }else{
-                                $newuser['type'] = 'wxxcx';
-                            }
+                            $social_type = isset($newuser['unionid']) && $newuser['unionid'] ? 'wechat' : 'wxxcx';
+                            update_user_option($user_id, 'social_type_'.$social_type, $newuser_id);
+                            update_user_option($user_id, 'social_type_wechat_name', $newuser['nickname']);
+                        }else{
+                            update_user_option($user_id, 'social_type_'.$newuser['type'], $newuser_id);
+                            update_user_option($user_id, 'social_type_'.$newuser['type'].'_name', $newuser['nickname']);
                         }
-                        update_user_option($user_id, 'social_type_'.$newuser['type'], $newuser_id);
-                        update_user_option($user_id, 'social_type_'.$newuser['type'].'_name', $newuser['nickname']);
                         Session::delete('', 'user');
                         $this->login($user_id);
                         $this->set_avatar($user_id, $newuser['avatar']);
@@ -993,7 +991,7 @@ class Social_Login {
         if(!$openid) return false;
         if( $type == 'wechat2' ) $type = 'wechat';
 
-        if( ($type === 'wechat' || $type === 'qq') && $unionid !== '' ){
+        if( ($type === 'wechat' || $type === 'qq') && $unionid ){
             $args = array(
                 'meta_key'     => $wpdb->get_blog_prefix() . 'social_type_' . $type,
                 'meta_value'   => $unionid,
@@ -1010,7 +1008,7 @@ class Social_Login {
                     return $user;
                 }
             }
-        }else if($type === 'weapp' && $unionid !== ''){
+        }else if($type === 'weapp' && $unionid ){
             $args = array(
                 'meta_key'     => $wpdb->get_blog_prefix() . 'social_type_wechat',
                 'meta_value'   => $unionid,

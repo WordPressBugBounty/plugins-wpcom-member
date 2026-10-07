@@ -2,9 +2,9 @@
 Contributors: whyun
 Donate link: https://www.wpcom.cn/plugins/wpcom-member-pro.html
 Tags: 用户中心, membership
-Requires at least: 6.2.0
-Tested up to: 7.0.2
-Stable tag: 1.7.27
+Requires at least: 6.4.0
+Tested up to: 7.1.3
+Stable tag: 1.8.0.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -61,6 +61,15 @@ WordPress用户中心插件 / User profile & membership plugin for WordPress
 == Changelog ==
 
 ### 更新记录
+
+**1.8.0** - 2026-10-07
+
+- 新增邮件模板：用户中心-设置选项-常规设置-邮件模板；
+- 优化社交登录安全性问题；
+- 优化手机号修改权限的问题；
+- 优化短信验证码发送频率限制；
+- 优化社交登录选项太多的情况下电脑端仅显示图标；
+- 优化部分细节代码；
 
 **1.7.27** - 2026-07-26
 

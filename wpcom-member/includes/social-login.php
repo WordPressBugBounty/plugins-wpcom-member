@@ -69,7 +69,7 @@ class Social_Login {
                 return false;
             }
 
-            $args = array( 'type'=>$this->type, 'action'=>'callback' );
+            $args = ['type' => $this->type, 'action' => 'callback'];
             $this->redirect_uri = add_query_arg( $args, $this->page );
 
             if ($_GET['action'] == 'login') {
@@ -85,10 +85,18 @@ class Social_Login {
                     exit();
                 }
 
-                if( isset($_GET['uuid']) && $uuid = sanitize_key(wp_unslash($_GET['uuid'])) ){
+                // 校验 state 防止登录/绑定 CSRF，bind 与普通登录回调均生效；按平台存储防跨平台重放，校验通过后立即删除
+                $state_key = 'oauth_state_' . $this->type;
+                $state = isset($_GET['state']) ? sanitize_text_field(wp_unslash($_GET['state'])) : '';
+                if( !$state || !hash_equals((string) Session::get($state_key), $state) ){
+                    wp_die("<h3>错误：</h3>State校验失败，请重试！");
+                    exit();
+                }
+                Session::delete('', $state_key);
+
+                if( isset($_GET['uuid']) && $this->type === 'wechat2' && $uuid = sanitize_key(wp_unslash($_GET['uuid'])) ){
                     echo '<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width"><title>微信登录</title></head><body><p style="font-size: 18px;color:#333;text-align: center;padding-top: 100px;">登录成功，请返回电脑端继续操作！</p></body></html>';
-                    $uuid = $this->type === 'weapp' ? substr(md5($uuid),2,26) : $uuid;
-                    Session::set('_'.$uuid, sanitize_text_field(wp_unslash($_GET['code'])));
+                    Session::set('_sl_wechat2_'.$uuid, sanitize_text_field(wp_unslash($_GET['code'])));
                     if(isset($_GET['redirect_to']) && $redirect_to = sanitize_url($_GET['redirect_to'])){
                         // 有跳转回前页，保存到session
                         Session::set('redirect_to', $redirect_to);
@@ -108,8 +116,9 @@ class Social_Login {
                 $openid = $openid ?: Session::get('openid');
                 $unionid = Session::get('unionid');
                 $bind_user = $this->is_bind($this->type, $openid, $unionid);
+                // from 仅信任 Session（由登录/扫码发起端写入），移除 URL 回退，防止 from=bind 注入；用后即删避免残留
                 $from = Session::get('from');
-                $from = $from ?: (isset($_GET['from']) ? sanitize_text_field(wp_unslash($_GET['from'])) : '');
+                Session::delete('', 'from');
                 $bind = $from && $from === 'bind' ? true : false;
                 if($bind_user && $bind_user->ID){
                     do_action('wpcom_sl_unionid_login', $bind_user->ID, $this->type, $openid, $unionid);
@@ -188,10 +197,12 @@ class Social_Login {
     }
 
     function qq_login() {
+        $state = md5(uniqid(wp_rand(), true));
+        Session::set('oauth_state_qq', $state);
         $params = array(
             'response_type' => 'code',
             'client_id' => $this->social['qq']['id'],
-            'state' => md5(uniqid(wp_rand(), true)),
+            'state' => $state,
             'scope' => 'get_user_info',
             'redirect_uri' => $this->redirect_uri
         );
@@ -200,9 +211,12 @@ class Social_Login {
     }
 
     function weibo_login() {
+        $state = md5(uniqid(wp_rand(), true));
+        Session::set('oauth_state_weibo', $state);
         $params = array(
             'response_type' => 'code',
             'client_id' => $this->social['weibo']['id'],
+            'state' => $state,
             'redirect_uri' => $this->redirect_uri
         );
         wp_redirect('https://api.weibo.com/oauth2/authorize?'.http_build_query($params));
@@ -211,12 +225,14 @@ class Social_Login {
 
     function wechat_login() {
         global $options;
+        $state = md5(uniqid(wp_rand(), true));
+        Session::set('oauth_state_wechat', $state);
         $params = array(
             'appid' => $this->social['wechat']['id'],
-            'redirect_uri' => apply_filters('wechat_login_redirect_uri', $this->redirect_uri),
+            'redirect_uri' => apply_filters('wechat_login_redirect_uri', add_query_arg('state', $state, $this->redirect_uri)),
             'response_type' => 'code',
             'scope' => 'snsapi_login',
-            'state' => md5(uniqid(wp_rand(), true))
+            'state' => $state
         );
         if(isset($_GET['from']) && $_GET['from'] === 'scan'){
             $params['href'] = 'data:text/css;base64,LmltcG93ZXJCb3ggLnFyY29kZSB7d2lkdGg6IDIxNnB4O2JvcmRlcjowO21heC13aWR0aDogMTAwJTttYXJnaW4tdG9wOjA7dmVydGljYWwtYWxpZ246IHRvcDt9Ci5pbXBvd2VyQm94IC50aXRsZSB7ZGlzcGxheTogbm9uZTt9Ci5pbXBvd2VyQm94IC5pbmZvIHt3aWR0aDogMjE2cHg7bWF4LXdpZHRoOiAxMDAlO2JhY2tncm91bmQ6I2ZmZjt9Ci5zdGF0dXNfaWNvbiB7ZGlzcGxheTpub25lO30KLmltcG93ZXJCb3ggLnN0YXR1cyB7dGV4dC1hbGlnbjogY2VudGVyO21hcmdpbi10b3A6IC0xMHB4O30KLmltcG93ZXJCb3ggLmljb24zOF9tc2d7ZGlzcGxheTogbm9uZTt9';
@@ -258,12 +274,14 @@ class Social_Login {
         if( isset($_GET['redirect_to']) ){
             $this->redirect_uri = add_query_arg( array( 'redirect_to' => sanitize_url($_GET['redirect_to']) ), $this->redirect_uri );
         }
+        $state = md5(uniqid(wp_rand(), true));
+        Session::set('oauth_state_wechat2', $state);
         $params = array(
             'appid' => $this->social['wechat2']['id'],
-            'redirect_uri' => apply_filters('wechat2_login_redirect_uri', $this->redirect_uri),
+            'redirect_uri' => apply_filters('wechat2_login_redirect_uri', add_query_arg('state', $state, $this->redirect_uri)),
             'response_type' => 'code',
             'scope' => 'snsapi_userinfo',
-            'state' => md5(uniqid(wp_rand(), true))
+            'state' => $state
         );
         wp_redirect('https://open.weixin.qq.com/connect/oauth2/authorize?'.http_build_query($params).'#wechat_redirect');
         exit();
@@ -274,25 +292,29 @@ class Social_Login {
     }
 
     function google_login() {
+        $state = md5(uniqid(wp_rand(), true));
+        Session::set('oauth_state_google', $state);
         $params = array(
             'response_type' => 'code',
             'client_id' => $this->social['google']['id'],
             'scope' => 'https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile',
             'redirect_uri' => $this->redirect_uri,
             'access_type' => 'offline',
-            'state' => md5(uniqid(wp_rand(), true))
+            'state' => $state
         );
         wp_redirect('https://accounts.google.com/o/oauth2/auth?'.http_build_query($params));
         exit();
     }
 
     function facebook_login() {
+        $state = md5(uniqid(wp_rand(), true));
+        Session::set('oauth_state_facebook', $state);
         $params = array(
             'response_type' => 'code',
             'auth_type' => 'reauthenticate',
             'client_id' => $this->social['facebook']['id'],
             'redirect_uri' => $this->redirect_uri,
-            'state' => md5(uniqid(wp_rand(), true))
+            'state' => $state
         );
         wp_redirect('https://www.facebook.com/v6.0/dialog/oauth?'.http_build_query($params));
         exit();
@@ -300,8 +322,10 @@ class Social_Login {
 
     function twitter_login() {
         $str = '';
+        $state = md5(uniqid(wp_rand(), true));
+        Session::set('oauth_state_twitter', $state);
         $params=array(
-            'oauth_callback' => add_query_arg( array('code'=>'twitter', 'state'=>md5(uniqid(wp_rand(), true))), $this->redirect_uri ),
+            'oauth_callback' => add_query_arg( array('code'=>'twitter', 'state'=>$state), $this->redirect_uri ),
             'oauth_consumer_key' => $this->social['twitter']['id'],
             'oauth_nonce' => md5(microtime().wp_rand()),
             'oauth_signature_method' => 'HMAC-SHA1',
@@ -326,10 +350,12 @@ class Social_Login {
     }
 
     function github_login() {
+        $state = md5(uniqid(wp_rand(), true));
+        Session::set('oauth_state_github', $state);
         $params = array(
             'client_id' => $this->social['github']['id'],
             'redirect_uri' => $this->redirect_uri,
-            'state' => md5(uniqid(wp_rand(), true))
+            'state' => $state
         );
         wp_redirect('https://github.com/login/oauth/authorize?'.http_build_query($params));
         exit();
@@ -640,6 +666,8 @@ class Social_Login {
     function wechat2_new_user(){
         if(isset($this->social['wechat2']['follow']) && $this->social['wechat2']['follow'] && (!$this->is_wechat() || isset($this->social['wechat2']['qrcode']))){
             $uuid = Session::get('access_token');
+            if( !$uuid || preg_match('/^(sl_|wxcode_|code_)/i', $uuid) ) return;
+
             $args = Session::get('_'.$uuid);
             $args = json_decode($args);
             if($args){
@@ -671,6 +699,7 @@ class Social_Login {
 
     function weapp_new_user(){
         $uuid = Session::get('access_token');
+        if( !$uuid || !preg_match('/^[0-9a-f]{26}$/', $uuid) ) return;
         $args = Session::get('_'.$uuid);
         $args = json_decode($args, true);
         if($args && isset($args['openid']) && $args['openid']){
@@ -1056,10 +1085,11 @@ class Social_Login {
                         Session::set('_' . $uuid, $data_str);
                         Session::delete('', '_wxcode_' . $wxcode);
                         $res['result'] = 0;
-                        $args = array('type' => 'wechat2', 'action' => 'callback', 'code' => $uuid);
-                        if (isset($_SERVER['HTTP_REFERER']) && preg_match('/(bind|account)/i', $_SERVER['HTTP_REFERER'])) {
-                            $args['from'] = 'bind';
-                        }
+                        // 扫码/验证码流程桌面端未经过 action=login，在此补发 state；from 写入 Session（回调不再信任 URL 参数）
+                        $state = md5(uniqid(wp_rand(), true));
+                        Session::set('oauth_state_wechat2', $state);
+                        Session::set('from', isset($_SERVER['HTTP_REFERER']) && preg_match('/(bind|account)/i', $_SERVER['HTTP_REFERER']) ? 'bind' : '');
+                        $args = array('type' => 'wechat2', 'action' => 'callback', 'code' => $uuid, 'state' => $state);
                         $res['redirect_to'] = add_query_arg($args, $this->page);
                         if (isset($_GET['redirect_to']) && $redirect_to = sanitize_url($_GET['redirect_to'])) {
                             // 有跳转回前页，保存到session
@@ -1071,8 +1101,10 @@ class Social_Login {
                     }
                 }
             }else{
-                if( isset($_POST['type']) && $_POST['type'] == 2) $uuid = substr(md5($uuid), 2, 26);
-                $code = Session::get('_' . $uuid);
+                $is_weapp = isset($_POST['type']) && $_POST['type'] == 2;
+                if( $is_weapp ) $uuid = substr(md5($uuid), 2, 26);
+                $is_follow = !$is_weapp && isset($this->social['wechat2']['follow']) && $this->social['wechat2']['follow'];
+                $code = ($is_weapp || $is_follow) ? Session::get('_' . $uuid) : Session::get('_sl_wechat2_' . $uuid);
                 if ($code) {
                     $type = 'wechat2';
                     if (isset($_POST['type']) && $_POST['type'] == 2) {
@@ -1084,10 +1116,11 @@ class Social_Login {
                     }
 
                     $res['result'] = 0;
-                    $args = array('type' => $type, 'action' => 'callback', 'code' => $code);
-                    if (isset($_SERVER['HTTP_REFERER']) && preg_match('/(bind|account)/i', $_SERVER['HTTP_REFERER'])) {
-                        $args['from'] = 'bind';
-                    }
+                    // 扫码流程桌面端未经过 action=login，在此补发 state；from 写入 Session（回调不再信任 URL 参数）
+                    $state = md5(uniqid(wp_rand(), true));
+                    Session::set('oauth_state_' . $type, $state);
+                    Session::set('from', isset($_SERVER['HTTP_REFERER']) && preg_match('/(bind|account)/i', $_SERVER['HTTP_REFERER']) ? 'bind' : '');
+                    $args = array('type' => $type, 'action' => 'callback', 'code' => $code, 'state' => $state);
                     $res['redirect_to'] = add_query_arg($args, $this->page);
                     if (isset($_GET['redirect_to']) && $redirect_to = sanitize_url($_GET['redirect_to'])) {
                         // 有跳转回前页，保存到session

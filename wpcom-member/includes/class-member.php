@@ -82,6 +82,7 @@ class Member {
         add_filter( 'wp_insert_post_data', array( $this, 'pre_insert_post'), 10 ,2 );
         add_action( 'rest_api_init', array( $this, 'add_rest_pre_insert_hooks' ) );
         add_filter( 'wpcom_tougao_notice', array( $this, 'tougao_notice'), 10, 2 );
+        add_filter( 'wpcom_tougao_result_notices', array( $this, 'tougao_result_notices'), 10, 2 );
         add_action( 'admin_notices', array($this, 'post_fill_login_error') );
         add_filter( 'qapress_pre_insert_question', [$this, 'qa_post_fill_login_check'], 20 );
 
@@ -1159,16 +1160,22 @@ class Member {
         $options = $GLOBALS['wpmx_options'];
         $socials = apply_filters( 'wpcom_socials', [] );
         ksort($socials);
-        if( $socials ){ ?>
-            <ul class="member-social-list">
-                <?php foreach ( $socials as $social ){ if( $social['id'] && $social['key'] ) { ?>
+        $socials = array_filter( $socials, function( $social ){
+            return !empty($social['id']) && !empty($social['key']);
+        } );
+        if( $socials ){
+            // 开启数量过多时文字放不下，超过阈值只显示图标
+            $icon_only = count($socials) > (int) apply_filters( 'wpcom_social_login_icon_only_min', 3 );
+            $classes = 'member-social-list' . ( $icon_only ? ' member-social-list-icon-only' : '' ); ?>
+            <ul class="<?php echo esc_attr( apply_filters( 'wpcom_social_list_classes', $classes, count($socials) ) );?>">
+                <?php foreach ( $socials as $social ){ ?>
                 <li class="social-item social-<?php echo esc_attr($social['name']);?>">
                     <?php /* translators: %s: social login type */ ?>
                     <a href="<?php echo esc_url(wpcom_social_login_url($social['name']));?>"<?php echo isset($options['social_login_target']) && !$options['social_login_target'] ? '' : ' target="_blank"';?> data-toggle="tooltip" data-placement="top" title="<?php echo esc_attr(sprintf( __('Log in with %s', WPMX_TD), $social['title'] ));?>" aria-label="<?php echo esc_attr($social['title']);?>">
                         <?php wpmx_icon($social['icon']);?>
                     </a>
                 </li>
-                <?php } } ?>
+                <?php } ?>
             </ul>
         <?php }
     }
@@ -1943,8 +1950,8 @@ class Member {
                     }else if($user->user_status == 1){
                         $user->display_name .= sprintf( '<span class="user-badge user-block">%s</span>', __( 'Blacklist', WPMX_TD ) );
                     }
-                    if(defined('WPCOM_MP_VERSION') && version_compare(WPCOM_MP_VERSION, '1.7.0', '>=')){
-                        $class = class_exists( VIP::class ) ? VIP::class : \WPCOM_VIP::class;
+                    if(defined('WPCOM_MP_VERSION') && version_compare(WPCOM_MP_VERSION, '1.7.0', '>=') && (class_exists( VIP::class ) || class_exists('\WPCOM_VIP'))){
+                        $class = class_exists( VIP::class ) ? VIP::class : '\WPCOM_VIP';
                         $user->display_name = $class::display_name($user->display_name, $user->ID, 'full');
                     }
                     if ( current_user_can( 'edit_user', $user->ID ) ) {
@@ -2010,7 +2017,7 @@ class Member {
     }
 
     function user_contactmethods($user_contact){
-        if(is_wpcom_enable_phone()) {
+        if(current_user_can( 'edit_users' ) && is_wpcom_enable_phone()) {
             $user_contact['mobile_phone'] = __('Mobile Phone', WPMX_TD);
         }
         return $user_contact;
@@ -2188,6 +2195,11 @@ class Member {
         $needed_types = apply_filters('wpmx_need_fill_login_post_types', ['post', 'page', 'kuaixun', 'qa_post']);
         if($user_id && $data['post_type'] && in_array($data['post_type'], $needed_types) && wpcom_need_fill_login($user_id)){
             $data['post_status'] = 'inherit';
+            // 登记投稿拦截原因，供主题持久化并准确显示提示
+            if(!isset($GLOBALS['tougao_result']) || !is_array($GLOBALS['tougao_result'])) $GLOBALS['tougao_result'] = [];
+            if(!isset($GLOBALS['tougao_notices']) || !is_array($GLOBALS['tougao_notices'])) $GLOBALS['tougao_notices'] = [];
+            $GLOBALS['tougao_result'][] = 'need_fill_login';
+            $GLOBALS['tougao_notices'][] = $this->fill_login_check_msg();
             if($rest){
                 $err = new WP_Error( 'need_fill_login', $this->fill_login_check_msg(false), $this->fill_login_check_status());
                 return $err;
@@ -2230,7 +2242,15 @@ class Member {
         <?php }
     }
 
+    function tougao_result_notices($notices, $result){
+        if(in_array('need_fill_login', $result)){
+            $notices['need_fill_login'] = $this->fill_login_check_msg();
+        }
+        return $notices;
+    }
+
     function tougao_notice($notice, $post){
+        if(isset($_GET['tougao_result']) || (!empty($GLOBALS['tougao_result']) && is_array($GLOBALS['tougao_result']))) return $notice;
         global $post_notice;
         if(!isset($post_notice) && $post->post_status === 'inherit'){
             $post_notice = $this->fill_login_check_msg();

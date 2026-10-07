@@ -822,18 +822,25 @@ function is_wpcom_enable_phone($compatible = false){
 }
 
 function wpcom_check_sms_code($phone, $val){
-    $attempts_key = 'attempts_'.$phone;
-    $attempts = Session::get($attempts_key) ?: 0;
-    // Lockout after 5 failed attempts
-    if($attempts >= 5) return false;
+    static $passed = [];
+    $cache_key = $phone . '|' . $val;
+    if( $phone && $val && isset($passed[$cache_key]) ) return true;
+
+    $fail_key = 'wpmx_sms_fail_' . $phone;
+    $fails = intval(get_transient($fail_key));
+    if($fails >= 5) return false;
 
     // 检查session、验证码值
     $key = 'code_'.$phone;
     $code = Session::get($key);
-    if($phone && $val && $code && $code == $val ){
+    if($phone && $val && $code && hash_equals((string)$val, (string)$code) ){
+        // 用后即删防重放，并清空失败计数
+        $passed[$cache_key] = true;
+        Session::delete('', $key);
+        delete_transient($fail_key);
         return true;
     }
-    Session::set($attempts_key, $attempts + 1, wpcom_sms_code_expire());
+    set_transient($fail_key, $fails + 1, wpcom_sms_code_expire());
     return false;
 }
 
@@ -1291,7 +1298,12 @@ function wpmx_send_sms_code(){
     $res = wpcom_form_validate( $res, 'send_sms_code', $filter );
 
     if ($res['result'] == 1) {
-        if(is_email($_POST[$target])){
+        $send_target = isset($_POST[$target]) ? sanitize_text_field(wp_unslash($_POST[$target])) : '';
+        $limit_error = wpmx_send_code_limit_error($send_target);
+        if ($limit_error !== '') {
+            $res['result'] = 0;
+            $res['error'] = $limit_error;
+        } else if(is_email($_POST[$target])){
             if(!wpcom_send_email_code(sanitize_text_field($_POST[$target]))){
                 $res['result'] = 0;
                 $res['error'] = __('Failed to send email', WPMX_TD);
@@ -1304,6 +1316,7 @@ function wpmx_send_sms_code(){
             }
         }
         if($res['result'] == 1){
+            wpmx_send_code_limit_record($send_target); // 发送成功后记录频控计数
             if(isset($_POST['ticket'])){
                 $ticket = sanitize_text_field($_POST['ticket']);
                 $randstr = sanitize_text_field($_POST['randstr']);
@@ -1328,6 +1341,36 @@ function wpmx_send_sms_code(){
     if ( $res['error'] == '' && isset($msg[$res['result']]) ) $res['error'] = $msg[$res['result']];
 
     wp_send_json($res);
+}
+
+// 发送频控检查：超限返回错误文案，未超限返回空字符串
+function wpmx_send_code_limit_error($target){
+    if($target === '') return '';
+    if(get_transient('wpmx_sms_lock_' . md5($target))){
+        $interval = max(1, intval(apply_filters('wpcom_sms_send_interval', 60)));
+        /* translators: %d: send interval in seconds */
+        return sprintf(__('Sending too frequently, please try again after %d seconds', WPMX_TD), $interval);
+    }
+    $sms_daily_limit = max(1, intval(apply_filters('wpcom_sms_daily_limit', 30)));
+    if(intval(get_transient('wpmx_sms_daily_' . md5($target))) >= $sms_daily_limit){
+        return __('Daily sending limit for this account has been reached, please try again tomorrow', WPMX_TD);
+    }
+    $ip_daily_limit = max(1, intval(apply_filters('wpcom_sms_ip_daily_limit', 60)));
+    if(intval(get_transient('wpmx_sms_ip_daily_' . md5(wpmx_get_ip()))) >= $ip_daily_limit){
+        return __('Daily sending limit for the current IP has been reached, please try again tomorrow', WPMX_TD);
+    }
+    return '';
+}
+
+// 记录一次成功发送：间隔锁 + 同目标/同 IP 计数（24 小时滚动窗口）
+function wpmx_send_code_limit_record($target){
+    if($target === '') return;
+    $interval = max(1, intval(apply_filters('wpcom_sms_send_interval', 60)));
+    set_transient('wpmx_sms_lock_' . md5($target), time(), $interval);
+    $daily_key = 'wpmx_sms_daily_' . md5($target);
+    set_transient($daily_key, intval(get_transient($daily_key)) + 1, DAY_IN_SECONDS);
+    $ip_key = 'wpmx_sms_ip_daily_' . md5(wpmx_get_ip());
+    set_transient($ip_key, intval(get_transient($ip_key)) + 1, DAY_IN_SECONDS);
 }
 
 function wpmx_description_length(){

@@ -35,11 +35,13 @@ class Utils_Free{
         return array(
             'textarea_name' => $args['textarea_name'],
             'textarea_rows' => $args['textarea_rows'],
+            'media_buttons' => false,
+            'quicktags'     => false,
             'tinymce'       => array(
-                'height'        => 150,
-                'toolbar1' => 'formatselect,fontsizeselect,bold,blockquote,forecolor,alignleft,aligncenter,alignright,link,unlink,bullist,numlist,fullscreen,wp_help',
-                'toolbar2' => '',
-                'toolbar3' => '',
+                'height'    => 150,
+                'toolbar1'  => 'formatselect,fontsizeselect,bold,blockquote,forecolor,alignleft,aligncenter,alignright,link,unlink,bullist,numlist,fullscreen,wp_help',
+                'toolbar2'  => '',
+                'toolbar3'  => '',
             )
         );
     }

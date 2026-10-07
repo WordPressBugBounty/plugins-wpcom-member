@@ -62,7 +62,7 @@ if( !class_exists( Session::class ) ) {
             global $wpdb;
             $table = esc_sql($wpdb->prefix . self::$table);
             if( $wpdb->get_var("SHOW TABLES LIKE '$table'") === $table ) {
-                $wpdb->query( $wpdb->prepare("DELETE FROM `$table` WHERE UNIX_TIMESTAMP(time) + expired < %d", current_time( 'timestamp', 1 ) ) );
+                $wpdb->query( "DELETE FROM `$table` WHERE TIMESTAMPDIFF(SECOND, time, UTC_TIMESTAMP()) > expired" );
             }
         }
 
@@ -128,18 +128,11 @@ if( !class_exists( Session::class ) ) {
             }
             $session_prefix = sanitize_text_field(wp_unslash($session_prefix));
             if( $session_prefix === '' ) {
-                $ip = '';
-                if(!empty($_SERVER['HTTP_CLIENT_IP'])){
-                    $ip = $_SERVER['HTTP_CLIENT_IP'];
-                } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])){
-                    $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-                } elseif (!empty($_SERVER['REMOTE_ADDR'])){
-                    $ip = $_SERVER['REMOTE_ADDR'];
+                try {
+                    $session_prefix = bin2hex( random_bytes( 16 ) );
+                } catch ( \Exception $e ) {
+                    $session_prefix = md5( uniqid( wp_rand(), true ) );
                 }
-                $ip = filter_var($ip, FILTER_VALIDATE_IP);
-                $ip = $ip ?: 'none';
-                $agent = isset($_SERVER['HTTP_USER_AGENT']) ? wp_unslash($_SERVER['HTTP_USER_AGENT']) : '';
-                $session_prefix = md5(time() . $ip . $agent . '-' . wp_rand(100,999) . '-' . wp_rand(100,999));
                 @setcookie('_s_prefix', $session_prefix, time()+315360000, COOKIEPATH, COOKIE_DOMAIN, is_ssl(), true);
             }
             return $session_prefix;

@@ -19,6 +19,7 @@ function wpmx_init() {
     );
 
     require_once WPCOM_ADMIN_FREE_PATH . 'load.php';
+    require_once WPMX_DIR . 'includes/email-template.php';
     $panel_class = class_exists(Plugin\Panel_Free::class) ? Plugin\Panel_Free::class : \WPCOM_PLUGIN_PANEL_FREE::class;
     $GLOBALS['wpmx'] = new $panel_class($wpmx_info);
     $wpmx_options = get_option($wpmx_info['key']);
@@ -722,6 +723,7 @@ function wpmx_admin_options(){
                     'type' => 'rp',
                     'title' => '登录方式',
                     'name' => '_social_login',
+                    'rt' => '{sl_type}[[（{ID=sl_id}）]]',
                     'options' => array(
                         array(
                             'name' => 'sl_type',

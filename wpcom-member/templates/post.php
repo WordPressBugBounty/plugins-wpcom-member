@@ -21,7 +21,7 @@ global $options, $is_author;
     <div class="item-content">
         <h2 class="item-title">
             <a href="<?php the_permalink();?>" title="<?php echo esc_attr(get_the_title());?>" target="_blank">
-                <?php if(isset($is_author) && $post->post_status=='draft'){ echo '<span>【草稿】</span>'; }else if(isset($is_author) && $post->post_status=='pending'){ echo '<span>【待审核】</span>'; }?>
+                <?php if(isset($is_author) && $post->post_status=='draft'){ echo '<span>【草稿】</span>'; }else if(isset($is_author) && $post->post_status=='pending'){ echo '<span>【待审核】</span>'; }else if(isset($is_author) && $post->post_status=='future'){ echo '<span>【计划发布】</span>'; }?>
                 <?php the_title();?>
             </a>
         </h2>

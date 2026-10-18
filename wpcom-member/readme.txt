@@ -4,7 +4,7 @@ Donate link: https://www.wpcom.cn/plugins/wpcom-member-pro.html
 Tags: 用户中心, membership
 Requires at least: 6.4.0
 Tested up to: 7.1.3
-Stable tag: 1.8.0.1
+Stable tag: 1.8.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -28,9 +28,10 @@ WordPress用户中心插件 / User profile & membership plugin for WordPress
 - 前端注册、登录、找回密码页面，注册登录弹框；
 - 前端帐号设置页面，可支持个人资料设置、修改密码、头像设置等；
 - 前端个人中心页面；
-- 社交登录：微信、微博、QQ、Google、Facebook、Twitter、Github;
+- 社交登录：微信、微博、QQ、Google、Facebook、Twitter、Github、Passkey（通行密钥 / WebAuthn）;
 - 注册登录表单人机验证：集成WPCOM内置人机验证（免费）、阿里云云盾验证码、腾讯云验证码/防水墙、hCaptcha和Google reCAPTCHA安全验证方式；
 - 注册邮箱验证；
+- 邮件模板：为通知邮件自动增加模板，告别系统默认的纯文本邮件单调风格；
 - 用户黑名单功能；
 - WooCommerce兼容；
 
@@ -61,6 +62,12 @@ WordPress用户中心插件 / User profile & membership plugin for WordPress
 == Changelog ==
 
 ### 更新记录
+
+**1.8.1** - 2026-10-18
+
+- 新增社交登录方式：Passkey 通行密钥（WebAuthn），支持 FaceID、TouchID、PIN 或实体安全密钥登录；
+- 账号设置-账号绑定新增“配置通行密钥”面板，支持添加、重命名、删除通行密钥；
+- 优化后台设置面板样式；
 
 **1.8.0** - 2026-10-07
 

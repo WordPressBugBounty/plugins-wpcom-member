@@ -30,6 +30,11 @@ class Social_Login {
                 $this->social['wechat'] = $this->social['wechat2'];
             }
 
+            if( isset($this->social['passkey']) ){
+                require_once WPMX_DIR . 'includes/passkey.php';
+                new Passkey($this);
+            }
+
             if($this->social) {
                 add_action( 'init', array($this, 'init'), 5 );
                 add_action( 'body_class', array($this, 'body_class') );
@@ -289,6 +294,19 @@ class Social_Login {
 
     function weapp_login() {
         exit();
+    }
+
+    function passkey_login() {
+        // Passkey 登录不走 OAuth 跳转，回到登录页由前端 WebAuthn 完成（?pk=1 自动拉起）
+        $login_url = function_exists('wpcom_login_url') ? wpcom_login_url('', 0) : '';
+        if( !$login_url ) $login_url = wp_login_url();
+        wp_safe_redirect(add_query_arg(array('pk' => 1), remove_query_arg(array('type', 'action', 'from', 'redirect_to'), $login_url)));
+        exit();
+    }
+
+    function passkey_callback() {
+        // Passkey 无 OAuth 回调，直接回登录页
+        $this->passkey_login();
     }
 
     function google_login() {

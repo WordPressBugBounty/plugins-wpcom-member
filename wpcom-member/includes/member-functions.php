@@ -290,6 +290,7 @@ function wpcom_account_tabs_bind_metas( $metas ){
         ksort($socials);
         if( $socials ){
             foreach ( $socials as $social ){
+                if( $social['name'] === 'passkey' ) continue; // Passkey 使用独立面板（wpcom_account_field_passkey）
                 if( $social['id'] && $social['key'] ) {
                     $key += 10;
                     $url = add_query_arg(array('from' => 'bind'), wpcom_social_login_url($social['name']));
@@ -485,6 +486,10 @@ function wpcom_socials( $social ){
         'github' => array(
             'title' => _x('Github', 'social login', WPMX_TD),
             'icon' => 'github-circle'
+        ),
+        'passkey' => array(
+            'title' => _x('Passkey', 'social login', WPMX_TD),
+            'icon' => 'fingerprint'
         )
     );
 
@@ -493,11 +498,12 @@ function wpcom_socials( $social ){
     $has_weapp = -1;
     if(isset($options['sl_type']) && is_array($options['sl_type']) && !empty($options['sl_type'])){
         foreach ($options['sl_type'] as $i => $type){
-            if(isset($types[$type]) && isset($options['sl_id'][$i]) && $options['sl_id'][$i] && isset($options['sl_key'][$i]) && $options['sl_key'][$i]){
+            $is_passkey = $type === 'passkey';
+            if(isset($types[$type]) && ($is_passkey || (isset($options['sl_id'][$i]) && $options['sl_id'][$i] && isset($options['sl_key'][$i]) && $options['sl_key'][$i]))){
                 $item = $types[$type];
                 $item['name'] = $type;
-                $item['id'] = $options['sl_id'][$i];
-                $item['key'] = $options['sl_key'][$i];
+                $item['id'] = $is_passkey ? 'passkey' : $options['sl_id'][$i];
+                $item['key'] = $is_passkey ? 'passkey' : $options['sl_key'][$i];
                 $item['index'] = $i;
                 if($type === 'wechat') $has_wechat = $i*10;
                 if($type === 'wechat2') {

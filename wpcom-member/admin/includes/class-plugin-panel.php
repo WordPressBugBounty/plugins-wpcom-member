@@ -10,11 +10,13 @@ class Panel_Free{
     protected $options;
     protected $version;
     protected $settings;
+    protected $text_domain;
     function __construct($info){
         global $_wpcom_free_plugins;
         if(!isset($_wpcom_free_plugins)) $_wpcom_free_plugins = array();
         $this->info = $info;
         $this->key = isset($this->info['key']) ? $this->info['key'] : '';
+        $this->text_domain = isset($this->info['text_domain']) ? $this->info['text_domain'] : 'wpcom';
         add_filter('pre_option_' .  $this->key, array($this, 'options_filter'), 10, 2);
         $this->options = get_option($this->key);
         $this->version = isset($this->info['ver']) ? $this->info['ver'] : '';
@@ -102,7 +104,7 @@ class Panel_Free{
                     <?php }}?>
                     <div class="wpcom-panel-submit" style="display: none;">
                         <?php wp_nonce_field( $this->key . '_options', $this->key . '_nonce', true );?>
-                        <input type="submit" name="submit" id="submit" class="button button-primary" value="<?php esc_attr_e('Save Changes', 'wpcom');?>">
+                        <input type="submit" name="submit" id="submit" class="button button-primary" value="<?php esc_attr_e('Save Changes', $this->text_domain);?>">
                     </div>
                 </form>
                 <?php foreach ($this->settings as $i => $item) { if($item===false){

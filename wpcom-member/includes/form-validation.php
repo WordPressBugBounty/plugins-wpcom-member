@@ -879,6 +879,10 @@ function wpcom_social_unbind() {
         if ($user->mobile_phone) $can_unbind = true; // 是否绑定手机
         if (!$can_unbind && $user->user_email && !wpcom_is_empty_mail($user->user_email)) $can_unbind = true; // 是否绑定邮箱
 
+        if (!$can_unbind && $name !== 'passkey' && get_user_option('wpcom_passkeys', $user->ID)) {
+            $can_unbind = true; // 已绑定通行密钥，也可作为登录方式
+        }
+
         if (!$can_unbind) { // 未绑定手机和邮箱，检查社交账号，至少要绑定了其他账号才可以解绑当前账号，不然账号无法登录
             $socials = apply_filters('wpcom_socials', array());
             if ($socials) {
@@ -904,6 +908,17 @@ function wpcom_social_unbind() {
             if($name === 'weapp'){
                 update_user_option($user->ID, 'social_type_wxxcx', '');
                 update_user_option($user->ID, 'social_type_wechat', '');
+            }else if($name === 'passkey'){
+                // 解绑全部通行密钥
+                $pk_passkeys = get_user_option('wpcom_passkeys', $user->ID);
+                if(is_array($pk_passkeys)){
+                    foreach (array_keys($pk_passkeys) as $pk_cid){
+                        delete_user_meta($user->ID, $wpdb->get_blog_prefix() . 'wpcom_passkey_cid', $pk_cid);
+                    }
+                }
+                delete_user_option($user->ID, 'wpcom_passkeys');
+                update_user_option($user->ID, 'social_type_passkey', '');
+                update_user_option($user->ID, 'social_type_passkey_name', '');
             }else{
                 update_user_option($user->ID, 'social_type_' . ($name === 'wechat2' ? 'wechat' : $name), '');
             }

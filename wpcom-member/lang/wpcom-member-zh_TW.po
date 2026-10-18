@@ -1117,6 +1117,138 @@ msgstr "註冊新帳戶"
 msgid "Register"
 msgstr "註冊"
 
+#: includes/passkey.php
+msgid "Add Passkey"
+msgstr "添加通行密鑰"
+
+#: includes/passkey.php
+msgid "Configure Passkey"
+msgstr "配置通行密鑰（Passkey）"
+
+#: includes/passkey.php
+msgid "Delete this passkey?"
+msgstr "確定要刪除此通行密鑰嗎？"
+
+#: includes/passkey.php
+msgid "Passkey"
+msgstr "Passkey"
+
+#: includes/passkey.php
+msgid "Passkey binding..."
+msgstr "通行密鑰綁定中..."
+
+#: includes/passkey.php
+msgid "Passkey connected successfully."
+msgstr "通行密鑰綁定成功。"
+
+#: includes/passkey.php
+msgid "Passkey data is invalid."
+msgstr "通行密鑰數據無效。"
+
+#: includes/passkey.php
+msgid "Passkey domain verification failed."
+msgstr "通行密鑰域名驗證失敗。"
+
+#: includes/passkey.php
+msgid "Passkey login..."
+msgstr "通行密鑰登錄中..."
+
+#: includes/passkey.php
+msgid "Passkey name can not be empty"
+msgstr "通行密鑰名稱不能為空"
+
+#: includes/passkey.php
+msgid "Passkey public key is invalid."
+msgstr "通行密鑰公鑰無效。"
+
+#: includes/passkey.php
+msgid "Passkey request expired, please try again."
+msgstr "通行密鑰請求已過期，請重試。"
+
+#: includes/passkey.php
+msgid "Passkey requires HTTPS or localhost."
+msgstr "通行密鑰需要 HTTPS 或 localhost 環境。"
+
+#: includes/passkey.php
+msgid "Passkey signature verification failed."
+msgstr "通行密鑰簽名驗證失敗。"
+
+#: includes/passkey.php
+msgid "Passkey user verification failed."
+msgstr "通行密鑰用戶驗證失敗。"
+
+#: includes/passkey.php
+msgid "Passkey verification failed."
+msgstr "通行密鑰驗證失敗。"
+
+#: includes/passkey.php
+msgid "Passkey verification was cancelled or failed."
+msgstr "通行密鑰驗證已取消或失敗。"
+
+#: includes/passkey.php
+msgid "Press Enter to save, Esc to cancel"
+msgstr "按回車保存，按 Esc 取消"
+
+#: includes/passkey.php
+msgid "Recently added"
+msgstr "最近添加"
+
+#: includes/passkey.php
+msgid "Rename"
+msgstr "重命名"
+
+#: includes/passkey.php
+msgid "Renamed successfully."
+msgstr "重命名成功。"
+
+#: includes/passkey.php
+msgid "Request expired, please try again."
+msgstr "請求已過期，請重試。"
+
+#: includes/passkey.php
+msgid "Supports Face ID, Touch ID, PIN or hardware security keys. A safer and faster alternative to QR code login."
+msgstr "支持 FaceID、TouchID、PIN 或實體安全密鑰，可作為掃碼登錄的安全快捷替代方案"
+
+#: includes/passkey.php
+msgid "This Passkey is already connected to another account."
+msgstr "該通行密鑰已綁定本站其他用戶。"
+
+#: includes/passkey.php
+msgid "This Passkey is already connected."
+msgstr "該通行密鑰已綁定。"
+
+#: includes/passkey.php
+msgid "This Passkey is not connected to an account."
+msgstr "該通行密鑰未綁定任何賬號。"
+
+#: includes/passkey.php
+msgid "This Passkey key type is not supported (only ES256, ES384, RS256, Ed25519)."
+msgstr "不支持該通行密鑰類型（僅支持 ES256、ES384、RS256、Ed25519）。"
+
+#: includes/passkey.php
+msgid "Too many attempts, please try again later."
+msgstr "嘗試次數過多，請稍後再試。"
+
+#: includes/passkey.php
+#, php-format
+msgid "You can add up to %d passkeys."
+msgstr "最多可添加 %d 個通行密鑰。"
+
+#: includes/passkey.php
+msgid "Your browser does not support Passkey."
+msgstr "當前瀏覽器不支持 Passkey。"
+
+#: includes/passkey.php
+#, php-format
+msgid "Added on: %s"
+msgstr "添加於: %s"
+
+
+#: includes/passkey.php
+msgctxt "account label"
+msgid "Passkey"
+msgstr "通行密鑰"
+
 #~ msgctxt "pagination"
 #~ msgid "Previous"
 #~ msgstr "上一頁"

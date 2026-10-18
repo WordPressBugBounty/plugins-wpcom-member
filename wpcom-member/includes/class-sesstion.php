@@ -128,11 +128,7 @@ if( !class_exists( Session::class ) ) {
             }
             $session_prefix = sanitize_text_field(wp_unslash($session_prefix));
             if( $session_prefix === '' ) {
-                try {
-                    $session_prefix = bin2hex( random_bytes( 16 ) );
-                } catch ( \Exception $e ) {
-                    $session_prefix = md5( uniqid( wp_rand(), true ) );
-                }
+                $session_prefix = bin2hex( random_bytes( 16 ) );
                 @setcookie('_s_prefix', $session_prefix, time()+315360000, COOKIEPATH, COOKIE_DOMAIN, is_ssl(), true);
             }
             return $session_prefix;

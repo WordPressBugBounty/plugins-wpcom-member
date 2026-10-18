@@ -15,6 +15,7 @@ function wpmx_init() {
         'position' => 72,
         'key' => 'wpmx_options',
         'plugin_id' => 'wpmx',
+        'text_domain' => WPMX_TD,
         'basename' => plugin_basename(__FILE__)
     );
 
@@ -49,8 +50,9 @@ add_filter('pre_option_wpmx_options', function($pre_option, $option){
     if(function_exists('wpcom_setup') && !defined('WPCOM_MP_VERSION')){
         $alloptions = wp_load_alloptions();
         if ( !isset( $alloptions[ $option ] ) ) $pre_option = 1;
+        return apply_filters( "option_{$option}", $pre_option, $option );
     }
-    return apply_filters( "option_{$option}", $pre_option, $option );
+    return $pre_option;
 }, 5, 2);
 
 add_filter('option_wpmx_options', 'wpmx_old_theme_options');
@@ -95,7 +97,7 @@ function wpmx_scripts(){
 
         // 图标库版本处理，兼容主题和其他插件
         $load_icon = true;
-        $ver = '2.8.9';
+        $ver = '4.0.5';
         if(wp_script_is('wpcom-icons')){
             $cur_version = isset(wp_scripts()->registered['wpcom-icons']) ? wp_scripts()->registered['wpcom-icons']->ver : '';
             if(!$cur_version || version_compare($cur_version, $ver, '<')){ // 当前版本低，需要替换
@@ -730,6 +732,7 @@ function wpmx_admin_options(){
                             'title' => '登录方式',
                             'type' => 's',
                             'options' => array(
+                                'passkey' => '通行密钥（Passkey / WebAuthn）',
                                 'qq' => '腾讯QQ',
                                 'weibo' => '新浪微博',
                                 'wechat' => '微信开放平台',
@@ -740,6 +743,13 @@ function wpmx_admin_options(){
                                 'twitter' => 'X / Twitter',
                                 'github' => 'Github',
                             )
+                        ),
+                        array(
+                            'name' => '_passkey_info',
+                            'filter' => 'sl_type:passkey',
+                            'title' => '通行密钥',
+                            'type' => 'i',
+                            'std' => '<b>通行密钥（Passkey / WebAuthn）登录无需填写 ID / Key，可直接留空</b>；支持 FaceID、TouchID、PIN 或实体安全密钥，用户可在“账号设置-账号绑定”中添加、重命名、删除，<b>需要 HTTPS 环境</b>'
                         ),
                         array(
                             'name' => 'sl_id',

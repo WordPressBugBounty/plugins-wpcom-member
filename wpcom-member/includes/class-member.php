@@ -783,7 +783,7 @@ class Member {
         $args = [
             'posts_per_page' => $per_page,
             'author' => $profile->ID,
-            'post_status' => $is_author ? ['draft', 'pending', 'publish'] : ['publish'],
+            'post_status' => $is_author ? ['draft', 'pending', 'future', 'publish'] : ['publish'],
             'no_found_rows' => true
         ];
         $posts = new \WP_Query($args);
@@ -819,7 +819,7 @@ class Member {
                 'posts_per_page' => $per_page,
                 'paged' => $page,
                 'author' => $user->ID,
-                'post_status' => $is_author ? [ 'draft', 'pending', 'publish' ] : [ 'publish' ],
+                'post_status' => $is_author ? [ 'draft', 'pending', 'future', 'publish' ] : [ 'publish' ],
                 'no_found_rows' => true
             ];
             $posts = new \WP_Query($arg);
@@ -1156,28 +1156,66 @@ class Member {
         }
     }
 
-    function social_login(){
+    /**
+     * 社交登录输出
+     * @param string $context 使用场景：login | register
+     */
+    function social_login( $context = '' ){
         $options = $GLOBALS['wpmx_options'];
+        $social_login_on = isset($options['social_login_on']) && $options['social_login_on'] == '1' ? 1 : 0;
+        if( !$social_login_on ) return;
+
+        // 显式传入有效场景值 = 新版模板调用
+        $standalone = in_array($context, ['login', 'register'], true);
+        if( !$standalone ){
+            // 旧版无参调用：依次回退 load_template 全局上下文 -> 当前页面判断
+            $context = $GLOBALS['wpcom_social_login_context'] ?? '';
+            if( !$context ) $context = is_wpcom_member_page('register') ? 'register' : 'login';
+        }
+
         $socials = apply_filters( 'wpcom_socials', [] );
         ksort($socials);
         $socials = array_filter( $socials, function( $social ){
             return !empty($social['id']) && !empty($social['key']);
         } );
-        if( $socials ){
-            // 开启数量过多时文字放不下，超过阈值只显示图标
-            $icon_only = count($socials) > (int) apply_filters( 'wpcom_social_login_icon_only_min', 3 );
-            $classes = 'member-social-list' . ( $icon_only ? ' member-social-list-icon-only' : '' ); ?>
-            <ul class="<?php echo esc_attr( apply_filters( 'wpcom_social_list_classes', $classes, count($socials) ) );?>">
-                <?php foreach ( $socials as $social ){ ?>
-                <li class="social-item social-<?php echo esc_attr($social['name']);?>">
-                    <?php /* translators: %s: social login type */ ?>
-                    <a href="<?php echo esc_url(wpcom_social_login_url($social['name']));?>"<?php echo isset($options['social_login_target']) && !$options['social_login_target'] ? '' : ' target="_blank"';?> data-toggle="tooltip" data-placement="top" title="<?php echo esc_attr(sprintf( __('Log in with %s', WPMX_TD), $social['title'] ));?>" aria-label="<?php echo esc_attr($social['title']);?>">
-                        <?php wpmx_icon($social['icon']);?>
-                    </a>
-                </li>
-                <?php } ?>
-            </ul>
-        <?php }
+        // Passkey 暂不支持注册新账号，注册场景不显示
+        if( $context === 'register' && !apply_filters('wpcom_passkey_show_on_register', false) ){
+            $socials = array_filter( $socials, function( $social ){
+                return ($social['name'] ?? '') !== 'passkey';
+            } );
+        }
+        if( !$socials ) return;
+
+        // 开启数量过多时文字放不下，超过阈值只显示图标
+        $icon_only = count($socials) > (int) apply_filters( 'wpcom_social_login_icon_only_min', 3 );
+        $classes = 'member-social-list' . ( $icon_only ? ' member-social-list-icon-only' : '' );
+
+        if( $standalone ){
+            $title = $context === 'register' ? __('Sign up with', WPMX_TD) : __('Sign in with', WPMX_TD); ?>
+            <div class="member-form-footer">
+                <div class="member-form-social">
+                    <span><?php echo esc_html($title); ?></span>
+                    <?php $this->social_list( $socials, $classes, $options ); ?>
+                </div>
+            </div>
+            <?php
+        } else {
+            $this->social_list( $socials, $classes, $options );
+        }
+    }
+
+    function social_list( $socials, $classes, $options ){ ?>
+        <ul class="<?php echo esc_attr( apply_filters( 'wpcom_social_list_classes', $classes, count($socials) ) );?>">
+            <?php foreach ( $socials as $social ){ ?>
+            <li class="social-item social-<?php echo esc_attr($social['name']);?>">
+                <?php /* translators: %s: social login type */ ?>
+                <a href="<?php echo esc_url(wpcom_social_login_url($social['name']));?>"<?php echo $social['name'] === 'passkey' || (isset($options['social_login_target']) && !$options['social_login_target']) ? '' : ' target="_blank"';?> data-toggle="tooltip" data-placement="top" title="<?php echo esc_attr(sprintf( __('Log in with %s', WPMX_TD), $social['title'] ));?>" aria-label="<?php echo esc_attr($social['title']);?>">
+                    <?php wpmx_icon($social['icon']);?>
+                </a>
+            </li>
+            <?php } ?>
+        </ul>
+        <?php
     }
 
     function approve_resend_form(){
@@ -1209,10 +1247,14 @@ class Member {
 
         if ( file_exists( $file ) ) {
             extract($atts, EXTR_SKIP);
+            // 为模板内 do_action('wpcom_social_login') 提供场景上下文（主题覆盖模板可能不传参）
+            $old_context = $GLOBALS['wpcom_social_login_context'] ?? '';
+            if( $template === 'login' || $template === 'register' ) $GLOBALS['wpcom_social_login_context'] = $template;
             ob_start();
             include $file;
             $output = ob_get_contents();
             ob_end_clean();
+            $GLOBALS['wpcom_social_login_context'] = $old_context;
             return $output;
         }
     }
@@ -1339,7 +1381,8 @@ class Member {
             $subpage = isset($wp_query->query['subpage']) && $wp_query->query['subpage'] ? $wp_query->query['subpage'] : 'general';
             // 登录判断
             if(!$user->ID){
-                wp_redirect( wp_login_url( wpcom_subpage_url( $subpage ) ) );
+                $login_redirect = isset($options['login_redirect']) ? trim($options['login_redirect']) : '';
+                wp_redirect( wp_login_url( $login_redirect === '' ? wpcom_subpage_url( $subpage ) : '' ) );
                 exit;
             }
 

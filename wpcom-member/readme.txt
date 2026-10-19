@@ -4,7 +4,7 @@ Donate link: https://www.wpcom.cn/plugins/wpcom-member-pro.html
 Tags: 用户中心, membership
 Requires at least: 6.4.0
 Tested up to: 7.1.3
-Stable tag: 1.8.1
+Stable tag: 1.8.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -62,6 +62,10 @@ WordPress用户中心插件 / User profile & membership plugin for WordPress
 == Changelog ==
 
 ### 更新记录
+
+**1.8.2** - 2026-10-19
+
+- 安全：社交登录入口链接携带 nonce 校验，避免登录页被页面缓存/CDN 缓存后旧 nonce 直接发起授权
 
 **1.8.1** - 2026-10-18
 

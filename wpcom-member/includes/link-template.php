@@ -75,6 +75,7 @@ function wpcom_social_login_url( $type, $action = 'login' ){
         \WPCOM\Themer\Session::set('redirect_to', $redirect_to);
         $args['redirect_to'] = urlencode($redirect_to);
     }
+    if( $action === 'login' ) $args['_wpnonce'] = wp_create_nonce('wpcom_social_init');
 
     return add_query_arg( $args, $login_url );
 }

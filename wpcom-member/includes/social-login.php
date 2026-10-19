@@ -78,6 +78,15 @@ class Social_Login {
             $this->redirect_uri = add_query_arg( $args, $this->page );
 
             if ($_GET['action'] == 'login') {
+                if ( !wp_verify_nonce( isset($_REQUEST['_wpnonce']) ? sanitize_text_field(wp_unslash($_REQUEST['_wpnonce'])) : '', 'wpcom_social_init' ) ) {
+                    $back = wp_login_url();
+                    $back_args = array('sl_expired' => '1');
+                    // 保留原跳转上下文，重新发起时不丢失
+                    if ( isset($_GET['redirect_to']) && $rt = sanitize_url(wp_unslash($_GET['redirect_to'])) ) $back_args['redirect_to'] = urlencode($rt);
+                    if ( isset($_GET['from']) && $_GET['from'] === 'bind' ) $back_args['from'] = 'bind';
+                    wp_safe_redirect( add_query_arg($back_args, $back) );
+                    exit();
+                }
                 Session::set('from', isset($_GET['from']) && $_GET['from'] === 'bind' ? 'bind' : '');
                 if(isset($_GET['redirect_to']) && $redirect_to = sanitize_url($_GET['redirect_to'])){
                     // 有跳转回前页，保存到session

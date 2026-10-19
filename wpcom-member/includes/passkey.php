@@ -279,7 +279,8 @@ class Passkey {
      * ------------------------------------------------------------------ */
 
     function login_options(){
-        if( !$this->verify_nonce() ) return;
+        // 登录流程的 nonce 取自社交登录链接地址（_wpnonce，随社交登录 HTML 一起输出）
+        if( !$this->verify_nonce('wpcom_social_init') ) return;
 
         if( $this->too_many_failures() ){
             $this->fail(__('Too many attempts, please try again later.', WPMX_TD));
@@ -303,7 +304,8 @@ class Passkey {
     }
 
     function login_verify(){
-        if( !$this->verify_nonce() ) return;
+        // 与 login_options 一致：校验社交登录链接地址携带的 nonce
+        if( !$this->verify_nonce('wpcom_social_init') ) return;
 
         if( $this->too_many_failures() ){
             $this->fail(__('Too many attempts, please try again later.', WPMX_TD));
@@ -807,9 +809,9 @@ class Passkey {
      *  杂项
      * ------------------------------------------------------------------ */
 
-    function verify_nonce(){
+    function verify_nonce( $action = 'wpcom_passkey' ){
         $nonce = isset($_POST['nonce']) ? sanitize_text_field(wp_unslash($_POST['nonce'])) : '';
-        if( !$nonce || !wp_verify_nonce($nonce, 'wpcom_passkey') ){
+        if( !$nonce || !wp_verify_nonce($nonce, $action) ){
             $this->fail(__('The nonce check failed', WPMX_TD));
             return false;
         }
